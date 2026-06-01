@@ -1,5 +1,7 @@
 # Checkpoint Karpathy Agent Workflow
 
+English | [简体中文](README_CN.md)
+
 A reusable agent workflow for **Codex** and **Claude Code**.
 
 It combines:
