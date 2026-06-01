@@ -14,6 +14,7 @@ It combines:
 ```text
 checkpoint-karpathy-development-skills/
   README.md
+  README_CN.md
   SKILL.md                                      # Shared Skill source
   AGENTS.md                                    # Codex project instructions
   CLAUDE.md                                    # Claude Code project memory/instructions

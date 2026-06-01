@@ -17,7 +17,7 @@
 ```text
 checkpoint-karpathy-development-skills/
   README.md
-  README.zh-CN.md
+  README_CN.md
   SKILL.md                                      # 通用 Skill 源文件
   AGENTS.md                                    # Codex 项目级指令
   CLAUDE.md                                    # Claude Code 项目级记忆/指令
