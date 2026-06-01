@@ -12,30 +12,17 @@
 2. **Karpathy-inspired engineering guardrails（Karpathy 风格工程护栏）**  
    先思考再编码，优先简单方案，避免臆想式抽象，在已有代码库中做外科手术式修改，并围绕明确目标验证结果。
 
-推荐 GitHub 仓库名：
-
-```text
-codex-claude-checkpoint-karpathy-workflow
-```
-
-较短备选：
-
-```text
-checkpoint-karpathy-agent-workflow
-checkpoint-karpathy-dev-skill
-```
-
 ## 包含内容
 
 ```text
-checkpoint-karpathy-agent-workflow/
+checkpoint-karpathy-development-skills/
   README.md
   README.zh-CN.md
   SKILL.md                                      # 通用 Skill 源文件
   AGENTS.md                                    # Codex 项目级指令
   CLAUDE.md                                    # Claude Code 项目级记忆/指令
   .gitignore                                   # 忽略 .agent-artifacts/
-  codex/
+  .codex/
     skills/
       checkpoint-karpathy-development/
         SKILL.md                               # Codex 安装布局

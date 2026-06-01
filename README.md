@@ -9,29 +9,16 @@ It combines:
 1. **Checkpoint-driven development** — split work into small recoverable phases, update `docs/progress.md`, keep scratch output in `.agent-artifacts/`, run verification, and commit every completed phase.
 2. **Karpathy-inspired engineering guardrails** — think before coding, keep solutions simple, avoid speculative abstractions, make surgical changes in existing codebases, and verify against explicit goals.
 
-Recommended GitHub repository name:
-
-```text
-codex-claude-checkpoint-karpathy-workflow
-```
-
-Shorter alternatives:
-
-```text
-checkpoint-karpathy-agent-workflow
-checkpoint-karpathy-dev-skill
-```
-
 ## What is included
 
 ```text
-checkpoint-karpathy-agent-workflow/
+checkpoint-karpathy-development-skills/
   README.md
   SKILL.md                                      # Shared Skill source
   AGENTS.md                                    # Codex project instructions
   CLAUDE.md                                    # Claude Code project memory/instructions
   .gitignore                                   # Ignores .agent-artifacts/
-  codex/
+  .codex/
     skills/
       checkpoint-karpathy-development/
         SKILL.md                               # Codex install layout
@@ -100,7 +87,7 @@ Or from this repository layout:
 
 ```bash
 mkdir -p ~/.codex/skills/checkpoint-karpathy-development
-cp codex/skills/checkpoint-karpathy-development/SKILL.md ~/.codex/skills/checkpoint-karpathy-development/SKILL.md
+cp .codex/skills/checkpoint-karpathy-development/SKILL.md ~/.codex/skills/checkpoint-karpathy-development/SKILL.md
 ```
 
 ### Project instructions
