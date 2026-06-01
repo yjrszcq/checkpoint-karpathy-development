@@ -1,6 +1,6 @@
 ---
 name: checkpoint-karpathy-development
-description: Use this skill for greenfield development, mid-project continuation, feature work, bug fixing, refactoring, or late-stage maintenance where work must be split into recoverable Git checkpoints while following Karpathy-inspired engineering guardrails: think before coding, simplicity first, surgical changes, and goal-driven verification.
+description: "Use this skill for greenfield development, mid-project continuation, feature work, bug fixing, refactoring, or late-stage maintenance where work must be split into recoverable Git checkpoints while following Karpathy-inspired engineering guardrails: think before coding, simplicity first, surgical changes, and goal-driven verification."
 ---
 
 # Checkpoint + Karpathy Development
