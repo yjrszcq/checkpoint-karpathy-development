@@ -118,9 +118,3 @@ Privacy mode:
 ```
 
 Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
-
-## Recommended repository name
-
-```text
-codex-claude-checkpoint-karpathy-workflow
-```

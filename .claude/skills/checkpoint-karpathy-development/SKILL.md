@@ -70,7 +70,7 @@ This directory must be ignored by Git.
 Do not put secrets, credentials, private customer data, or sensitive vulnerability details into committed roadmap or progress files.
 
 ---
----
+
 ## Karpathy-Inspired Guardrails
 
 ### Think Before Coding

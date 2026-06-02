@@ -118,9 +118,3 @@ cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/command
 ```
 
 不要直接忽略整个 `.checkpoint-karpathy/`，除非你有意隐藏全部工作流状态。
-
-## 推荐仓库名
-
-```text
-codex-claude-checkpoint-karpathy-workflow
-```
