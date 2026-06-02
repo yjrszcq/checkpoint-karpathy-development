@@ -1,6 +1,6 @@
 # Checkpoint Karpathy Agent Workflow
 
-[English](README.md) | [简体中文](README_CN.md)
+English | [简体中文](README_CN.md)
 
 A Codex + Claude Code workflow for roadmap-driven, checkpointed software development with Karpathy-inspired engineering guardrails.
 
