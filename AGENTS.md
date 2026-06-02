@@ -1,150 +1,75 @@
-# AGENTS.md
+# Checkpoint Karpathy Agent Workflow
 
-Use checkpoint-karpathy development for this project.
+Use checkpoint-karpathy development for multi-step software work in this project.
 
-This project should be developed, continued, modified, refactored, and maintained in small, recoverable phases. Each meaningful phase must produce a coherent repository state, update persistent progress notes, run appropriate verification, and create a Git commit.
+## Core behavior
 
-This rule applies to:
+When the user gives a concrete development goal:
 
-- starting from zero,
-- continuing an existing project,
-- adding features,
-- fixing bugs,
-- refactoring,
-- late-stage maintenance,
-- release preparation,
-- documentation and configuration changes that affect development.
+1. Select the work mode: greenfield, continuation, feature, bugfix, refactor, or maintenance.
+2. Create or update `.checkpoint-karpathy/roadmap.md`.
+3. Split the goal into major milestones and commit-sized subphases.
+4. Work on one subphase at a time.
+5. Update `.checkpoint-karpathy/progress.md` after each completed subphase.
+6. Run the smallest project-appropriate verification.
+7. Commit each completed subphase.
+8. Keep following the roadmap unless reality changes; if it changes, update the roadmap and record why.
 
-## Main Workflow
+## Karpathy guardrails
 
-For multi-step coding work:
+- Think before coding.
+- Prefer simple, working vertical slices.
+- Avoid speculative abstractions.
+- Make surgical changes in existing codebases.
+- Preserve existing behavior unless the user asks otherwise.
+- Verify against a concrete goal.
 
-1. Select the work mode: greenfield, continuation, feature, bug fix, refactor, or maintenance.
-2. Define a small, concrete phase goal.
-3. Think before coding: identify assumptions, risks, and the smallest useful vertical slice.
-4. Inspect current repository state and `git status` before editing.
-5. Implement the minimal coherent change.
-6. Avoid speculative abstractions and unrelated refactors.
-7. Detect the project stack before choosing verification commands.
-8. Prefer project-declared commands over generic language defaults.
-9. Run the smallest relevant verification.
-10. Update `docs/progress.md`.
-11. Keep scratch/intermediate files under `.agent-artifacts/`.
-12. Ensure `.agent-artifacts/` is listed in `.gitignore`.
-13. Review Git state with `git status`, `git diff`, and `git diff --staged`.
-14. Commit the completed phase.
+## State visibility policy
 
-Do not leave completed phase work uncommitted.
+Default collaborative mode:
 
-## Work Modes
+- Commit `.checkpoint-karpathy/roadmap.md`.
+- Commit `.checkpoint-karpathy/progress.md`.
+- Ignore `.checkpoint-karpathy/private/`.
 
-### Greenfield
+Privacy mode:
 
-For empty or new projects, create the minimum coherent project structure for the current phase. Do not build broad unfinished architecture.
+- If the user asks to keep planning private, add roadmap/progress to `.gitignore`.
+- Do not commit `.checkpoint-karpathy/roadmap.md` or `.checkpoint-karpathy/progress.md` in privacy mode.
 
-### Continuation
+Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential business strategy into committed roadmap/progress files.
 
-For existing projects or partially completed work, first inspect docs, manifests, Git status, and `docs/progress.md` if present. Do not overwrite or discard existing work.
+Use `.checkpoint-karpathy/private/` for sensitive local notes. It must be gitignored.
 
-### Feature
+## No workflow scratch directory
 
-Add one useful vertical slice at a time. Preserve existing behavior and commit each completed slice.
+Do not create or rely on `.checkpoint-karpathy/tmp/` or any other workflow-specific project-local scratch directory unless the user explicitly asks.
 
-### Bug Fix
+Agent-owned temporary files should use the agent/tool's native temporary storage.
 
-Reproduce or characterize the bug when possible. Fix the smallest cause. Verify the fix. Document cause, fix, and verification.
+Do not move or redirect project build outputs, runtime temp files, caches, generated files, dependency files, logs, coverage, tests, manifests, lockfiles, source files, configs, migrations, or required build outputs into a workflow directory.
 
-### Refactor
+Respect the project's existing build, run, and test output conventions.
 
-Preserve behavior. Avoid API, data format, CLI, config, or workflow breakage unless explicitly requested. Verification is mandatory.
+## Gitignore
 
-### Maintenance
-
-Be conservative. Prefer small, low-risk changes. Document compatibility and risk notes.
-
-## Engineering Guardrails
-
-Follow these Karpathy-inspired principles:
-
-- Think before coding; do not hide confusion or assumptions.
-- Simplicity first; use the minimum code that solves the current phase.
-- Surgical changes in existing codebases; touch only what the task requires.
-- Goal-driven execution; every phase needs a verifiable success condition.
-
-For greenfield development, create the minimum coherent project structure required for the current phase.
-
-For existing projects, preserve current behavior and match existing style unless instructed otherwise.
-
-## Language and Stack Neutrality
-
-Do not assume Python, Node, Rust, Go, Java, C++, or any other stack unless the repository or user request indicates it.
-
-Before running checks, infer the stack from:
-
-- project docs,
-- manifests,
-- lockfiles,
-- build files,
-- test configuration,
-- existing scripts.
-
-Prefer project-declared commands over generic language defaults.
-
-If no reliable check command exists, document that honestly in `docs/progress.md`.
-
-## Progress Log
-
-Persistent progress belongs in:
-
-```text
-docs/progress.md
-```
-
-Each phase entry should include:
-
-- work mode,
-- goal,
-- completed work,
-- files changed,
-- verification,
-- decisions,
-- compatibility or risk notes,
-- known issues,
-- next step.
-
-The progress log must be useful to a future agent with no access to the previous conversation.
-
-## Intermediate Files
-
-All scratch or intermediate agent outputs belong under:
-
-```text
-.agent-artifacts/
-```
-
-Examples:
-
-- temporary notes,
-- investigation logs,
-- generated comparison files,
-- throwaway scripts,
-- local transcripts,
-- screenshots used for analysis,
-- experimental outputs,
-- draft plans not meant for the repository.
-
-Ensure `.gitignore` contains:
+Default collaborative mode should ignore only:
 
 ```gitignore
-# Agent scratch/intermediate outputs
-.agent-artifacts/
+.checkpoint-karpathy/private/
 ```
 
-Do not stage or commit `.agent-artifacts/`.
+Privacy mode should ignore:
 
-If an intermediate artifact becomes a real deliverable, move it out of `.agent-artifacts/`, document why in `docs/progress.md`, and commit it as a normal project file.
+```gitignore
+.checkpoint-karpathy/roadmap.md
+.checkpoint-karpathy/progress.md
+.checkpoint-karpathy/private/
+```
 
-## Git Rules
+Do not ignore `.checkpoint-karpathy/` wholesale.
+
+## Git safety
 
 Before staging:
 
@@ -159,38 +84,6 @@ After staging:
 git diff --staged
 ```
 
-Commit message format:
+Stage only relevant files. Do not commit unrelated user changes.
 
-```text
-phase N: <short summary>
-```
-
-Do not commit unrelated user changes.
-
-Do not run destructive Git commands without explicit permission, including:
-
-```bash
-git reset --hard
-git clean
-git rebase
-git commit --amend
-git push --force
-git checkout -- .
-git restore .
-git restore --staged .
-```
-
-Do not commit secrets or generated dependency folders unless the project intentionally tracks them.
-
-## Quota Safety
-
-If the work is large or the session may end soon:
-
-1. Stop expanding scope.
-2. Bring current work to a coherent checkpoint if possible.
-3. Update `docs/progress.md`.
-4. Run the smallest relevant verification.
-5. Commit.
-6. Report what remains.
-
-Never keep large completed work uncommitted.
+Do not run destructive Git commands without explicit permission.

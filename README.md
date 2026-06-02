@@ -1,219 +1,134 @@
 # Checkpoint Karpathy Agent Workflow
 
-English | [简体中文](README_CN.md)
+[English](README.md) | [简体中文](README_CN.md)
 
-A reusable agent workflow for **Codex** and **Claude Code**.
+A Codex + Claude Code workflow for roadmap-driven, checkpointed software development with Karpathy-inspired engineering guardrails.
 
-It combines:
+It is designed for greenfield development, mid-project continuation, feature work, bug fixing, refactoring, late-stage maintenance, and handoffs where work must stay recoverable across quota limits, session resets, and context loss.
 
-1. **Checkpoint-driven development** — split work into small recoverable phases, update `docs/progress.md`, keep scratch output in `.agent-artifacts/`, run verification, and commit every completed phase.
-2. **Karpathy-inspired engineering guardrails** — think before coding, keep solutions simple, avoid speculative abstractions, make surgical changes in existing codebases, and verify against explicit goals.
+## Core idea
 
-## What is included
+Before substantial work, the agent creates or updates a roadmap. Then it works one commit-sized subphase at a time.
+
+Each normal subphase must end with:
+
+- a completed roadmap item,
+- project-appropriate verification,
+- an updated progress log,
+- a Git commit,
+- and a clear next step.
+
+The engineering guardrails are:
+
+- think before coding,
+- keep the solution simple,
+- make surgical changes in existing codebases,
+- verify against a concrete goal.
+
+## Repository state
+
+The workflow uses a namespaced directory:
 
 ```text
-checkpoint-karpathy-development-skills/
-  README.md
-  README_CN.md
-  SKILL.md                                      # Shared Skill source
-  AGENTS.md                                    # Codex project instructions
-  CLAUDE.md                                    # Claude Code project memory/instructions
-  .gitignore                                   # Ignores .agent-artifacts/
-  .codex/
-    skills/
-      checkpoint-karpathy-development/
-        SKILL.md                               # Codex install layout
-  .claude/
-    skills/
-      checkpoint-karpathy-development/
-        SKILL.md                               # Claude Code Skill layout
-    commands/
-      checkpoint-karpathy.md                   # Legacy/custom slash command wrapper
+.checkpoint-karpathy/
+  roadmap.md
+  progress.md
+  private/
 ```
 
-## When to use it
+Default collaborative mode:
 
-Use this workflow for:
+- commit `.checkpoint-karpathy/roadmap.md`,
+- commit `.checkpoint-karpathy/progress.md`,
+- ignore `.checkpoint-karpathy/private/`.
 
-- greenfield development,
-- mid-project continuation,
-- feature development,
-- bug fixing,
-- refactoring,
-- late-stage maintenance,
-- release preparation,
-- documentation/configuration changes that affect development,
-- any multi-step coding task where losing uncommitted progress would be expensive.
+Privacy mode:
 
-Do not use it for tiny one-line edits unless you explicitly want every change checkpointed.
+- ignore `.checkpoint-karpathy/roadmap.md`,
+- ignore `.checkpoint-karpathy/progress.md`,
+- ignore `.checkpoint-karpathy/private/`.
 
-## Core behavior
+Use privacy mode for public repositories or when development planning should not be exposed.
 
-Every completed phase must end with:
+## Scratch and project artifact policy
 
-- a coherent repository state,
-- updated `docs/progress.md`,
-- intermediate/scratch artifacts kept under `.agent-artifacts/`,
-- `.agent-artifacts/` ignored by Git,
-- project-appropriate verification,
-- and a Git commit.
+This workflow does not create a workflow-specific `tmp/` directory.
 
-A phase is not complete until it is committed.
+Agent-owned temporary files should use the agent or tool's native temporary storage. Do not move project files, build outputs, runtime temp files, caches, generated files, coverage, logs, dependency manifests, lockfiles, source files, tests, configs, migrations, or required outputs into a workflow directory.
 
-## Work modes
+Project files belong in the real project tree.
 
-The agent should classify each task before starting:
+## Install for Codex
 
-| Mode | Use case |
-| --- | --- |
-| Greenfield Development | Starting a new project from zero |
-| Mid-Project Continuation | Continuing an existing codebase or unfinished work |
-| Feature Development | Adding a new capability |
-| Bug Fixing | Reproducing, diagnosing, and fixing a bug |
-| Refactoring | Improving structure while preserving behavior |
-| Late-Stage Maintenance | Conservative changes near release or production |
-
-## Codex installation
-
-### Global Skill installation
-
-Copy the Skill into your Codex skills directory:
-
-```bash
-mkdir -p ~/.codex/skills/checkpoint-karpathy-development
-cp SKILL.md ~/.codex/skills/checkpoint-karpathy-development/SKILL.md
-```
-
-Or from this repository layout:
+Copy the skill into Codex's project or user skill directory:
 
 ```bash
 mkdir -p ~/.codex/skills/checkpoint-karpathy-development
 cp .codex/skills/checkpoint-karpathy-development/SKILL.md ~/.codex/skills/checkpoint-karpathy-development/SKILL.md
 ```
 
-### Project instructions
-
-Copy `AGENTS.md` to the target project root:
+For project-level Codex instructions, copy:
 
 ```bash
 cp AGENTS.md /path/to/your/project/AGENTS.md
 ```
 
-Then start Codex from that project and invoke:
+Use it:
 
 ```text
 $checkpoint-karpathy-development
 
-Follow the project AGENTS.md. Work in checkpointed phases: update docs/progress.md, keep scratch files in .agent-artifacts/, run project-appropriate verification, and commit every completed phase.
+Read AGENTS.md. Create or update .checkpoint-karpathy/roadmap.md for this task, complete one roadmap subphase, update .checkpoint-karpathy/progress.md, run project-appropriate verification, and git commit.
 ```
 
-## Claude Code installation
+## Install for Claude Code
 
-Claude Code supports project instructions through `CLAUDE.md` and supports current custom workflow packaging through `.claude/skills/<name>/SKILL.md`. This repository includes both.
-
-### Project-level setup
-
-Copy these files/directories into the target project root:
+For project-level Claude Code instructions, copy:
 
 ```bash
 cp CLAUDE.md /path/to/your/project/CLAUDE.md
+```
+
+Copy the Claude Code skill:
+
+```bash
 mkdir -p /path/to/your/project/.claude/skills/checkpoint-karpathy-development
 cp .claude/skills/checkpoint-karpathy-development/SKILL.md /path/to/your/project/.claude/skills/checkpoint-karpathy-development/SKILL.md
+```
+
+Optional slash command:
+
+```bash
 mkdir -p /path/to/your/project/.claude/commands
 cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/commands/checkpoint-karpathy.md
 ```
 
-Also ensure `.agent-artifacts/` is ignored in the target project:
-
-```bash
-grep -qxF '.agent-artifacts/' /path/to/your/project/.gitignore 2>/dev/null || echo '.agent-artifacts/' >> /path/to/your/project/.gitignore
-```
-
-### Usage in Claude Code
-
-Use the skill directly if available:
+Use it:
 
 ```text
-/checkpoint-karpathy-development <your task>
+/checkpoint-karpathy Continue this project using checkpoint-karpathy development. Select the work mode, update the roadmap, complete one subphase, update progress, verify, and commit.
 ```
 
-Or use the wrapper command included in this repository:
+## Gitignore
+
+Default collaborative mode:
+
+```gitignore
+.checkpoint-karpathy/private/
+```
+
+Privacy mode:
+
+```gitignore
+.checkpoint-karpathy/roadmap.md
+.checkpoint-karpathy/progress.md
+.checkpoint-karpathy/private/
+```
+
+Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
+
+## Recommended repository name
 
 ```text
-/checkpoint-karpathy <your task>
-```
-
-You can also ask in plain language:
-
-```text
-Use checkpoint-karpathy development for this task. Follow CLAUDE.md. Work in small phases, update docs/progress.md, keep scratch files in .agent-artifacts/, run project-appropriate verification, and commit each completed phase.
-```
-
-## Claude Code global/personal setup
-
-For personal use across projects, you may copy the skill to your Claude user directory:
-
-```bash
-mkdir -p ~/.claude/skills/checkpoint-karpathy-development
-cp SKILL.md ~/.claude/skills/checkpoint-karpathy-development/SKILL.md
-```
-
-Legacy/custom command support:
-
-```bash
-mkdir -p ~/.claude/commands
-cp .claude/commands/checkpoint-karpathy.md ~/.claude/commands/checkpoint-karpathy.md
-```
-
-For project-specific behavior, still keep `CLAUDE.md` in the repository root.
-
-## Intermediate artifacts
-
-Use `.agent-artifacts/` for scratch files, temporary analysis outputs, generated notes, draft plans, logs, and other intermediate files that should not be committed.
-
-Keep persistent handoff information in:
-
-```text
-docs/progress.md
-```
-
-If an intermediate artifact becomes a real deliverable, move it out of `.agent-artifacts/`, record the decision in `docs/progress.md`, and commit it.
-
-## Git safety
-
-The workflow forbids destructive Git commands unless the user explicitly asks.
-
-Do not run without explicit permission:
-
-```bash
-git reset --hard
-git clean
-git rebase
-git commit --amend
-git push --force
-git checkout -- .
-git restore .
-git restore --staged .
-```
-
-Do not commit unrelated user changes.
-
-Do not commit secrets.
-
-Respect `.gitignore`.
-
-## Suggested first prompt
-
-For Codex:
-
-```text
-$checkpoint-karpathy-development
-
-Continue this project using checkpoint-karpathy development. First inspect the repo and select the work mode. Then complete one small phase, update docs/progress.md, keep scratch files in .agent-artifacts/, run project-appropriate verification, and git commit.
-```
-
-For Claude Code:
-
-```text
-/checkpoint-karpathy Continue this project using checkpoint-karpathy development. First inspect the repo and select the work mode. Then complete one small phase, update docs/progress.md, keep scratch files in .agent-artifacts/, run project-appropriate verification, and git commit.
+codex-claude-checkpoint-karpathy-workflow
 ```
