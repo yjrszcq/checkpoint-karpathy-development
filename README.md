@@ -50,14 +50,6 @@ Privacy mode:
 
 Use privacy mode for public repositories or when development planning should not be exposed.
 
-## Scratch and project artifact policy
-
-This workflow does not create a workflow-specific `tmp/` directory.
-
-Agent-owned temporary files should use the agent or tool's native temporary storage. Do not move project files, build outputs, runtime temp files, caches, generated files, coverage, logs, dependency manifests, lockfiles, source files, tests, configs, migrations, or required outputs into a workflow directory.
-
-Project files belong in the real project tree.
-
 ## Install for Codex
 
 Copy the skill into Codex's project or user skill directory:

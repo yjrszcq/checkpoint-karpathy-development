@@ -70,48 +70,7 @@ This directory must be ignored by Git.
 Do not put secrets, credentials, private customer data, or sensitive vulnerability details into committed roadmap or progress files.
 
 ---
-
-## No Workflow Scratch Directory
-
-Do not create or rely on a workflow-specific scratch directory such as `.checkpoint-karpathy/tmp/`.
-
-Agent-owned temporary files should use the agent/tool's own native temporary storage when available.
-
-Do not invent a project-local scratch directory unless the user explicitly asks for one.
-
-Most importantly: do not change where the project itself writes build outputs, runtime temporary files, caches, generated files, logs, coverage reports, test artifacts, dependency files, manifests, lockfiles, or source files just to fit this workflow.
-
-Respect the project's existing conventions for:
-
-- build output,
-- cache location,
-- generated code,
-- runtime temporary files,
-- logs,
-- coverage,
-- test artifacts,
-- dependency manifests and lockfiles.
-
-Project files belong in the real project tree. This includes, but is not limited to:
-
-- `go.mod`, `go.sum`,
-- `package.json`, lockfiles,
-- `Cargo.toml`, `Cargo.lock`,
-- `pyproject.toml`, dependency files,
-- `pom.xml`, `build.gradle`,
-- `Makefile`, `CMakeLists.txt`,
-- `Dockerfile`, compose files,
-- source files,
-- tests,
-- configs,
-- migrations,
-- fixtures required by tests,
-- generated files required by the project.
-
-If a project command naturally writes files to a conventional location, do not redirect it unless the project docs or the user explicitly says to do so.
-
 ---
-
 ## Karpathy-Inspired Guardrails
 
 ### Think Before Coding

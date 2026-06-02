@@ -41,16 +41,6 @@ Never put secrets, credentials, private customer data, sensitive vulnerability d
 
 Use `.checkpoint-karpathy/private/` for sensitive local notes. It must be gitignored.
 
-## No workflow scratch directory
-
-Do not create or rely on `.checkpoint-karpathy/tmp/` or any other workflow-specific project-local scratch directory unless the user explicitly asks.
-
-Agent-owned temporary files should use the agent/tool's native temporary storage.
-
-Do not move or redirect project build outputs, runtime temp files, caches, generated files, dependency files, logs, coverage, tests, manifests, lockfiles, source files, configs, migrations, or required build outputs into a workflow directory.
-
-Respect the project's existing build, run, and test output conventions.
-
 ## Gitignore
 
 Default collaborative mode should ignore only:
