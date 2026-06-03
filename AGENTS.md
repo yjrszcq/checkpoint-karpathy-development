@@ -77,4 +77,12 @@ git diff --staged
 
 Stage only relevant files. Do not commit unrelated user changes.
 
+Use Conventional Commits-style messages by default:
+
+```text
+type(scope): English summary
+```
+
+Use English unless the user explicitly requests Chinese or another language. Keep phase labels in `.checkpoint-karpathy/roadmap.md` and `.checkpoint-karpathy/progress.md`, not as the Git commit subject.
+
 Do not run destructive Git commands without explicit permission.

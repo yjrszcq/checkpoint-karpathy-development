@@ -15,7 +15,7 @@
 - 已完成的 roadmap 项；
 - 项目适用的验证；
 - 更新后的 progress 日志；
-- 一个 Git commit；
+- 一个默认使用英文 Conventional Commits 风格提交信息的 Git commit，除非用户明确要求中文或其他语言；
 - 明确的下一步。
 
 当一个大阶段完成时，agent 必须先单独执行 milestone review checkpoint 再继续。这个 checkpoint 不占用下一个规划 Phase/Subphase 编号；它先确认范围，再精简本大阶段工作，运行最完整且相关的验证，审查回归或集成缺口，debug 并修复范围内的问题，重新验证，记录 progress，并提交这次收尾。
@@ -26,6 +26,14 @@
 - 保持方案简单；
 - 在已有代码库里做小范围、精确修改；
 - 围绕具体目标验证结果。
+
+Commit message 默认使用标准工程风格：
+
+```text
+type(scope): English summary
+```
+
+例如 `fix(web): update stale button state` 或 `docs(skill): require conventional commit messages`。只有用户明确要求时才使用中文或其他语言。
 
 ## 仓库状态文件
 

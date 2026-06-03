@@ -13,7 +13,7 @@ Instructions:
 5. For normal subphases, run the smallest project-appropriate verification.
 6. For milestone review checkpoints, do not increment the planned Phase/Subphase number; confirm scope, simplify milestone work, run the broadest relevant verification, review for regressions or integration gaps, debug and fix in-scope issues, and rerun verification.
 7. Update `.checkpoint-karpathy/progress.md`.
-8. Run `git status`, `git diff`, stage relevant files only, run `git diff --staged`, and commit.
+8. Run `git status`, `git diff`, stage relevant files only, run `git diff --staged`, and commit with an English Conventional Commits-style message unless the user requested another language.
 9. Report the commit and the next subphase.
 
 User request:

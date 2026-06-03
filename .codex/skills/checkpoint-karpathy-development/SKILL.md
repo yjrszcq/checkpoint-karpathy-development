@@ -209,13 +209,13 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `phase 1.1: <summary>`
+  - Commit target: `<type>(<scope>): <English summary>`
 
 - [ ] 1.2 <commit-sized goal>
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `phase 1.2: <summary>`
+  - Commit target: `<type>(<scope>): <English summary>`
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.
@@ -224,7 +224,7 @@ Milestone review:
 - Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
 - Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
 - Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
-- Commit target: `milestone 1 review: <summary>`
+- Commit target: `<type>(<scope>): review <English summary>`
 
 ### Milestone 2: <title>
 Purpose: <why this milestone exists>
@@ -234,7 +234,7 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `phase 2.1: <summary>`
+  - Commit target: `<type>(<scope>): <English summary>`
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.
@@ -243,7 +243,7 @@ Milestone review:
 - Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
 - Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
 - Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
-- Commit target: `milestone 2 review: <summary>`
+- Commit target: `<type>(<scope>): review <English summary>`
 
 ## Risks / Blockers
 - <Risk or blocker>
@@ -459,13 +459,20 @@ Do not commit unrelated user changes.
 
 Commit message style:
 
+- Use Conventional Commits-style subjects by default: `type(scope): English summary`.
+- Use English for the commit subject unless the user explicitly requests Chinese or another language.
+- Keep the subject concise, action-oriented, and specific to the completed subphase.
+- Use a scope when it clarifies the touched area, such as `web`, `server`, `docs`, `skill`, `test`, or `config`; omit the scope only when it would be forced.
+- Keep roadmap phase labels in `.checkpoint-karpathy/roadmap.md` and `.checkpoint-karpathy/progress.md`; do not use phase labels as the Git commit subject.
+- Common types include `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`, `style`, and `revert`.
+
 ```text
-phase 1.1: initialize project skeleton
-phase 1.2: add first runnable command
-milestone 1 review: stabilize project skeleton
-phase 2.1: implement core data model
-checkpoint: update roadmap after requirement change
-fix: repair blocking test failure before next roadmap phase
+feat(web): add remote login proxy configuration
+fix(server): store points count as long
+docs(skill): require conventional commit messages
+chore(checkpoint): update roadmap after requirement change
+test(auth): cover expired session refresh
+revert: revert "fix(server): store points count as long"
 ```
 
 Do not run destructive Git commands unless the user explicitly asks.
