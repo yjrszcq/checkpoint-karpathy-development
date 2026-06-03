@@ -18,6 +18,8 @@ Each normal subphase must end with:
 - a Git commit,
 - and a clear next step.
 
+When a major milestone is complete, the agent must perform a standalone milestone review checkpoint before moving on. This checkpoint does not consume the next planned Phase/Subphase number; it confirms scope, simplifies milestone work, runs the broadest relevant verification, reviews for regressions or integration gaps, debugs and fixes in-scope issues, reruns verification, records progress, and commits the closeout.
+
 The engineering guardrails are:
 
 - think before coding,

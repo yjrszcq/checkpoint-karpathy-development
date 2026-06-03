@@ -9,7 +9,7 @@ Use this skill for software work that may span more than one step or may be inte
 
 This workflow combines two ideas:
 
-1. **Roadmap-driven checkpointing** — plan the requested work in `.checkpoint-karpathy/roadmap.md`, split it into major milestones and commit-sized subphases, update `.checkpoint-karpathy/progress.md`, verify each completed subphase, and commit it.
+1. **Roadmap-driven checkpointing** — plan the requested work in `.checkpoint-karpathy/roadmap.md`, split it into major milestones and commit-sized subphases, update `.checkpoint-karpathy/progress.md`, verify and commit each completed subphase, then run a standalone milestone review checkpoint before moving on from a completed major milestone.
 2. **Karpathy-inspired engineering guardrails** — think before coding, keep the solution simple, make surgical changes in existing codebases, and verify against a concrete goal.
 
 The workflow is not limited to starting from zero. It applies to:
@@ -125,6 +125,8 @@ Every subphase must have:
 - a verification method,
 - a commit.
 
+Every major milestone must end with a standalone milestone review checkpoint before the agent starts the next milestone or declares the goal done.
+
 ---
 
 ## Work Mode Selection
@@ -159,6 +161,7 @@ The roadmap must estimate from the current repository state:
 - what each subphase will change,
 - what each subphase's success criteria are,
 - how each subphase will be verified,
+- how each major milestone will be reviewed before moving on,
 - likely risks or blockers,
 - which subphase should be done next.
 
@@ -214,6 +217,15 @@ Subphases:
   - Verification: <project-appropriate check>
   - Commit target: `phase 1.2: <summary>`
 
+Milestone review:
+- Trigger: After the last planned subphase in this milestone is complete.
+- Phase label: `Phase 1.2 Milestone Review: <summary>`; this does not increment to `Phase 1.3`.
+- Scope: Close out only the work introduced or substantially touched by this milestone.
+- Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
+- Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
+- Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
+- Commit target: `milestone 1 review: <summary>`
+
 ### Milestone 2: <title>
 Purpose: <why this milestone exists>
 
@@ -224,6 +236,15 @@ Subphases:
   - Verification: <project-appropriate check>
   - Commit target: `phase 2.1: <summary>`
 
+Milestone review:
+- Trigger: After the last planned subphase in this milestone is complete.
+- Phase label: `Phase 2.1 Milestone Review: <summary>`; this does not increment to `Phase 2.2`.
+- Scope: Close out only the work introduced or substantially touched by this milestone.
+- Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
+- Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
+- Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
+- Commit target: `milestone 2 review: <summary>`
+
 ## Risks / Blockers
 - <Risk or blocker>
 
@@ -233,6 +254,32 @@ Subphases:
 ## Roadmap Change Log
 - <YYYY-MM-DD>: Initial roadmap created.
 ```
+
+---
+
+## Milestone Review Requirement
+
+When all planned subphases in a major milestone are complete, perform a standalone milestone review checkpoint before starting the next milestone or declaring the goal done.
+
+The milestone review is separate from the final planned subphase. It must update `.checkpoint-karpathy/progress.md` and have its own commit, but it does not consume or increment the planned Phase/Subphase number. Reuse the last completed planned phase label with a review suffix, such as:
+
+```md
+## Phase 1.2 Milestone Review: stabilize authentication flow
+```
+
+Do not label this checkpoint as `Phase 1.3` unless `1.3` is an actual planned roadmap subphase.
+
+Use this order for the milestone review:
+
+1. Confirm scope and evidence: restate what the milestone was meant to accomplish and which touched surfaces need review.
+2. Simplify: remove speculative abstractions, unnecessary layers, unused frameworks, unused files, unused imports, and dead paths introduced by the milestone.
+3. Run broad verification: run the broadest project-appropriate verification available for the milestone's touched surface, plus targeted checks for changed behavior.
+4. Review: inspect the whole milestone for regressions, inconsistent behavior, missing tests, stale documentation, roadmap drift, and integration gaps.
+5. Debug and fix: reproduce every failing check or discovered defect that is in scope, isolate the cause, and fix it.
+6. Rerun verification: rerun the failed checks and the broad milestone verification after fixes.
+7. Record and commit: update progress with the review results, update the roadmap if needed, review diffs, and commit the milestone review checkpoint.
+
+Preserve existing behavior unless the user requested a change, and avoid unrelated refactors. Do not mark the milestone complete until simplification, verification results, review findings, debugging, fixes, and final rerun results are recorded in `.checkpoint-karpathy/progress.md`. If a blocking issue cannot be fixed in the review checkpoint, update the roadmap, record the blocker in progress, and commit only a coherent checkpoint that leaves the repository understandable.
 
 ---
 
@@ -279,6 +326,27 @@ Commit: <hash after commit, or pending before commit>
 <The next roadmap subphase or a roadmap update.>
 ```
 
+For a milestone review checkpoint, use a non-incrementing phase label and include:
+
+```md
+## Phase <last planned phase> Milestone Review: <short title>
+
+Date: <YYYY-MM-DD>
+Roadmap item: Milestone <N> Review after Phase <last planned phase>
+Commit: <hash after commit, or pending before commit>
+
+### Goal
+<What the milestone review was meant to stabilize.>
+
+### Closeout Order
+- Scope and evidence: <confirmed milestone goal and touched surface>
+- Simplification: <what was simplified or why no simplification was needed>
+- Broad verification: <initial broad checks and results>
+- Review findings: <findings and outcomes>
+- Debugging / fixes: <bugs found and fixed, or none>
+- Final verification rerun: <failed checks and broad checks rerun after fixes>
+```
+
 Append entries. Do not erase useful prior history.
 
 ---
@@ -295,14 +363,29 @@ For each subphase:
 6. Run the smallest relevant verification.
 7. Update `.checkpoint-karpathy/progress.md`.
 8. Update `.checkpoint-karpathy/roadmap.md` if the plan changed or the item is complete.
-9. Run `git status`.
-10. Review relevant diffs with `git diff`.
-11. Stage only relevant files.
-12. Review staged diff with `git diff --staged`.
-13. Commit the completed subphase.
-14. Report the commit and next subphase.
+9. If this subphase completes a major milestone, set the next step to the standalone Milestone Review Requirement using the same planned phase label with a review suffix.
+10. Run `git status`.
+11. Review relevant diffs with `git diff`.
+12. Stage only relevant files.
+13. Review staged diff with `git diff --staged`.
+14. Commit the completed subphase.
+15. Report the commit and next subphase.
 
 A normal commit should correspond to one completed roadmap subphase.
+
+For each milestone review checkpoint:
+
+1. Confirm that every planned subphase in the milestone is complete and committed.
+2. Use the last planned phase label with a milestone-review suffix; do not increment the planned Phase/Subphase number.
+3. Follow the Milestone Review Requirement order through the final verification rerun.
+4. Update `.checkpoint-karpathy/progress.md` with the milestone review entry.
+5. Update `.checkpoint-karpathy/roadmap.md` to mark the milestone reviewed or to record any blocker.
+6. Run `git status`.
+7. Review relevant diffs with `git diff`.
+8. Stage only relevant files.
+9. Review staged diff with `git diff --staged`.
+10. Commit the milestone review checkpoint.
+11. Report the commit and the next planned subphase or goal completion.
 
 If special circumstances arise, create a temporary checkpoint for the immediate coherent goal, such as:
 
@@ -379,6 +462,7 @@ Commit message style:
 ```text
 phase 1.1: initialize project skeleton
 phase 1.2: add first runnable command
+milestone 1 review: stabilize project skeleton
 phase 2.1: implement core data model
 checkpoint: update roadmap after requirement change
 fix: repair blocking test failure before next roadmap phase
@@ -441,3 +525,10 @@ A subphase is done only when:
 - relevant changes are committed,
 - no unrelated user changes were committed,
 - the next step is recorded.
+
+A major milestone is done only when:
+
+- every planned subphase in that milestone is complete and committed,
+- the standalone milestone review checkpoint is complete and committed,
+- progress records the closeout order, findings, fixes, and final verification rerun,
+- the next planned subphase or goal completion is recorded.

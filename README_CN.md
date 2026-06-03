@@ -18,6 +18,8 @@
 - 一个 Git commit；
 - 明确的下一步。
 
+当一个大阶段完成时，agent 必须先单独执行 milestone review checkpoint 再继续。这个 checkpoint 不占用下一个规划 Phase/Subphase 编号；它先确认范围，再精简本大阶段工作，运行最完整且相关的验证，审查回归或集成缺口，debug 并修复范围内的问题，重新验证，记录 progress，并提交这次收尾。
+
 工程护栏是：
 
 - 先思考再写代码；

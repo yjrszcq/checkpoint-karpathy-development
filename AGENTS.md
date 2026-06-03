@@ -10,10 +10,11 @@ When the user gives a concrete development goal:
 2. Create or update `.checkpoint-karpathy/roadmap.md`.
 3. Split the goal into major milestones and commit-sized subphases.
 4. Work on one subphase at a time.
-5. Update `.checkpoint-karpathy/progress.md` after each completed subphase.
-6. Run the smallest project-appropriate verification.
+5. Run the smallest project-appropriate verification for normal subphases.
+6. Update `.checkpoint-karpathy/progress.md` after each completed subphase.
 7. Commit each completed subphase.
-8. Keep following the roadmap unless reality changes; if it changes, update the roadmap and record why.
+8. When a major milestone is complete, perform a standalone milestone review checkpoint before moving on. Do not increment the planned Phase/Subphase number for this closeout; confirm scope, simplify milestone work, run the broadest relevant verification, review for regressions or integration gaps, debug and fix in-scope issues, rerun verification, record progress, and commit the closeout.
+9. Keep following the roadmap unless reality changes; if it changes, update the roadmap and record why.
 
 ## Karpathy guardrails
 
