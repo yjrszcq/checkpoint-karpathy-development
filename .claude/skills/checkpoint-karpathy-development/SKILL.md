@@ -25,15 +25,67 @@ The workflow is not limited to starting from zero. It applies to:
 
 ---
 
+## Skill Lifecycle
+
+### First-Time Planning
+
+When this skill is first invoked for a development goal, the roadmap must plan completely from the current state to the full achievement of all stated goals. Every major milestone and subphase needed to reach the end state must be included.
+
+Roadmaps are plans, not contracts. They may be updated later if unexpected situations arise, requirements change, or blockers appear. But the initial roadmap must be a complete end-to-end plan, not a partial sketch.
+
+### During Execution
+
+Once this skill is active and the roadmap has subphases remaining:
+
+- Stay in this skill and keep executing subphases one at a time.
+- Do not exit the skill or switch to a different workflow until every subphase and milestone review in the roadmap is complete.
+- The only exception is when the user explicitly asks to exit, pause, or switch modes.
+
+### After Roadmap Completion
+
+When every subphase and milestone review in the roadmap is complete, the goal is done:
+
+- Stop using this skill. Do not invoke it again proactively.
+- Only use this skill again when the user explicitly asks for checkpoint-karpathy development on a new goal.
+
+### Re-invocation and Archiving
+
+When the user asks to use this skill again:
+
+1. Check whether the active roadmap exists and has unfinished subphases.
+2. **If the roadmap is already complete** (all subphases done, all milestone reviews committed):
+   - Archive the current roadmap and progress files before starting fresh.
+   - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`
+   - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/`
+   - `<summary>` is a short kebab-case description of the completed goal (e.g., `2026-07-14-user-auth-system`).
+   - Move `roadmap.md` and `progress.md` into the archive directory.
+   - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
+3. **If the roadmap is not yet complete**:
+   - Continue from the next unfinished subphase.
+   - Do not archive or recreate anything.
+
+---
+
 ## State Files
 
 Use this namespaced directory for durable workflow state:
 
+**Collaborative mode:**
 ```text
 .checkpoint-karpathy/
   roadmap.md
   progress.md
   private/
+  archive/
+```
+
+**Privacy mode:**
+```text
+.checkpoint-karpathy/
+  private/
+    roadmap.md
+    progress.md
+    archive/
 ```
 
 ### Default collaborative mode
@@ -50,10 +102,11 @@ Rationale: roadmap and progress make the work recoverable across sessions and he
 
 If the user asks to keep agent planning private, switch to privacy mode:
 
-- add `.checkpoint-karpathy/roadmap.md` to `.gitignore`,
-- add `.checkpoint-karpathy/progress.md` to `.gitignore`,
-- keep `.checkpoint-karpathy/private/` ignored,
+- place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`,
+- keep `.checkpoint-karpathy/private/` ignored by Git,
 - do not commit roadmap or progress.
+
+Because `.checkpoint-karpathy/private/` is gitignored, the roadmap and progress files are kept private.
 
 Use privacy mode for public repositories or sensitive planning where the user does not want to expose development direction, vulnerability notes, business strategy, or unfinished reasoning.
 
@@ -66,6 +119,8 @@ Put sensitive or non-public notes in:
 ```
 
 This directory must be ignored by Git.
+
+In privacy mode, roadmap and progress files live here alongside other private notes.
 
 Do not put secrets, credentials, private customer data, or sensitive vulnerability details into committed roadmap or progress files.
 
@@ -154,7 +209,7 @@ When the user first gives a concrete development goal for the current task, crea
 .checkpoint-karpathy/roadmap.md
 ```
 
-The roadmap must estimate from the current repository state:
+The roadmap must plan completely from the current repository state to the full achievement of all stated goals:
 
 - how many major milestones are needed,
 - which commit-sized subphases belong to each milestone,
@@ -397,6 +452,20 @@ If special circumstances arise, create a temporary checkpoint for the immediate 
 
 After such a checkpoint, return to the roadmap.
 
+### Lifecycle Behavior During Execution
+
+While this skill is active:
+
+- After completing a subphase or milestone review, immediately proceed to the next roadmap item.
+- Do not stop, pause, or switch workflows between subphases unless the user explicitly asks.
+- Keep executing subphases until every item in the roadmap is complete.
+
+When the final milestone review is committed and the roadmap is fully complete:
+
+- Report that the goal is complete.
+- Stop using this skill. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
+- If the user later asks to use this skill again, follow the re-invocation and archiving procedure in the Skill Lifecycle section.
+
 ---
 
 ## Stack-Neutral Verification
@@ -502,19 +571,13 @@ If commit fails because Git identity is missing, do not fabricate identity. Repo
 
 ## Gitignore Policy
 
-Default collaborative mode `.gitignore` entry:
+Both collaborative mode and privacy mode use the same `.gitignore` entry:
 
 ```gitignore
 .checkpoint-karpathy/private/
 ```
 
-Privacy mode `.gitignore` entries:
-
-```gitignore
-.checkpoint-karpathy/roadmap.md
-.checkpoint-karpathy/progress.md
-.checkpoint-karpathy/private/
-```
+In collaborative mode, this keeps the `private/` notes directory out of version control. In privacy mode, `roadmap.md` and `progress.md` are placed inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
 
 Do not add `.checkpoint-karpathy/` wholesale to `.gitignore`, because that would hide roadmap and progress even in collaborative mode.
 
@@ -539,3 +602,11 @@ A major milestone is done only when:
 - the standalone milestone review checkpoint is complete and committed,
 - progress records the closeout order, findings, fixes, and final verification rerun,
 - the next planned subphase or goal completion is recorded.
+
+The full roadmap is complete only when:
+
+- every major milestone and its review checkpoint are done and committed,
+- progress records the final milestone review,
+- the next step is recorded as goal completion.
+
+After full roadmap completion, stop using this skill. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.

@@ -7,7 +7,7 @@ Use checkpoint-karpathy development for multi-step software work in this project
 When the user gives a concrete development goal:
 
 1. Select the work mode: greenfield, continuation, feature, bugfix, refactor, or maintenance.
-2. Create or update `.checkpoint-karpathy/roadmap.md`.
+2. Create or update `.checkpoint-karpathy/roadmap.md`. The initial roadmap must plan completely from the current state to the full achievement of all stated goals.
 3. Split the goal into major milestones and commit-sized subphases.
 4. Work on one subphase at a time.
 5. Run the smallest project-appropriate verification for normal subphases.
@@ -15,6 +15,15 @@ When the user gives a concrete development goal:
 7. Commit each completed subphase.
 8. When a major milestone is complete, perform a standalone milestone review checkpoint before moving on. Do not increment the planned Phase/Subphase number for this closeout; confirm scope, simplify milestone work, run the broadest relevant verification, review for regressions or integration gaps, debug and fix in-scope issues, rerun verification, record progress, and commit the closeout.
 9. Keep following the roadmap unless reality changes; if it changes, update the roadmap and record why.
+
+## Skill lifecycle
+
+- **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. It may be updated later if unexpected situations arise.
+- **During execution:** Once this skill is active, stay in it and execute subphases one at a time until the entire roadmap is complete. Do not exit or switch workflows unless the user explicitly asks.
+- **After completion:** When every subphase and milestone review is done, stop using this skill. Do not invoke it again proactively.
+- **Re-invocation:** When the user asks to use this skill again:
+  - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/` in privacy mode), then create fresh roadmap and progress files for the new goal.
+  - If the roadmap is not yet complete, continue from the next unfinished subphase.
 
 ## Karpathy guardrails
 
@@ -35,8 +44,9 @@ Default collaborative mode:
 
 Privacy mode:
 
-- If the user asks to keep planning private, add roadmap/progress to `.gitignore`.
-- Do not commit `.checkpoint-karpathy/roadmap.md` or `.checkpoint-karpathy/progress.md` in privacy mode.
+- If the user asks to keep planning private, place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`.
+- Do not commit roadmap or progress in privacy mode.
+- Because `.checkpoint-karpathy/private/` is gitignored, all planning state stays private.
 
 Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential business strategy into committed roadmap/progress files.
 
@@ -44,19 +54,13 @@ Use `.checkpoint-karpathy/private/` for sensitive local notes. It must be gitign
 
 ## Gitignore
 
-Default collaborative mode should ignore only:
+Both collaborative and privacy mode use the same single entry:
 
 ```gitignore
 .checkpoint-karpathy/private/
 ```
 
-Privacy mode should ignore:
-
-```gitignore
-.checkpoint-karpathy/roadmap.md
-.checkpoint-karpathy/progress.md
-.checkpoint-karpathy/private/
-```
+In privacy mode, `roadmap.md` and `progress.md` are inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
 
 Do not ignore `.checkpoint-karpathy/` wholesale.
 
