@@ -50,17 +50,18 @@ When every subphase and milestone review in the roadmap is complete, the goal is
 
 ### Re-invocation and Archiving
 
-When the user explicitly asks to use this skill again, or when a new conversation begins and the unfinished roadmap indicates this skill should resume:
+This procedure applies in two situations: the user explicitly asks to use this skill for a new goal, or a new conversation begins and an unfinished roadmap indicates development should continue.
 
-1. Check whether the active roadmap exists.
-2. **If the roadmap is already complete** (all subphases done, all milestone reviews committed):
+1. Check whether `.checkpoint-karpathy/roadmap.md` (or `.checkpoint-karpathy/private/roadmap.md` in privacy mode) exists.
+2. **No roadmap exists:** This is first-time use. Follow the First-Time Planning procedure.
+3. **Roadmap exists and is complete** (all subphases done, all milestone reviews committed):
    - This is a new goal. Archive the current roadmap and progress files before starting fresh.
    - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`
    - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/`
    - `<summary>` is a short kebab-case description of the completed goal (e.g., `2026-07-14-user-auth-system`).
    - Move `roadmap.md` and `progress.md` into the archive directory.
    - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
-3. **If the roadmap is not yet complete**:
+4. **Roadmap exists and is not yet complete:**
    - Resume from the next unfinished subphase.
    - Do not archive or recreate anything.
 
@@ -454,10 +455,10 @@ After such a checkpoint, return to the roadmap.
 
 ### Lifecycle Behavior During Execution
 
-While this skill is active and the roadmap has unfinished items:
+Within a conversation, while this skill is active and the roadmap has unfinished items:
 
-- After completing a subphase or milestone review within a conversation, immediately proceed to the next roadmap item.
-- A conversation may naturally end (session limit, quota, user closes it) between subphases. That is expected — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
+- After completing a subphase or milestone review, immediately proceed to the next roadmap item.
+- Keep executing until this conversation ends or the roadmap is complete.
 
 When the final milestone review is committed and the roadmap is fully complete:
 

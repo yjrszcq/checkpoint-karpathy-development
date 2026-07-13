@@ -22,6 +22,7 @@ When the user gives a concrete development goal:
 - **During execution:** Every development-related conversation must use this skill until the roadmap is complete. A conversation may naturally end (session limit, quota) between subphases — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
 - **After completion:** When every subphase and milestone review is done, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
 - **Re-invocation:** When the user asks to use this skill for a new goal, or when a new conversation continues an unfinished roadmap:
+  - If no roadmap exists, this is first-time use — plan from scratch.
   - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/` in privacy mode), then create fresh roadmap and progress files for the new goal.
   - If the roadmap is not yet complete, resume from the next unfinished subphase.
 
