@@ -29,7 +29,10 @@ The workflow is not limited to starting from zero. It applies to:
 
 ### First-Time Planning
 
-When this skill is first invoked for a development goal, the roadmap must plan completely from the current state to the full achievement of all stated goals. Every major milestone and subphase needed to reach the end state must be included.
+When this skill is first invoked for a development goal:
+
+- The roadmap must plan completely from the current state to the full achievement of all stated goals. Every major milestone and subphase needed to reach the end state must be included.
+- The agent should state the current defaults: collaborative mode (roadmap and progress are committed) and Phase-style commit messages. Tell the user these can be changed — privacy mode moves roadmap and progress into the gitignored `private/` directory, and Professional-style uses Conventional Commits format.
 
 Roadmaps are plans, not contracts. They may be updated later if unexpected situations arise, requirements change, or blockers appear. But the initial roadmap must be a complete end-to-end plan, not a partial sketch.
 
