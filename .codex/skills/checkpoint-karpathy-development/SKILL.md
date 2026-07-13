@@ -58,7 +58,7 @@ This procedure applies in two situations: the user explicitly asks to use this s
    - This is a new goal. Archive the current roadmap and progress files before starting fresh.
    - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`
    - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/`
-   - `<summary>` is a short kebab-case description of the completed goal (e.g., `2026-07-14-user-auth-system`).
+   - `<summary>` is a brief kebab-case label for the completed goal (e.g., `user-auth`). Keep it short — it is a directory name.
    - Move `roadmap.md` and `progress.md` into the archive directory.
    - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
 4. **Roadmap exists and is not yet complete:**
