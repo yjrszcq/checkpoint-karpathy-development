@@ -82,13 +82,19 @@ git diff --staged
 
 Stage only relevant files. Do not commit unrelated user changes.
 
-Use Conventional Commits-style messages by default:
+Commit messages — pick one style and stay consistent:
 
+Phase-style (default for roadmap-driven work):
 ```text
-type(scope): English summary
+Phase X.Y: <description>
 ```
 
-Use English unless the user explicitly requests Chinese or another language. Keep phase labels in `.checkpoint-karpathy/roadmap.md` and `.checkpoint-karpathy/progress.md`, not as the Git commit subject.
+Professional-style (Conventional Commits):
+```text
+type(scope): <English summary>
+```
+
+Description defaults to English. Do not commit unrelated user changes.
 
 Do not run destructive Git commands without explicit permission.
 
