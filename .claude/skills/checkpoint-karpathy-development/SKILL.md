@@ -39,8 +39,6 @@ Once this skill is active and the roadmap has subphases remaining:
 
 - Every development-related conversation must use this skill until the roadmap is complete. The user does not need to re-invoke it each time.
 - When a conversation ends (session limit, quota, or user closes it), the skill itself is not "exited" — the roadmap persists. The next conversation that continues development work should automatically resume this skill from the next unfinished subphase.
-- Do not switch to a different workflow or drop out of the skill while the roadmap has unfinished items. The only exception is when the user explicitly asks to exit, pause, or switch modes.
-- Conversations may naturally end between subphases — that is expected and fine. The work resumes with this skill when the next development conversation begins.
 
 ### After Roadmap Completion
 
@@ -459,7 +457,6 @@ After such a checkpoint, return to the roadmap.
 While this skill is active and the roadmap has unfinished items:
 
 - After completing a subphase or milestone review within a conversation, immediately proceed to the next roadmap item.
-- Do not stop, pause, or switch workflows between subphases within a conversation unless the user explicitly asks.
 - A conversation may naturally end (session limit, quota, user closes it) between subphases. That is expected — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
 
 When the final milestone review is committed and the roadmap is fully complete:
