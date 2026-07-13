@@ -8,7 +8,11 @@ It is designed for greenfield development, mid-project continuation, feature wor
 
 ## Core idea
 
-Before substantial work, the agent creates or updates a roadmap. Then it works one commit-sized subphase at a time.
+Before substantial work, the agent creates or updates a roadmap that plans completely from the current state to the full achievement of all stated goals.
+
+Once active, the skill stays active across conversations until the roadmap is complete. Each new development conversation automatically resumes from the next unfinished subphase — the user does not need to re-invoke it.
+
+When the roadmap is complete, the skill deactivates. If the user later asks to use it again for a new goal, the completed roadmap and progress are archived to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`.
 
 Each normal subphase must end with:
 
@@ -39,11 +43,22 @@ For example, `fix(web): update stale button state` or `docs(skill): require conv
 
 The workflow uses a namespaced directory:
 
+**Collaborative mode:**
 ```text
 .checkpoint-karpathy/
   roadmap.md
   progress.md
   private/
+  archive/
+```
+
+**Privacy mode:**
+```text
+.checkpoint-karpathy/
+  private/
+    roadmap.md
+    progress.md
+    archive/
 ```
 
 Default collaborative mode:
@@ -54,9 +69,9 @@ Default collaborative mode:
 
 Privacy mode:
 
-- ignore `.checkpoint-karpathy/roadmap.md`,
-- ignore `.checkpoint-karpathy/progress.md`,
-- ignore `.checkpoint-karpathy/private/`.
+- place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`,
+- keep `.checkpoint-karpathy/private/` ignored by Git,
+- do not commit roadmap or progress.
 
 Use privacy mode for public repositories or when development planning should not be exposed.
 
@@ -113,18 +128,14 @@ Use it:
 
 ## Gitignore
 
-Default collaborative mode:
+Add one line to `.gitignore`:
 
 ```gitignore
 .checkpoint-karpathy/private/
 ```
 
-Privacy mode:
+In privacy mode, `roadmap.md` and `progress.md` live inside `private/` and are covered automatically. In collaborative mode, this keeps sensitive notes out of version control.
 
-```gitignore
-.checkpoint-karpathy/roadmap.md
-.checkpoint-karpathy/progress.md
-.checkpoint-karpathy/private/
-```
+Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
 
 Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
