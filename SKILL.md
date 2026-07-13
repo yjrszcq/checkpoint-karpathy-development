@@ -59,9 +59,10 @@ This procedure applies in two situations: the user explicitly asks to use this s
 2. **No roadmap exists:** This is first-time use. Follow the First-Time Planning procedure.
 3. **Roadmap exists and is complete** (all subphases done, all milestone reviews committed):
    - This is a new goal. Archive the current roadmap and progress files before starting fresh.
-   - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`
-   - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/`
-   - `<summary>` is a brief kebab-case label for the completed goal (e.g., `user-auth`). Keep it short — it is a directory name.
+   - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/`
+   - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/`
+   - The letter after the date (`a`, `b`, …, `z`, `aa`, `ab`, …) auto-increments to avoid collisions when archiving multiple times on the same day.
+- `<summary>` is a brief kebab-case label for the completed goal (e.g., `user-auth`). Keep it short — it is a directory name.
    - Move `roadmap.md` and `progress.md` into the archive directory.
    - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
 4. **Roadmap exists and is not yet complete:**

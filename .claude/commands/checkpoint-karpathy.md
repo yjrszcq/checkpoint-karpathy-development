@@ -9,7 +9,7 @@ Instructions:
 1. Read project instructions, including `CLAUDE.md` and `AGENTS.md` if present.
 2. **Re-invocation check:** Check if `.checkpoint-karpathy/roadmap.md` (or `.checkpoint-karpathy/private/roadmap.md` in privacy mode) exists.
    - **No roadmap:** First-time use — proceed to step 3.
-   - **Roadmap is complete:** Archive it to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/` in privacy mode). `<summary>` is a brief kebab-case label — keep it short, it is a directory name. Then create a fresh roadmap and progress for the new goal.
+   - **Roadmap is complete:** Archive it to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode). The letter auto-increments (`a`, `b`, …, `z`, `aa`, …) to avoid collisions when archiving multiple times on the same day. Then create a fresh roadmap and progress for the new goal.
    - **Roadmap is not yet complete:** Resume from the next unfinished subphase.
 3. Select the work mode: greenfield, continuation, feature, bugfix, refactor, or maintenance.
 4. Create or update the roadmap. The initial roadmap must plan completely to achieve all stated goals.
@@ -17,7 +17,7 @@ Instructions:
 6. For normal subphases, run the smallest project-appropriate verification.
 7. For milestone review checkpoints, do not increment the planned Phase/Subphase number; confirm scope, simplify milestone work, run the broadest relevant verification, review for regressions or integration gaps, debug and fix in-scope issues, and rerun verification.
 8. Update progress.
-9. Run `git status`, `git diff`, stage relevant files only, run `git diff --staged`, and commit with an English Conventional Commits-style message unless the user requested another language.
+9. Run `git status`, `git diff`, stage relevant files only, run `git diff --staged`, and commit (Phase-style or Professional-style; description defaults to English).
 10. Report the commit and the next subphase.
 11. **Continue until done:** If there are more subphases remaining, proceed to the next one within this conversation. If this conversation ends, the next development conversation should automatically resume this skill from the next unfinished subphase. If the roadmap is fully complete, report goal completion — the skill is no longer active.
 

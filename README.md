@@ -12,7 +12,7 @@ Before substantial work, the agent creates or updates a roadmap that plans compl
 
 Once active, the skill stays active across conversations until the roadmap is complete. Each new development conversation automatically resumes from the next unfinished subphase — the user does not need to re-invoke it.
 
-When the roadmap is complete, the skill deactivates. If the user later asks to use it again for a new goal, the completed roadmap and progress are archived to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`.
+When the roadmap is complete, the skill deactivates. If the user later asks to use it again for a new goal, the completed roadmap and progress are archived to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/`.
 
 Each normal subphase must end with:
 

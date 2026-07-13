@@ -12,7 +12,7 @@
 
 skill 激活后，在 roadmap 完成之前会跨对话持续使用。每次新的开发对话自动从下一未完成子阶段恢复——用户无需重复调用。
 
-roadmap 全部完成后，skill 自动停用。如果用户后续要求再次使用，已完成的 roadmap 和 progress 会被归档到 `.checkpoint-karpathy/archive/YYYY-MM-DD-<概括>/`。
+roadmap 全部完成后，skill 自动停用。如果用户后续要求再次使用，已完成的 roadmap 和 progress 会被归档到 `.checkpoint-karpathy/archive/YYYYMMDDa-<概括>/`。
 
 每个正常小阶段结束时必须有：
 
