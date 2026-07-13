@@ -19,8 +19,22 @@ Each normal subphase must end with:
 - a completed roadmap item,
 - project-appropriate verification,
 - an updated progress log,
-- a Git commit using an English Conventional Commits-style message unless the user requests another language,
+- a Git commit,
 - and a clear next step.
+
+Commit messages use one of two styles:
+
+Phase-style (default):
+```text
+Phase X.Y: <description>
+```
+
+Professional-style (Conventional Commits):
+```text
+type(scope): <English summary>
+```
+
+Description defaults to English. Use another language only when the user asks.
 
 When a major milestone is complete, the agent must perform a standalone milestone review checkpoint before moving on. This checkpoint does not consume the next planned Phase/Subphase number; it confirms scope, simplifies milestone work, runs the broadest relevant verification, reviews for regressions or integration gaps, debugs and fixes in-scope issues, reruns verification, records progress, and commits the closeout.
 
@@ -30,14 +44,6 @@ The engineering guardrails are:
 - keep the solution simple,
 - make surgical changes in existing codebases,
 - verify against a concrete goal.
-
-Commit messages default to standard engineering style:
-
-```text
-type(scope): English summary
-```
-
-For example, `fix(web): update stale button state` or `docs(skill): require conventional commit messages`. Use another language only when the user asks for it.
 
 ## Repository state
 
