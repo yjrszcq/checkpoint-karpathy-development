@@ -31,7 +31,7 @@ Phase X.Y: <描述>
 
 Professional-style（Conventional Commits）：
 ```text
-type(scope): <英文摘要>
+type(scope): <描述>
 ```
 
 描述默认英文，只有用户明确要求时才使用中文或其他语言。

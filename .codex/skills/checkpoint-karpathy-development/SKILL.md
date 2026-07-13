@@ -268,13 +268,13 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <English summary>`
+  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
 
 - [ ] 1.2 <commit-sized goal>
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <English summary>`
+  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.
@@ -293,7 +293,7 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <English summary>`
+  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.

@@ -91,7 +91,7 @@ Phase X.Y: <description>
 
 Professional-style (Conventional Commits):
 ```text
-type(scope): <English summary>
+type(scope): <summary>
 ```
 
 Description defaults to English; use another language only when the user asks. Do not commit unrelated user changes.
