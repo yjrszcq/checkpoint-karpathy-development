@@ -540,7 +540,7 @@ Phase X.Y: <description>
 type(scope): <English summary>
 ```
 - Uses Conventional Commits types and scopes.
-- Description defaults to English.
+- Description defaults to English; use another language only when the user asks.
 - Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`, `style`, `revert`.
 - Common scopes: `web`, `server`, `docs`, `skill`, `test`, `config`, or omit when forced.
 - Examples:

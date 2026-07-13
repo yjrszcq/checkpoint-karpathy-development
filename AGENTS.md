@@ -94,6 +94,6 @@ Professional-style (Conventional Commits):
 type(scope): <English summary>
 ```
 
-Description defaults to English. Do not commit unrelated user changes.
+Description defaults to English; use another language only when the user asks. Do not commit unrelated user changes.
 
 Do not run destructive Git commands without explicit permission.
