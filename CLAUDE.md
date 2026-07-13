@@ -19,11 +19,11 @@ When the user gives a concrete development goal:
 ## Skill lifecycle
 
 - **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. It may be updated later if unexpected situations arise.
-- **During execution:** Once this skill is active, stay in it and execute subphases one at a time until the entire roadmap is complete. Do not exit or switch workflows unless the user explicitly asks.
-- **After completion:** When every subphase and milestone review is done, stop using this skill. Do not invoke it again proactively.
-- **Re-invocation:** When the user asks to use this skill again:
+- **During execution:** Every development-related conversation must use this skill until the roadmap is complete. A conversation may naturally end (session limit, quota) between subphases — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase. Do not switch workflows mid-conversation unless the user explicitly asks.
+- **After completion:** When every subphase and milestone review is done, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
+- **Re-invocation:** When the user asks to use this skill for a new goal, or when a new conversation continues an unfinished roadmap:
   - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/` in privacy mode), then create fresh roadmap and progress files for the new goal.
-  - If the roadmap is not yet complete, continue from the next unfinished subphase.
+  - If the roadmap is not yet complete, resume from the next unfinished subphase.
 
 ## Karpathy guardrails
 

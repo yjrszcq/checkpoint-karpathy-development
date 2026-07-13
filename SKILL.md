@@ -37,31 +37,33 @@ Roadmaps are plans, not contracts. They may be updated later if unexpected situa
 
 Once this skill is active and the roadmap has subphases remaining:
 
-- Stay in this skill and keep executing subphases one at a time.
-- Do not exit the skill or switch to a different workflow until every subphase and milestone review in the roadmap is complete.
-- The only exception is when the user explicitly asks to exit, pause, or switch modes.
+- Every development-related conversation must use this skill until the roadmap is complete. The user does not need to re-invoke it each time.
+- When a conversation ends (session limit, quota, or user closes it), the skill itself is not "exited" — the roadmap persists. The next conversation that continues development work should automatically resume this skill from the next unfinished subphase.
+- Do not switch to a different workflow or drop out of the skill while the roadmap has unfinished items. The only exception is when the user explicitly asks to exit, pause, or switch modes.
+- Conversations may naturally end between subphases — that is expected and fine. The work resumes with this skill when the next development conversation begins.
 
 ### After Roadmap Completion
 
 When every subphase and milestone review in the roadmap is complete, the goal is done:
 
-- Stop using this skill. Do not invoke it again proactively.
+- The skill is no longer active. Do not invoke it proactively in future conversations.
 - Only use this skill again when the user explicitly asks for checkpoint-karpathy development on a new goal.
+- Normal development questions or minor edits after completion do not need this skill.
 
 ### Re-invocation and Archiving
 
-When the user asks to use this skill again:
+When the user explicitly asks to use this skill again, or when a new conversation begins and the unfinished roadmap indicates this skill should resume:
 
-1. Check whether the active roadmap exists and has unfinished subphases.
+1. Check whether the active roadmap exists.
 2. **If the roadmap is already complete** (all subphases done, all milestone reviews committed):
-   - Archive the current roadmap and progress files before starting fresh.
+   - This is a new goal. Archive the current roadmap and progress files before starting fresh.
    - Collaborative mode archive path: `.checkpoint-karpathy/archive/YYYY-MM-DD-<summary>/`
    - Privacy mode archive path: `.checkpoint-karpathy/private/archive/YYYY-MM-DD-<summary>/`
    - `<summary>` is a short kebab-case description of the completed goal (e.g., `2026-07-14-user-auth-system`).
    - Move `roadmap.md` and `progress.md` into the archive directory.
    - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
 3. **If the roadmap is not yet complete**:
-   - Continue from the next unfinished subphase.
+   - Resume from the next unfinished subphase.
    - Do not archive or recreate anything.
 
 ---
@@ -454,17 +456,16 @@ After such a checkpoint, return to the roadmap.
 
 ### Lifecycle Behavior During Execution
 
-While this skill is active:
+While this skill is active and the roadmap has unfinished items:
 
-- After completing a subphase or milestone review, immediately proceed to the next roadmap item.
-- Do not stop, pause, or switch workflows between subphases unless the user explicitly asks.
-- Keep executing subphases until every item in the roadmap is complete.
+- After completing a subphase or milestone review within a conversation, immediately proceed to the next roadmap item.
+- Do not stop, pause, or switch workflows between subphases within a conversation unless the user explicitly asks.
+- A conversation may naturally end (session limit, quota, user closes it) between subphases. That is expected — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
 
 When the final milestone review is committed and the roadmap is fully complete:
 
 - Report that the goal is complete.
-- Stop using this skill. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
-- If the user later asks to use this skill again, follow the re-invocation and archiving procedure in the Skill Lifecycle section.
+- The skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
 
 ---
 
@@ -609,4 +610,4 @@ The full roadmap is complete only when:
 - progress records the final milestone review,
 - the next step is recorded as goal completion.
 
-After full roadmap completion, stop using this skill. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
+After full roadmap completion, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
