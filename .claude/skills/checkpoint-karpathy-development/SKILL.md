@@ -421,7 +421,7 @@ For each subphase:
 5. Detect the project stack before choosing verification.
 6. Run the smallest relevant verification.
 7. Update `.checkpoint-karpathy/progress.md`.
-8. Update `.checkpoint-karpathy/roadmap.md` if the plan changed or the item is complete.
+8. Update `.checkpoint-karpathy/roadmap.md`: mark the completed subphase checkbox from `[ ]` to `[x]`, update the Next Subphase field, and record any plan changes.
 9. If this subphase completes a major milestone, set the next step to the standalone Milestone Review Requirement using the same planned phase label with a review suffix.
 10. Run `git status`.
 11. Review relevant diffs with `git diff`.
@@ -438,7 +438,7 @@ For each milestone review checkpoint:
 2. Use the last planned phase label with a milestone-review suffix; do not increment the planned Phase/Subphase number.
 3. Follow the Milestone Review Requirement order through the final verification rerun.
 4. Update `.checkpoint-karpathy/progress.md` with the milestone review entry.
-5. Update `.checkpoint-karpathy/roadmap.md` to mark the milestone reviewed or to record any blocker.
+5. Update `.checkpoint-karpathy/roadmap.md`: mark the milestone as reviewed (all its subphase checkboxes should already be `[x]`), update the Next Subphase field, and record any blocker.
 6. Run `git status`.
 7. Review relevant diffs with `git diff`.
 8. Stage only relevant files.
