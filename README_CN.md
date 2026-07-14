@@ -143,5 +143,3 @@ cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/command
 隐私模式下 `roadmap.md` 和 `progress.md` 放在 `private/` 内，自动被覆盖。协作模式下仅敏感笔记被忽略。
 
 不要直接忽略整个 `.checkpoint-karpathy/`，除非你有意隐藏全部工作流状态。
-
-不要直接忽略整个 `.checkpoint-karpathy/`，除非你有意隐藏全部工作流状态。

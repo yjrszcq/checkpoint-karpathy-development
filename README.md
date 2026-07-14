@@ -143,5 +143,3 @@ Add one line to `.gitignore`:
 In privacy mode, `roadmap.md` and `progress.md` live inside `private/` and are covered automatically. In collaborative mode, this keeps sensitive notes out of version control.
 
 Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
-
-Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
