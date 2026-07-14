@@ -9,7 +9,7 @@ Instructions:
 1. Read project instructions, including `CLAUDE.md` and `AGENTS.md` if present.
 2. **Re-invocation check:** Check if `.checkpoint-karpathy/roadmap.md` (or `.checkpoint-karpathy/private/roadmap.md` in privacy mode) exists.
    - **No roadmap:** First-time use — proceed to step 3.
-   - **Roadmap is complete:** Archive it to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode). The letter auto-increments (`a`, `b`, …, `z`, `aa`, …) to avoid collisions when archiving multiple times on the same day. Then create a fresh roadmap and progress for the new goal.
+   - **Roadmap is complete:** Archive it to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode). `<summary>` describes the **completed goal being archived** (read it from the old roadmap), not the new one. The letter auto-increments to avoid same-day collisions. Then create a fresh roadmap and progress for the new goal.
    - **Roadmap is not yet complete:** Resume from the next unfinished subphase.
 3. Select the work mode: greenfield, continuation, feature, bugfix, refactor, or maintenance.
 4. Create or update the roadmap. The initial roadmap must plan completely to achieve all stated goals.
