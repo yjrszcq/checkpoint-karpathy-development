@@ -68,6 +68,10 @@ This procedure applies in two situations: the user explicitly asks to use this s
    - Resume from the next unfinished subphase.
    - Do not archive or recreate anything.
 
+**Mode persistence:** When the skill has been used before, keep the previous configuration — privacy or collaborative mode, Phase-style or Professional-style commits. Only state the defaults on actual first-time use.
+
+To determine the previous mode: check where the existing `roadmap.md` lives (root of `.checkpoint-karpathy/` = collaborative; inside `private/` = privacy) and check the commit history for the message style used. On resume, the file location already determines the mode. When archiving and starting fresh, carry the previous mode forward.
+
 ---
 
 ## State Files

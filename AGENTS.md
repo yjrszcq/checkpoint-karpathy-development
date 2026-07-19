@@ -25,6 +25,7 @@ When the user gives a concrete development goal:
   - If no roadmap exists, this is first-time use — plan from scratch.
   - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode; the letter auto-increments to avoid collisions), then create fresh roadmap and progress files for the new goal.
   - If the roadmap is not yet complete, resume from the next unfinished subphase.
+  - **Mode persistence:** When the skill has been used before, keep the previous privacy/collaborative mode and commit style. Only state the defaults on actual first-time use.
 
 ## Karpathy guardrails
 
