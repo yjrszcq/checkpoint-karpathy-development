@@ -71,6 +71,14 @@ Never put secrets, credentials, private customer data, sensitive vulnerability d
 
 Use `.checkpoint-karpathy/private/` for sensitive local notes. It must be gitignored.
 
+## Temporary work files
+
+Ensure `.checkpoint-karpathy/private/work/` exists in both modes and is covered by the `.checkpoint-karpathy/private/` Git ignore rule. Keep this directory in place during mode changes and goal archiving.
+
+Store temporary project files in meaningful subdirectories by purpose or task; keep the `work/` root free of loose files. Create categories only as needed, such as `logs/` for command output, `tools/` and `probes/` for temporary scripts, `reports/` and `reviews/` for analysis, `browser/` and `screenshots/` for browser evidence, `configs/` and `fixtures/` for temporary inputs, `backups/` and `drafts/` for intermediate copies, and `bin/` and `artifacts/` for generated output. Subdivide large categories by task or run; task-specific directories may group related scripts, logs, and reports together.
+
+Keep permanent project files and user deliverables in their intended locations. Record durable conclusions and verification summaries in progress.
+
 ## Gitignore
 
 Both collaborative and privacy mode use the same single entry:

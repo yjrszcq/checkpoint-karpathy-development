@@ -82,6 +82,8 @@ Before planning or executing work each time this skill is used, look for `config
 - If none exists, create it before roadmap or progress files. For each setting, use the user's explicit choice when provided; otherwise use `collaborative` mode and `conventional` commit message style.
 - If both locations contain a configuration, ask the user which one to keep as the active configuration before proceeding.
 
+Ensure `.checkpoint-karpathy/private/work/` exists and `.checkpoint-karpathy/private/` is ignored by Git in both modes.
+
 Use this Markdown structure, filling in the selected values:
 
 ```md
@@ -107,7 +109,7 @@ When the user requests a mode or style change, update only the requested setting
 
 For a mode change, move the active configuration, roadmap, and progress files together to the selected directory, preserving their contents. Check for destination conflicts before moving; do not overwrite existing state. Keep `.checkpoint-karpathy/private/` gitignored. In collaborative mode, commit the active state files; in privacy mode, keep them untracked and include removal of any formerly tracked active state paths in the next relevant commit. Moving files into privacy mode does not remove their existing Git history. Archived state and other private notes retain their existing locations and visibility.
 
-All state file paths below refer to the directory selected by `config.md`; `.checkpoint-karpathy/` paths illustrate collaborative mode.
+Configuration, roadmap, and progress paths below refer to the directory selected by `config.md`; `.checkpoint-karpathy/` paths illustrate collaborative mode. The work directory always uses `.checkpoint-karpathy/private/work/`.
 
 ---
 
@@ -122,6 +124,7 @@ Use this namespaced directory for durable workflow state:
   roadmap.md
   progress.md
   private/
+    work/
   archive/
 ```
 
@@ -129,6 +132,7 @@ Use this namespaced directory for durable workflow state:
 ```text
 .checkpoint-karpathy/
   private/
+    work/
     config.md
     roadmap.md
     progress.md
@@ -171,6 +175,44 @@ This directory must be ignored by Git.
 In privacy mode, configuration, roadmap, and progress files live here alongside other private notes.
 
 Do not put secrets, credentials, private customer data, or sensitive vulnerability details into committed roadmap or progress files.
+
+### Temporary work files
+
+Use `.checkpoint-karpathy/private/work/` for temporary files produced during project work. Keep it ignored by Git in both collaborative and privacy modes. It stays in this location when modes change or completed goals are archived.
+
+Place files in meaningful subdirectories by purpose or task; keep the `work/` root free of loose files. Reuse suitable existing categories and create only the subdirectories needed for the current work. Within large categories, group files by task, phase, or run so related artifacts remain easy to find.
+
+Typical categories include:
+
+- `logs/`, `checks/`, `verification/`: command output, test logs, and verification evidence.
+- `tools/`, `probes/`: temporary scripts and diagnostic programs.
+- `reports/`, `reviews/`, `notes/`: analysis results, review notes, and investigation records.
+- `browser/`, `screenshots/`: browser profiles, test traces, and screenshots.
+- `configs/`, `fixtures/`: temporary tool configuration and test input.
+- `backups/`, `drafts/`: intermediate copies, patches, and drafts.
+- `bin/`, `artifacts/`: temporary executables, build output, and profiling data.
+
+A task-specific directory can keep its scripts, logs, and reports together. For example:
+
+```text
+.checkpoint-karpathy/private/work/
+  logs/
+    login-check/
+      test.log
+  tools/
+    login-check/
+      inspect.py
+  browser/
+    login-check/
+      profile/
+  docs-audit/
+    scripts/
+      audit.py
+    reports/
+      result.json
+```
+
+Direct temporary output and tool-created working data into the appropriate subdirectory where supported. Keep permanent source code, maintained tests, and user deliverables in their intended project locations. Record durable conclusions and verification summaries in progress so resuming work does not depend on temporary files.
 
 ---
 
