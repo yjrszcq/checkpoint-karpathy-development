@@ -14,17 +14,19 @@ The installer supports Bash 3.2+ on Linux, macOS, and WSL. Remote installation n
 
 Standard skills parent directories are listed below. Each receives a `checkpoint-karpathy-development/` child directory. Links point to the harness's documentation or discovery implementation.
 
-| `--harness` | User scope | Project scope |
+| Harness | User scope | Project scope |
 |---|---|---|
-| [claude](https://code.claude.com/docs/en/skills) | `~/.claude/skills/` | `.claude/skills/` |
-| [codex](https://developers.openai.com/codex/skills/) | `~/.agents/skills/` | `.agents/skills/` |
-| [pi](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md) | `~/.pi/agent/skills/` | `.pi/skills/` |
-| [ohmypi](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/discovery/builtin.ts) | `~/.omp/agent/skills/` | `.omp/skills/` |
-| [antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/` | `.agents/skills/` |
-| [cursor](https://cursor.com/docs/context/skills) | `~/.cursor/skills/` | `.cursor/skills/` |
-| [deepseek](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md) | `~/.dsh/skills/` | `.dsh/skills/` |
-| [gemini](https://geminicli.com/docs/cli/skills/) | `~/.gemini/skills/` | `.gemini/skills/` |
-| [opencode](https://opencode.ai/docs/skills/) | `~/.config/opencode/skills/` | `.opencode/skills/` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/` | `.claude/skills/` |
+| [Codex](https://developers.openai.com/codex/skills/) | `~/.agents/skills/` | `.agents/skills/` |
+| [Pi](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md) | `~/.pi/agent/skills/` | `.pi/skills/` |
+| [Oh My Pi](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/discovery/builtin.ts) | `~/.omp/agent/skills/` | `.omp/skills/` |
+| [Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/` | `.agents/skills/` |
+| [Cursor](https://cursor.com/docs/context/skills) | `~/.cursor/skills/` | `.cursor/skills/` |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md) | `~/.dsh/skills/` | `.dsh/skills/` |
+| [Gemini CLI](https://geminicli.com/docs/cli/skills/) | `~/.gemini/skills/` | `.gemini/skills/` |
+| [OpenCode](https://opencode.ai/docs/skills/) | `~/.config/opencode/skills/` | `.opencode/skills/` |
+
+See the [harness identifiers table](docs/guide.md#harness-identifiers) for `--harness` values.
 
 `claudecode` / `claude-code`, `omp` / `oh-my-pi`, `deepseekharness` / `deepseek-harness` / `dsh`, and `geminicli` / `gemini-cli` are accepted aliases. Multiple harnesses can be comma-separated or supplied with repeated `--harness` flags. Identical destination paths are installed once.
 

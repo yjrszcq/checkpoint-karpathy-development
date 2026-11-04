@@ -335,7 +335,9 @@ class InstallerTests(unittest.TestCase):
         return transcript.decode()
 
     def test_interactive_selection_when_script_is_piped(self):
-        self.run_interactive([(b"> ", b"2,6"), (b"Install scope:", b"2")])
+        transcript = self.run_interactive([(b"> ", b"2,6"), (b"Install scope:", b"2")])
+        for label in ("1) Claude Code\r\n", "4) Oh My Pi\r\n", "8) Gemini CLI\r\n", "9) OpenCode\r\n"):
+            self.assertIn(label, transcript)
         self.assert_package(self.target())
         self.assert_package(self.project / PROJECT_DIRS["cursor"] / NAME)
 
@@ -349,7 +351,7 @@ class InstallerTests(unittest.TestCase):
                     (b"> ", choice),
                     (b"Skills directory", relative.encode()),
                 ])
-                self.assertIn("custom (enter installation path)", transcript)
+                self.assertIn("Custom (enter installation path)", transcript)
                 self.assertNotIn("Install scope:", transcript)
                 self.assert_package(parent / NAME)
 

@@ -5,6 +5,7 @@ set -euo pipefail
 SKILL_NAME=checkpoint-karpathy-development
 REPOSITORY=yjrszcq/checkpoint-karpathy-development
 HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode custom)
+HARNESS_NAMES=('Claude Code' 'Codex' 'Pi' 'Oh My Pi' 'Antigravity' 'Cursor' 'DeepSeek Harness' 'Gemini CLI' 'OpenCode' 'Custom')
 selected=()
 scope=
 project_dir=
@@ -31,10 +32,13 @@ Usage: bash install.sh [OPTIONS]
   --source PATH            Install from a local checkout without downloading.
   --ref REF                GitHub branch, tag, or commit to download (default: main).
   --dry-run                Print destinations without writing or downloading.
-  --list                   List harness identifiers.
+  --list                   List harness names.
   -h, --help               Show this help.
 
-Harnesses: claude, codex, pi, ohmypi, antigravity, cursor, deepseek, gemini, opencode, custom
+Harnesses: Claude Code, Codex, Pi, Oh My Pi, Antigravity, Cursor,
+  DeepSeek Harness, Gemini CLI, OpenCode, Custom.
+For --harness identifiers, see:
+  https://github.com/yjrszcq/checkpoint-karpathy-development/blob/main/docs/guide.md#harness-identifiers
 Use --harness custom --skills-dir PATH for other compatible harnesses.
 With no --harness, read an interactive menu from /dev/tty (also works with curl | bash).
 Select custom to enter the skills parent directory; the skill folder is added inside it.
@@ -57,7 +61,7 @@ add_harness() {
     antigravity|antigrivaty) name=antigravity ;;
     deepseek|deepseekharness|deepseek-harness|dsh) name=deepseek ;;
     gemini|geminicli|gemini-cli) name=gemini ;;
-    *) die "Unknown harness: $1. Run with --list." ;;
+    *) die "Unknown harness: $1. See the harness identifiers table in docs/guide.md." ;;
   esac
   for existing in ${selected[@]+"${selected[@]}"}; do
     [[ "$existing" != "$name" ]] || return 0
@@ -82,7 +86,9 @@ while [[ $# -gt 0 ]]; do
     --source) need_value "$@"; source_dir=$2; shift 2 ;;
     --ref) need_value "$@"; ref=$2; shift 2 ;;
     --dry-run) dry_run=true; shift ;;
-    --list) printf '%s\n' "${HARNESS_LIST[@]}"; exit 0 ;;
+    --list)
+      printf '%s\n' "${HARNESS_NAMES[@]}"
+      exit 0 ;;
     -h|--help) usage; exit 0 ;;
     *) die "Unknown option: $1. Run with --help." ;;
   esac
@@ -96,12 +102,12 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   if ! { exec 3<>/dev/tty; } 2>/dev/null; then
     die 'No terminal available. Specify --harness NAME and optionally --scope user|project.'
   fi
-  printf 'Select harnesses (numbers or names, separated by spaces or commas):\n' >&3
+  printf 'Select harnesses by number (separated by spaces or commas):\n' >&3
   for ((i=0; i<${#HARNESS_LIST[@]}; i++)); do
     if [[ "${HARNESS_LIST[$i]}" == custom ]]; then
-      printf '  %s) custom (enter installation path)\n' "$((i+1))" >&3
+      printf '  %s) Custom (enter installation path)\n' "$((i+1))" >&3
     else
-      printf '  %s) %s\n' "$((i+1))" "${HARNESS_LIST[$i]}" >&3
+      printf '  %s) %s\n' "$((i+1))" "${HARNESS_NAMES[$i]}" >&3
     fi
   done
   printf '> ' >&3
