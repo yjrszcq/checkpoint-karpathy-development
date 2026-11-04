@@ -50,3 +50,7 @@ The defaults are collaborative visibility and Conventional Commits. Settings per
 - [Usage guide](docs/guide.md): configuration, project-state commands, roadmap lifecycle, and temporary files.
 - [Agent installation guide](INSTALL.md): installation paths, updates, backups, and verification.
 - [Skill instructions](SKILL.md): the agent's workflow and supporting references.
+
+## License
+
+[MIT](LICENSE) © 2026 yjrszcq.

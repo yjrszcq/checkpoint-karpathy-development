@@ -1,5 +1,6 @@
 ---
 name: checkpoint-karpathy-development
+license: MIT
 description: "Use this skill for roadmap-driven, checkpointed software work across greenfield development, continuation, feature work, bug fixing, refactoring, and maintenance, while following Karpathy-inspired engineering guardrails."
 ---
 

@@ -71,13 +71,14 @@ class InstallerTests(unittest.TestCase):
 
     def assert_package(self, target):
         self.assertEqual((target / "SKILL.md").read_bytes(), (ROOT / "SKILL.md").read_bytes())
+        self.assertEqual((target / "LICENSE").read_bytes(), (ROOT / "LICENSE").read_bytes())
         for resource in ("references", "scripts", "assets"):
             source_files = sorted(p.relative_to(ROOT / resource) for p in (ROOT / resource).rglob("*") if p.is_file())
             installed_files = sorted(p.relative_to(target / resource) for p in (target / resource).rglob("*") if p.is_file())
             self.assertEqual(source_files, installed_files)
             for file in source_files:
                 self.assertEqual((target / resource / file).read_bytes(), (ROOT / resource / file).read_bytes())
-        self.assertEqual({p.name for p in target.iterdir()}, {"SKILL.md", "references", "scripts", "assets"})
+        self.assertEqual({p.name for p in target.iterdir()}, {"SKILL.md", "LICENSE", "references", "scripts", "assets"})
 
     def test_all_project_harnesses_and_shared_destination(self):
         result = self.invoke("--harness", ",".join(PROJECT_DIRS), "--project", str(self.project))
@@ -98,6 +99,15 @@ class InstallerTests(unittest.TestCase):
         self.assertFalse(any((self.case / "state").rglob("previous-*")))
         for filename in ("AGENTS.md", "CLAUDE.md", ".gitignore"):
             self.assertEqual((self.project / filename).read_text(), "existing project instructions\n")
+
+    def test_license_update_replaces_package_and_preserves_backup(self):
+        self.invoke(*self.base)
+        (self.target() / "LICENSE").write_text("previous license notice\n")
+        self.invoke(*self.base)
+        self.assert_package(self.target())
+        backups = list((self.case / "state").rglob("previous-codex/LICENSE"))
+        self.assertEqual(len(backups), 1)
+        self.assertEqual(backups[0].read_text(), "previous license notice\n")
 
     def test_installed_helpers_initialize_create_archive_and_create(self):
         self.invoke(*self.base)
@@ -230,6 +240,7 @@ class InstallerTests(unittest.TestCase):
         project_instructions.write_text("Project-specific instructions.\n")
         with tarfile.open(archive, "w:gz") as bundle:
             bundle.add(ROOT / "SKILL.md", arcname="release/SKILL.md")
+            bundle.add(ROOT / "LICENSE", arcname="release/LICENSE")
             for resource in ("references", "scripts", "assets"):
                 bundle.add(ROOT / resource, arcname="release/" + resource)
             bundle.add(project_instructions, arcname="release/AGENTS.md")

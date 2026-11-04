@@ -73,6 +73,7 @@ The installed package contains only:
 ```text
 checkpoint-karpathy-development/
   SKILL.md
+  LICENSE
   references/
     checkpoint-details.md
     project-state.md
@@ -100,7 +101,7 @@ checkpoint-karpathy-development/
       progress.md
 ```
 
-Install the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` directories into the selected skill directory, preserving their relative structure. The repository root is the canonical package source. Keep installation confined to that destination.
+Install the root `SKILL.md`, `LICENSE`, and complete `references/`, `scripts/`, and `assets/` directories into the selected skill directory, preserving their relative structure. The repository root is the canonical package source. Keep installation confined to that destination.
 
 ## Updates and recovery
 
@@ -116,7 +117,7 @@ The printed backup path includes custom files from the previous installation. If
 
 For manual restoration, first move the current installed bundle to a separate location outside all scanned skills directories, then move the printed previous bundle back to its original installation path. Preserve both versions until the restored skill is verified. Do not put backup skill directories under any `skills/` directory.
 
-If shell installation is unavailable, copy root `SKILL.md` and the complete `references/`, `scripts/`, and `assets/` directories into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
+If shell installation is unavailable, copy root `SKILL.md`, `LICENSE`, and the complete `references/`, `scripts/`, and `assets/` directories into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
 
 The project-state helpers require Python 3.9+ and PyYAML. Verify the Python environment before using them; if PyYAML is missing, install it in a suitable environment with `python3 -m pip install -r /path/to/checkpoint-karpathy-development/scripts/requirements.txt`.
 

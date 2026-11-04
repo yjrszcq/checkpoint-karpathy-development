@@ -45,7 +45,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 Follow INSTALL.md in the repository.
 ```
 
-[INSTALL.md](../INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` as its package source. It backs up previous installations outside skill discovery.
+[INSTALL.md](../INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md`, `LICENSE`, and complete `references/`, `scripts/`, and `assets/` as its package source. It backs up previous installations outside skill discovery.
 
 After installation, restart or reload your harness and ask it to use `checkpoint-karpathy-development` for your goal.
 
