@@ -31,22 +31,13 @@ Generate a configuration that explains every setting, its accepted values, effec
   - conventional: Conventional Commits, for example feat(auth): add login.
   - phase: Phase-style, for example Phase 1.1: add login.
 - Default: conventional
-
-## Roadmap layout
-- Value: auto
-- Purpose: Select how a goal's planning documents are organized.
-- Accepted values:
-  - auto: Let the agent choose and reassess compact or structured layout for the whole goal.
-  - compact: Use roadmap/roadmap.md and roadmap/progress.md; switch only at the user's request.
-  - structured: Use separate overview, status, context, milestones, changelog, and progress documents in roadmap/; switch only at the user's request.
-- Default: auto
 ```
 
 The state directory is `.checkpoint-karpathy/` in collaborative mode and `.checkpoint-karpathy/private/` in privacy mode. `config.md` sits directly in that directory, alongside the fixed `roadmap/` directory.
 
 During initialization, create the selected state directory and its `roadmap/`, plus `.checkpoint-karpathy/private/work/` in both modes. Reuse existing directories and ensure `.checkpoint-karpathy/private/` is ignored by Git. Create work categories and `archive/` only as needed. An empty `roadmap/` is a directory ready for planning, not an existing goal.
 
-When the user requests settings changes, update only the requested values and apply them to subsequent work. Update uncompleted commit targets for a commit-style change. For a layout request, read [Layout switching](layout-switching.md) before conversion.
+When the user requests settings changes, update only the requested values and apply them to subsequent work. Update uncompleted commit targets for a commit-style change.
 
 For a visibility-mode change, create or reuse the destination `roadmap/`, move the active goal contents into it, and move `config.md` into its parent state directory, preserving content and relative links. Check destination conflicts before moving; do not overwrite state. Keep the source `roadmap/` directory in place. Apply the selected Git tracking policy; include removal of formerly tracked active state paths in the next relevant commit when switching to privacy. Existing Git history remains. Archived goals, other private notes, and `private/work/` retain their locations and visibility.
 
@@ -76,15 +67,7 @@ Paths in these references illustrate collaborative mode. Resolve `config.md`, `r
     archive/
 ```
 
-**Compact layout:**
-
-```text
-roadmap/
-  roadmap.md
-  progress.md
-```
-
-**Structured layout:**
+**Roadmap documents:**
 
 ```text
 roadmap/
@@ -100,7 +83,7 @@ In collaborative mode, commit configuration, roadmap contents, and goal archives
 
 ### Temporary work files
 
-Use `.checkpoint-karpathy/private/work/` for temporary project files. Create it during initialization in both modes. It stays in place during mode changes, layout switches, and goal archiving. Do not automatically archive or clear its contents when starting a new goal.
+Use `.checkpoint-karpathy/private/work/` for temporary project files. Create it during initialization in both modes. It stays in place during mode changes and goal archiving. Do not automatically archive or clear its contents when starting a new goal.
 
 Keep the work root free of loose files. Classify by purpose or task, reuse suitable categories, and create only needed subdirectories. Subdivide large categories by task, phase, or run. Examples:
 
@@ -139,4 +122,4 @@ archive/
     progress.md
 ```
 
-For compact layout, that archive directly contains `roadmap.md` and `progress.md`. The archive has no extra enclosing `roadmap/` layer. Keep `config.md` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal, not immediately upon completion or cancellation.
+The archive has no extra enclosing `roadmap/` layer. Keep `config.md` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal, not immediately upon completion or cancellation.

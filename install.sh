@@ -200,7 +200,7 @@ validate_package() {
   local package=$1 file
   [[ -s "$package/SKILL.md" ]] || die "Missing SKILL.md in $package"
   grep -Eq '^name: checkpoint-karpathy-development[[:space:]]*$' "$package/SKILL.md" || die "Unexpected skill name in $package/SKILL.md"
-  for file in project-state.md roadmap-templates.md layout-switching.md checkpoint-details.md; do
+  for file in project-state.md roadmap-templates.md checkpoint-details.md; do
     [[ -s "$package/references/$file" ]] || die "Missing reference: $package/references/$file"
   done
 }

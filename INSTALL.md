@@ -63,7 +63,6 @@ checkpoint-karpathy-development/
   SKILL.md
   references/
     checkpoint-details.md
-    layout-switching.md
     project-state.md
     roadmap-templates.md
 ```
