@@ -8,6 +8,8 @@ Works with Codex, Claude Code, Pi, Oh My Pi, Antigravity, Cursor, DeepSeek Harne
 
 ## Quick installation
 
+The project-state helpers require **Python 3.9+** and **PyYAML >= 6.0** for project initialization, roadmap generation, and archiving. See [dependency setup](docs/guide.md#project-state-commands).
+
 Run the installer and select your harness and installation scope:
 
 ```bash
