@@ -141,10 +141,10 @@ Do not run destructive Git commands without explicit permission.
 
 ## Claude Code usage
 
-When asked to use this workflow, follow the local `CLAUDE.md` and the skill at `.claude/skills/checkpoint-karpathy-development/SKILL.md` if present.
+When asked to use this workflow, follow the local `CLAUDE.md` and the installed `checkpoint-karpathy-development` skill.
 
 A typical command is:
 
 ```text
-/checkpoint-karpathy Continue this project using checkpoint-karpathy development. Select the work mode, update the roadmap, complete one subphase, update progress, verify, and commit.
+/checkpoint-karpathy-development Continue this project using checkpoint-karpathy development. Select the work mode, update the roadmap, complete one subphase, update progress, verify, and commit.
 ```
