@@ -20,7 +20,18 @@ Or specify them directly:
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-For custom paths, project installations, and other harnesses, see the [installation options](docs/guide.md#installation). You can also send the repository link to your agent and ask it to follow [INSTALL.md](INSTALL.md).
+For custom paths, project installations, and other harnesses, see the [installation options](docs/guide.md#installation).
+
+### Let your agent install it
+
+Send this request to your agent:
+
+```text
+Install this skill for my current harness by following INSTALL.md in the repository:
+https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+```
+
+You can specify a harness, project scope, or custom installation path in the request. See the [agent installation guide](INSTALL.md) for details.
 
 ## Usage
 

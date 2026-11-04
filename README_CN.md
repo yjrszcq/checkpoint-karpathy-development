@@ -20,7 +20,18 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-自定义路径、项目级安装和其他 harness 见[安装选项](docs/guide_CN.md#安装)。也可以把仓库链接发给 agent，让它按照 [INSTALL.md](INSTALL.md) 安装。
+自定义路径、项目级安装和其他 harness 见[安装选项](docs/guide_CN.md#安装)。
+
+### 让 agent 帮你安装
+
+将下面这段话发给 agent：
+
+```text
+请按照仓库中的 INSTALL.md，为我当前使用的 harness 安装这个技能：
+https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+```
+
+也可以在请求中指定 harness、项目级安装或自定义安装路径。详细流程见 [Agent 安装说明](INSTALL.md)。
 
 ## 使用
 
