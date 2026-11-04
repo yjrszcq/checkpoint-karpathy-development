@@ -8,11 +8,13 @@
 
 ## 核心思路
 
+项目首次使用时，agent 先创建与 roadmap、progress 同层的 `config.md`，记录用户指定的模式和提交信息风格；未指定的项目填写默认值：协作模式、约定式提交。之后每次使用都读取此文件，用户要求调整时更新相应设置。
+
 正式开发前，agent 先创建路线图，从当前状态完整规划到实现所有目标。
 
 skill 激活后，在 roadmap 完成之前会跨对话持续使用。每次新的开发对话自动从下一未完成子阶段恢复——用户无需重复调用。
 
-roadmap 全部完成后，skill 自动停用。如果用户后续要求再次使用，已完成的 roadmap 和 progress 会被归档到 `.checkpoint-karpathy/archive/YYYYMMDDa-<概括>/`。
+roadmap 全部完成后，skill 自动停用。如果用户后续要求再次使用，已完成的 roadmap 和 progress 会被归档到当前配置目录下的 `archive/YYYYMMDDa-<概括>/`，`config.md` 保留供后续任务使用。
 
 每个正常小阶段结束时必须有：
 
@@ -24,14 +26,14 @@ roadmap 全部完成后，skill 自动停用。如果用户后续要求再次使
 
 Commit message 有两种风格可选：
 
-Phase-style（默认）：
-```text
-Phase X.Y: <描述>
-```
-
-Professional-style（Conventional Commits）：
+约定式提交（Conventional Commits，默认）：
 ```text
 type(scope): <描述>
+```
+
+阶段式提交（Phase-style，可选）：
+```text
+Phase X.Y: <描述>
 ```
 
 描述默认英文，只有用户明确要求时才使用中文或其他语言。
@@ -52,6 +54,7 @@ type(scope): <描述>
 **协作模式：**
 ```text
 .checkpoint-karpathy/
+  config.md
   roadmap.md
   progress.md
   private/
@@ -62,22 +65,35 @@ type(scope): <描述>
 ```text
 .checkpoint-karpathy/
   private/
+    config.md
     roadmap.md
     progress.md
     archive/
 ```
 
+`config.md` 记录实际采用的设置：
+
+```md
+# Checkpoint Karpathy Configuration
+
+- Mode: collaborative
+- Commit message style: conventional
+```
+
+`Mode` 可填 `collaborative`（协作）或 `privacy`（隐私）；`Commit message style` 可填 `conventional`（约定式提交）或 `phase`（阶段式提交）。用户切换模式时，配置、路线图、进度三个文件一起移动到对应目录，并按该模式决定是否纳入 Git。已有归档和其他隐私笔记保留在原位置。
+
 默认协作模式：
 
+- 提交 `.checkpoint-karpathy/config.md`；
 - 提交 `.checkpoint-karpathy/roadmap.md`；
 - 提交 `.checkpoint-karpathy/progress.md`；
 - 忽略 `.checkpoint-karpathy/private/`。
 
 隐私模式：
 
-- 将 `roadmap.md` 和 `progress.md` 放在 `.checkpoint-karpathy/private/` 下；
+- 将 `config.md`、`roadmap.md` 和 `progress.md` 放在 `.checkpoint-karpathy/private/` 下；
 - `.checkpoint-karpathy/private/` 被 gitignore；
-- 不提交 roadmap 或 progress。
+- 配置、roadmap 和 progress 均不纳入 Git 跟踪。
 
 公开仓库或不想暴露开发规划时，使用隐私模式。
 
@@ -101,7 +117,7 @@ cp AGENTS.md /path/to/your/project/AGENTS.md
 ```text
 $checkpoint-karpathy-development
 
-阅读 AGENTS.md。为当前任务创建或更新 .checkpoint-karpathy/roadmap.md，完成一个 roadmap 小阶段，更新 .checkpoint-karpathy/progress.md，运行项目适用的验证命令，并 git commit。
+阅读 AGENTS.md，并读取或创建 config.md。按其中的模式和提交风格，为当前任务创建或更新 roadmap，完成一个小阶段，更新 progress，运行项目适用的验证命令，并 git commit。
 ```
 
 ## Claude Code 安装
@@ -140,6 +156,6 @@ cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/command
 .checkpoint-karpathy/private/
 ```
 
-隐私模式下 `roadmap.md` 和 `progress.md` 放在 `private/` 内，自动被覆盖。协作模式下仅敏感笔记被忽略。
+隐私模式下 `config.md`、`roadmap.md` 和 `progress.md` 放在 `private/` 内，自动被覆盖。协作模式下仅敏感笔记被忽略。
 
 不要直接忽略整个 `.checkpoint-karpathy/`，除非你有意隐藏全部工作流状态。
