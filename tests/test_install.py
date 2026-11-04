@@ -151,6 +151,7 @@ class InstallerTests(unittest.TestCase):
             ["--harness", "codex", "--scope", "missing"],
             ["--harness", "codex", "--project", str(self.project), "--scope", "user"],
             ["--harness", "custom"],
+            ["--harness", "custom,codex"],
             ["--harness", "codex,cursor", "--skills-dir", str(self.case / "skills")],
             [*self.base, "--source", str(broken)],
         ):
@@ -242,14 +243,16 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("Specify --harness", result.stderr)
         self.assertEqual(list(self.project.iterdir()), [])
 
-    def test_interactive_selection_when_script_is_piped(self):
+    def run_interactive(self, answers, success=True):
         command = f"cat {shlex.quote(str(SCRIPT))} | bash -s -- --source {shlex.quote(str(ROOT))}"
         pid, master = pty.fork()
         if pid == 0:
             os.chdir(self.project)
             os.execve("/bin/bash", ["bash", "-c", command], self.env)
         transcript = b""
-        selected = scoped = reaped = False
+        answered = 0
+        reaped = False
+        exit_code = None
         deadline = time.monotonic() + 30
         try:
             while time.monotonic() < deadline:
@@ -262,31 +265,67 @@ class InstallerTests(unittest.TestCase):
                     if not data:
                         break
                     transcript += data
-                    if b"> " in transcript and not selected:
-                        os.write(master, b"2,6\n")
-                        selected = True
-                    if b"Install scope:" in transcript and not scoped:
-                        os.write(master, b"2\n")
-                        scoped = True
+                    while answered < len(answers) and answers[answered][0] in transcript:
+                        os.write(master, answers[answered][1] + b"\n")
+                        answered += 1
                 done, status = os.waitpid(pid, os.WNOHANG)
                 if done:
                     reaped = True
-                    self.assertEqual(os.waitstatus_to_exitcode(status), 0, transcript.decode())
+                    exit_code = os.waitstatus_to_exitcode(status)
                     break
             else:
                 self.fail("Interactive installer timed out: " + transcript.decode())
             if not reaped:
                 _, status = os.waitpid(pid, 0)
                 reaped = True
-                self.assertEqual(os.waitstatus_to_exitcode(status), 0, transcript.decode())
+                exit_code = os.waitstatus_to_exitcode(status)
         finally:
             if not reaped:
                 os.kill(pid, 15)
                 os.waitpid(pid, 0)
             os.close(master)
-        self.assertTrue(selected and scoped, transcript.decode())
+        self.assertEqual(answered, len(answers), transcript.decode())
+        if success:
+            self.assertEqual(exit_code, 0, transcript.decode())
+        else:
+            self.assertNotEqual(exit_code, 0, transcript.decode())
+        return transcript.decode()
+
+    def test_interactive_selection_when_script_is_piped(self):
+        self.run_interactive([(b"> ", b"2,6"), (b"Install scope:", b"2")])
         self.assert_package(self.target())
         self.assert_package(self.project / PROJECT_DIRS["cursor"] / NAME)
+
+    def test_interactive_custom_installation_by_number_and_name(self):
+        for choice in (b"10", b"custom"):
+            with self.subTest(choice=choice):
+                parent = self.case / ("custom skills " + choice.decode())
+                # Relative paths and spaces must survive terminal input unchanged.
+                relative = os.path.relpath(parent, self.project)
+                transcript = self.run_interactive([
+                    (b"> ", choice),
+                    (b"Skills directory", relative.encode()),
+                ])
+                self.assertIn("custom (enter installation path)", transcript)
+                self.assertNotIn("Install scope:", transcript)
+                self.assert_package(parent / NAME)
+
+    def test_interactive_custom_rejects_empty_path_and_mixed_selection(self):
+        transcript = self.run_interactive([
+            (b"> ", b"custom"), (b"Skills directory", b"   "),
+        ], success=False)
+        self.assertIn("No installation path entered.", transcript)
+        transcript = self.run_interactive([(b"> ", b"custom,2")], success=False)
+        self.assertIn("Select custom on its own.", transcript)
+        self.assertFalse((self.case / "state").exists())
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_custom_home_path_dry_run(self):
+        result = self.invoke(
+            "--harness", "custom", "--skills-dir", "~/custom skills", "--dry-run",
+        )
+        self.assertIn(str(Path.home() / "custom skills" / NAME), result.stdout)
+        self.assertFalse((self.case / "state").exists())
 
 
 if __name__ == "__main__":

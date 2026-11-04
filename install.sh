@@ -4,7 +4,7 @@ set -euo pipefail
 
 SKILL_NAME=checkpoint-karpathy-development
 REPOSITORY=yjrszcq/checkpoint-karpathy-development-skills
-HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode)
+HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode custom)
 selected=()
 scope=
 project_dir=
@@ -34,14 +34,16 @@ Usage: bash install.sh [OPTIONS]
   --list                   List harness identifiers.
   -h, --help               Show this help.
 
-Harnesses: claude, codex, pi, ohmypi, antigravity, cursor, deepseek, gemini, opencode
+Harnesses: claude, codex, pi, ohmypi, antigravity, cursor, deepseek, gemini, opencode, custom
 Use --harness custom --skills-dir PATH for other compatible harnesses.
 With no --harness, read an interactive menu from /dev/tty (also works with curl | bash).
+Select custom to enter the skills parent directory; the skill folder is added inside it.
 
 Examples:
   bash install.sh --harness codex --scope user
   bash install.sh --harness claude,cursor --project /path/to/project
   bash install.sh --harness pi --source . --dry-run
+  bash install.sh --harness custom --skills-dir /path/to/skills
 EOF
 }
 
@@ -96,7 +98,11 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   fi
   printf 'Select harnesses (numbers or names, separated by spaces or commas):\n' >&3
   for ((i=0; i<${#HARNESS_LIST[@]}; i++)); do
-    printf '  %s) %s\n' "$((i+1))" "${HARNESS_LIST[$i]}" >&3
+    if [[ "${HARNESS_LIST[$i]}" == custom ]]; then
+      printf '  %s) custom (enter installation path)\n' "$((i+1))" >&3
+    else
+      printf '  %s) %s\n' "$((i+1))" "${HARNESS_LIST[$i]}" >&3
+    fi
   done
   printf '> ' >&3
   IFS= read -r answer <&3 || die 'No harness selected.'
@@ -104,12 +110,22 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   read -r -a choices <<< "$answer"
   for choice in ${choices[@]+"${choices[@]}"}; do
     case "$choice" in
-      [1-9]) add_harness "${HARNESS_LIST[$((choice-1))]}" ;;
+      [1-9]|10) add_harness "${HARNESS_LIST[$((choice-1))]}" ;;
       *) add_harness "$choice" ;;
     esac
   done
   [[ ${#selected[@]} -gt 0 ]] || die 'No harness selected.'
-  if [[ -z "$scope" ]]; then
+  for name in "${selected[@]}"; do
+    if [[ "$name" == custom ]]; then
+      [[ ${#selected[@]} -eq 1 ]] || die 'Select custom on its own.'
+      if [[ -z "$skills_dir" ]]; then
+        printf 'Skills directory (parent of %s/): ' "$SKILL_NAME" >&3
+        IFS= read -r skills_dir <&3 || die 'No installation path entered.'
+        [[ -n "${skills_dir//[[:space:]]/}" ]] || die 'No installation path entered.'
+      fi
+    fi
+  done
+  if [[ -z "$scope" && "${selected[0]}" != custom ]]; then
     printf 'Install scope: 1) user  2) project [1]: ' >&3
     IFS= read -r answer <&3 || die 'No scope selected.'
     case "$answer" in ''|1|user) scope=user ;; 2|project) scope=project ;; *) die 'Invalid scope.' ;; esac
@@ -119,11 +135,21 @@ fi
 scope=${scope:-user}
 [[ "$scope" == user || "$scope" == project ]] || die 'Scope must be user or project.'
 [[ -z "$skills_dir" || ${#selected[@]} -eq 1 ]] || die '--skills-dir requires exactly one harness.'
+for name in "${selected[@]}"; do
+  if [[ "$name" == custom ]]; then
+    [[ ${#selected[@]} -eq 1 ]] || die 'Select custom on its own.'
+    [[ -n "$skills_dir" ]] || die 'Custom harness requires --skills-dir PATH.'
+  fi
+done
 if [[ "$scope" == project ]]; then
   project_dir=${project_dir:-$PWD}
   [[ -d "$project_dir" ]] || die "Project directory does not exist: $project_dir"
   project_dir=$(cd "$project_dir" && pwd -P)
 fi
+case "$skills_dir" in
+  '~') skills_dir=$HOME ;;
+  '~/'*) skills_dir=$HOME/${skills_dir#\~/} ;;
+esac
 if [[ -n "$skills_dir" && "$skills_dir" != /* ]]; then skills_dir=$PWD/$skills_dir; fi
 
 skills_root() {
