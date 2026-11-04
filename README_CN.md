@@ -58,6 +58,7 @@ Phase X.Y: <描述>
   roadmap.md
   progress.md
   private/
+    work/
   archive/
 ```
 
@@ -65,6 +66,7 @@ Phase X.Y: <描述>
 ```text
 .checkpoint-karpathy/
   private/
+    work/
     config.md
     roadmap.md
     progress.md
@@ -96,6 +98,14 @@ Phase X.Y: <描述>
 - 配置、roadmap 和 progress 均不纳入 Git 跟踪。
 
 公开仓库或不想暴露开发规划时，使用隐私模式。
+
+## 临时工作文件
+
+两种模式都使用 `.checkpoint-karpathy/private/work/` 存放项目过程中的临时文件，由 `.checkpoint-karpathy/private/` 的 gitignore 规则覆盖。切换模式或归档任务时，`work` 保持原位置。
+
+`work/` 根目录不放散落文件。按用途或任务分类，需要时才创建子目录，例如：`logs/<任务>/` 放命令日志，`tools/<任务>/` 放临时脚本，`reports/<任务>/` 放分析报告，`browser/<任务>/`、`screenshots/<任务>/` 放浏览器数据和截图，`configs/`、`fixtures/` 放临时配置和测试输入，`backups/`、`drafts/` 放中间副本和草稿，`bin/`、`artifacts/` 放编译产物。也可以用一个任务目录，把相关脚本、日志、报告分组放在一起；分类下文件较多时继续按任务或运行批次细分。
+
+正式源码、长期维护的测试和交付给用户的文件放在各自应在的项目位置。需要长期保留的结论、验证摘要写入 progress。
 
 ## Codex 安装
 

@@ -58,6 +58,7 @@ The workflow uses a namespaced directory:
   roadmap.md
   progress.md
   private/
+    work/
   archive/
 ```
 
@@ -65,6 +66,7 @@ The workflow uses a namespaced directory:
 ```text
 .checkpoint-karpathy/
   private/
+    work/
     config.md
     roadmap.md
     progress.md
@@ -96,6 +98,14 @@ Privacy mode:
 - keep configuration, roadmap, and progress untracked.
 
 Use privacy mode for public repositories or when development planning should not be exposed.
+
+## Temporary work files
+
+In both modes, temporary project files live in `.checkpoint-karpathy/private/work/`, covered by the `.checkpoint-karpathy/private/` Git ignore rule. The work directory stays in place during mode changes and goal archiving.
+
+Keep the `work/` root free of loose files. Classify files by purpose or task and create only the directories needed: for example, `logs/<task>/` for command output, `tools/<task>/` for temporary scripts, `reports/<task>/` for analysis, `browser/<task>/` and `screenshots/<task>/` for browser evidence, `configs/` and `fixtures/` for temporary inputs, `backups/` and `drafts/` for intermediate copies, and `bin/` and `artifacts/` for generated output. A task directory can also group related scripts, logs, and reports together.
+
+Keep permanent source, maintained tests, and user deliverables in their intended project locations. Record durable conclusions and verification summaries in progress.
 
 ## Install for Codex
 
