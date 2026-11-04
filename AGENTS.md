@@ -17,33 +17,29 @@ When the user gives a concrete development goal, read project configuration firs
 
 ## Project configuration
 
-Before each use, look for `.checkpoint-karpathy/config.md` and `.checkpoint-karpathy/private/config.md`. Read the active one; resolve duplicate active configurations with the user. Create configuration only if absent, using user-specified values and defaults for unspecified settings. Retain existing values when adding a missing setting. Change settings only at the user's request. Keep configuration across goals and archiving.
+Before each use, look for `.checkpoint-karpathy/config.yaml` and `.checkpoint-karpathy/private/config.yaml`. Read the active one; resolve duplicate active configurations with the user. Create configuration only if absent, using user-specified values and defaults for unspecified settings. Retain existing values when adding a missing setting. Change settings only at the user's request. Keep configuration across goals and archiving.
 
-Generated `config.md` must explain every setting's purpose, accepted values and effects, and default, in the user's language. Users edit the `Value` for each setting:
+Generated `config.yaml` must explain every setting's purpose, accepted values and effects, and default, in the user's language. Users edit the YAML values; comments explain each setting:
 
-```md
-# Checkpoint Karpathy Configuration
+```yaml
+# Planning visibility and location. Default: collaborative.
+# collaborative: Track configuration, roadmap documents, and archives in Git.
+# privacy: Keep them under Git-ignored private/.
+mode: collaborative
 
-## Mode
-- Value: collaborative
-- Purpose: Select planning visibility and location.
-- Accepted values:
-  - collaborative: Track configuration, roadmap documents, and goal archives in Git.
-  - privacy: Keep configuration, roadmap documents, and goal archives under Git-ignored private/.
-- Default: collaborative
-
-## Commit message style
-- Value: conventional
-- Purpose: Select commit subject format.
-- Accepted values:
-  - conventional: Conventional Commits, such as feat(auth): add login.
-  - phase: Phase-style, such as Phase 1.1: add login.
-- Default: conventional
+# Commit subject format. Default: conventional.
+# conventional: Conventional Commits, e.g. feat(auth): add login.
+# phase: Phase-style, e.g. Phase 1.1: add login.
+commit_message_style: conventional
 ```
 
-Keep `config.md` beside the fixed `roadmap/` directory: under `.checkpoint-karpathy/` for collaborative mode, or `.checkpoint-karpathy/private/` for privacy mode. Initialize `roadmap/` and `private/work/` even before goal files are created; create archives and work categories only when needed.
+Keep `config.yaml` beside the fixed `roadmap/` directory: under `.checkpoint-karpathy/` for collaborative mode, or `.checkpoint-karpathy/private/` for privacy mode. Initialize `roadmap/` and `private/work/` even before goal files are created; create archives and work categories only when needed.
 
-For a user-requested visibility-mode change, create or reuse the destination `roadmap/`, move the active goal contents into it, and move `config.md` into its parent state directory without overwriting state. Keep the source fixed directory and preserve contents and relative links. Apply the selected Git tracking policy; include removal of formerly tracked active paths in the next relevant commit when moving to privacy. Existing Git history remains. Existing archives, private notes, and work retain their locations. Update only requested settings and, for a commit-style change, uncompleted commit targets.
+For a user-requested visibility-mode change, create or reuse the destination `roadmap/`, move the active goal contents into it, and move `config.yaml` into its parent state directory without overwriting state. Keep the source fixed directory and preserve contents and relative links. Apply the selected Git tracking policy; include removal of formerly tracked active paths in the next relevant commit when moving to privacy. Existing Git history remains. Existing archives, private notes, and work retain their locations. Update only requested settings and, for a commit-style change, uncompleted commit targets.
+
+Use the installed skill's helpers (Python 3.9+ and PyYAML): `python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative` initializes directories, annotated YAML configuration, and all six document skeletons. Pass the selected mode explicitly, `--language zh` for Chinese configuration comments, and an optional `--commit-message-style phase` at first creation. Existing configuration and complete documents are preserved; recover partial or conflicting state before retrying.
+
+For a new goal after completion/cancellation, use `python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary`. This reads the mode from configuration, archives all goal contents, and creates fresh skeletons in one operation. The agent verifies termination evidence and fills the new goal's complete plan. Keep the `## Completion` heading in `status.md` with its plain `incomplete`, `completed`, or `cancelled` value on the next nonblank line. A failed archive attempts restoration and reports paths for recovery; preserve failed staging under `private/work/staging/`. Helpers do not commit or push.
 
 ## Roadmap documents
 
@@ -60,7 +56,7 @@ For a user-requested visibility-mode change, create or reuse the destination `ro
 - **Completed:** Set only after all subphases, review checkpoints, commits, and overall acceptance pass with recorded verification. Check the evidence before treating a recorded completed state as final.
 - **Cancelled:** Requires explicit user direction or confirmation. Record the reason and append termination to progress; preserve unfinished phases accurately. Cancellation does not require unfinished work to pass acceptance.
 - **After completion or cancellation:** Deactivate the skill and keep the documents in place. Invoke it for a new goal only when explicitly requested.
-- **Next invocation for a new goal:** For completed or cancelled goals, create an unused `archive/YYYYMMDDa-<summary>/` in the selected state directory. Describe the old goal in `<summary>` and increment the letter (`a` through `z`, then `aa`, `ab`, ...) to avoid collisions. Move all contents of `roadmap/` directly into the archive, including extra files and subdirectories, without an enclosing `roadmap/` layer. Preserve internal links and keep the fixed `roadmap/` itself. Then initialize the new goal's documents there using the configuration. Keep `config.md`, `private/work/`, and work contents. For incomplete goals, resume instead of archiving. An empty fixed directory is not an existing goal; recover partial documents without discarding content.
+- **Next invocation for a new goal:** For completed or cancelled goals, create an unused `archive/YYYYMMDDa-<summary>/` in the selected state directory. Describe the old goal in `<summary>` and increment the letter (`a` through `z`, then `aa`, `ab`, ...) to avoid collisions. Move all contents of `roadmap/` directly into the archive, including extra files and subdirectories, without an enclosing `roadmap/` layer. Preserve internal links and keep the fixed `roadmap/` itself. Then initialize the new goal's documents there using the configuration. Keep `config.yaml`, `private/work/`, and work contents. For incomplete goals, resume instead of archiving. An empty fixed directory is not an existing goal; recover partial documents without discarding content.
 
 ## Karpathy guardrails
 
@@ -73,7 +69,7 @@ For a user-requested visibility-mode change, create or reuse the destination `ro
 
 ## State visibility policy
 
-Collaborative mode commits `.checkpoint-karpathy/config.md`, the contents of `.checkpoint-karpathy/roadmap/`, and goal archives under `.checkpoint-karpathy/archive/`. Privacy mode places configuration, `roadmap/`, and `archive/` under `.checkpoint-karpathy/private/` and keeps them untracked.
+Collaborative mode commits `.checkpoint-karpathy/config.yaml`, the contents of `.checkpoint-karpathy/roadmap/`, and goal archives under `.checkpoint-karpathy/archive/`. Privacy mode places configuration, `roadmap/`, and `archive/` under `.checkpoint-karpathy/private/` and keeps them untracked.
 
 Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy into committed state. Sensitive notes and temporary work stay under `private/` in both modes.
 
@@ -112,7 +108,7 @@ git diff --staged
 
 Stage only relevant files. Do not commit unrelated user changes.
 
-Use the commit message style recorded in `config.md`:
+Use the commit message style recorded in `config.yaml`:
 
 Conventional Commits (default):
 ```text

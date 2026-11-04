@@ -70,12 +70,13 @@ class InstallerTests(unittest.TestCase):
 
     def assert_package(self, target):
         self.assertEqual((target / "SKILL.md").read_bytes(), (ROOT / "SKILL.md").read_bytes())
-        source_files = sorted(p.relative_to(ROOT / "references") for p in (ROOT / "references").rglob("*") if p.is_file())
-        installed_files = sorted(p.relative_to(target / "references") for p in (target / "references").rglob("*") if p.is_file())
-        self.assertEqual(source_files, installed_files)
-        for file in source_files:
-            self.assertEqual((target / "references" / file).read_bytes(), (ROOT / "references" / file).read_bytes())
-        self.assertEqual({p.name for p in target.iterdir()}, {"SKILL.md", "references"})
+        for resource in ("references", "scripts", "assets"):
+            source_files = sorted(p.relative_to(ROOT / resource) for p in (ROOT / resource).rglob("*") if p.is_file())
+            installed_files = sorted(p.relative_to(target / resource) for p in (target / resource).rglob("*") if p.is_file())
+            self.assertEqual(source_files, installed_files)
+            for file in source_files:
+                self.assertEqual((target / resource / file).read_bytes(), (ROOT / resource / file).read_bytes())
+        self.assertEqual({p.name for p in target.iterdir()}, {"SKILL.md", "references", "scripts", "assets"})
 
     def test_all_project_harnesses_and_shared_destination(self):
         result = self.invoke("--harness", ",".join(PROJECT_DIRS), "--project", str(self.project))
@@ -96,6 +97,26 @@ class InstallerTests(unittest.TestCase):
         self.assertFalse(any((self.case / "state").rglob("previous-*")))
         for filename in ("AGENTS.md", "CLAUDE.md", ".gitignore"):
             self.assertEqual((self.project / filename).read_text(), "existing project instructions\n")
+
+    def test_installed_helpers_initialize_and_archive_with_bundled_templates(self):
+        self.invoke(*self.base)
+        scripts = self.target() / "scripts"
+        for script, args in (
+            ("init_project.py", ["--mode", "privacy", "--language", "zh"]),
+            ("archive_goal.py", ["--title", "installed-goal"]),
+        ):
+            result = subprocess.run(
+                [sys.executable, "-B", str(scripts / script), "--project", str(self.project), *args],
+                env=self.env, capture_output=True, text=True, timeout=15,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            roadmap = self.project / ".checkpoint-karpathy/private/roadmap"
+            if script == "init_project.py":
+                (roadmap / "status.md").write_text("## Completion\ncancelled\n")
+        archive = next((roadmap.parent / "archive").iterdir())
+        self.assertIn("cancelled", (archive / "status.md").read_text())
+        self.assertIn("incomplete", (roadmap / "status.md").read_text())
+        self.assert_package(self.target())
 
     def test_upgrade_backs_up_complete_previous_package_outside_discovery(self):
         self.invoke(*self.base)
@@ -188,7 +209,8 @@ class InstallerTests(unittest.TestCase):
         archive = self.case / "release.tar.gz"
         with tarfile.open(archive, "w:gz") as bundle:
             bundle.add(ROOT / "SKILL.md", arcname="release/SKILL.md")
-            bundle.add(ROOT / "references", arcname="release/references")
+            for resource in ("references", "scripts", "assets"):
+                bundle.add(ROOT / resource, arcname="release/" + resource)
             bundle.add(ROOT / "AGENTS.md", arcname="release/AGENTS.md")
         self.env["TEST_ARCHIVE"] = str(archive)
         self.env["TEST_REQUEST"] = str(self.case / "request.txt")

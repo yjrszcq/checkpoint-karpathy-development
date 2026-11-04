@@ -1,0 +1,9 @@
+# Planning visibility and location. Default: collaborative.
+# collaborative: Track configuration, roadmap documents, and archives in Git.
+# privacy: Keep them under Git-ignored private/.
+mode: ${mode}
+
+# Commit subject format. Default: conventional.
+# conventional: Conventional Commits, e.g. feat(auth): add login.
+# phase: Phase-style, e.g. Phase 1.1: add login.
+commit_message_style: ${commit_message_style}

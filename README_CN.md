@@ -10,11 +10,11 @@
 
 ## 核心思路
 
-每次使用先读取 `config.md`，仅在缺失时创建。配置记录可见性模式和提交风格，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认协作模式和 Conventional Commits；已有值持续沿用，用户要求时修改。
+每次使用先读取 `config.yaml`，仅在缺失时创建。配置记录可见性模式和提交风格，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认协作模式和 Conventional Commits；已有值持续沿用，用户要求时修改。
 
 初始化时创建所选模式下固定的 `roadmap/` 和两种模式共用的 `private/work/`。目标文档全部放在 `roadmap/` 中，分别记录总览、状态、背景、里程碑计划、计划变更历史和执行历史。初次规划须完整覆盖全部目标。
 
-目标未完成时，技能跨对话持续使用，恢复当前下一行动。完成或经用户明确要求取消后，技能停用，文档留在原位；下次明确启用技能开展新目标时，将旧文档内容归档，再在原 `roadmap/` 中创建新文档。`config.md` 和 `private/work/` 持续保留。
+目标未完成时，技能跨对话持续使用，恢复当前下一行动。完成或经用户明确要求取消后，技能停用，文档留在原位；下次明确启用技能开展新目标时，将旧文档内容归档，再在原 `roadmap/` 中创建新文档。`config.yaml` 和 `private/work/` 持续保留。
 
 每个正常小阶段结束时必须有：
 
@@ -52,7 +52,7 @@ Phase X.Y: <描述>
 **协作模式：**
 ```text
 .checkpoint-karpathy/
-  config.md
+  config.yaml
   roadmap/
   private/
     work/
@@ -63,7 +63,7 @@ Phase X.Y: <描述>
 ```text
 .checkpoint-karpathy/
   private/
-    config.md
+    config.yaml
     roadmap/
     work/
     archive/
@@ -73,29 +73,32 @@ Phase X.Y: <描述>
 
 ### 配置
 
-生成的 `config.md` 自带逐项说明，用户修改对应的 `Value`：
+生成的 `config.yaml` 自带逐项说明，用户修改对应的 YAML 值，注释说明配置项：
 
-```md
-# Checkpoint Karpathy Configuration
+```yaml
+# 规划文档的可见性和位置，默认 collaborative。
+# collaborative：协作模式，配置、目标文档和归档纳入 Git。
+# privacy：隐私模式，放在 Git 忽略的 private/ 下。
+mode: collaborative
 
-## Mode
-- Value: collaborative
-- 作用：选择规划文档的可见性和存放位置。
-- 可填值：
-  - collaborative：协作模式，配置、目标文档和归档纳入 Git。
-  - privacy：隐私模式，配置、目标文档和归档放在 Git 忽略的 private/ 下。
-- 默认值：collaborative
-
-## Commit message style
-- Value: conventional
-- 作用：选择提交信息格式。
-- 可填值：
-  - conventional：约定式提交，例如 feat(auth): add login。
-  - phase：阶段式提交，例如 Phase 1.1: add login。
-- 默认值：conventional
+# 提交信息格式，默认 conventional。
+# conventional：约定式提交，例如 feat(auth): add login。
+# phase：阶段式提交，例如 Phase 1.1: add login。
+commit_message_style: conventional
 ```
 
-切换协作／隐私模式时，在目标位置创建或复用 `roadmap/`，先检查冲突，再将活动目标内容迁入该目录、将 `config.md` 迁入其上一级状态目录。保留源目录，保全文档内容及内部链接。已有归档、隐私笔记和 work 保留原位。切到隐私模式时，在下次相关提交中移除旧路径的跟踪；已有 Git 历史仍然存在。
+切换协作／隐私模式时，在目标位置创建或复用 `roadmap/`，先检查冲突，再将活动目标内容迁入该目录、将 `config.yaml` 迁入其上一级状态目录。保留源目录，保全文档内容及内部链接。已有归档、隐私笔记和 work 保留原位。切到隐私模式时，在下次相关提交中移除旧路径的跟踪；已有 Git 历史仍然存在。
+
+### 项目状态脚本
+
+脚本需要 Python 3.9+ 和 PyYAML；可在合适的 Python 环境中运行 `python3 -m pip install -r /技能路径/scripts/requirements.txt`。使用已安装技能中的脚本，并填写实际项目根目录：
+
+```bash
+python3 /技能路径/scripts/init_project.py --project /项目路径 --mode collaborative --language zh
+python3 /技能路径/scripts/archive_goal.py --project /项目路径 --title old-goal-summary
+```
+
+初始化创建带注释的 YAML 配置、固定目录、六份文档骨架，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置和完整目标文档保持原样，部分缺失的状态先恢复再运行。agent 负责填写实际规划、核对完成证据；归档命令从配置读取模式，将已完成／已取消目标归档并一次生成新骨架。配置和 work 持续保留。状态字段要求和失败恢复见[脚本说明](references/project-state.md#helper-commands)。
 
 ### 路线图文档
 
@@ -134,7 +137,7 @@ roadmap/
 
 已完成和已取消采用相同归档流程：下次启用技能开展新目标时，将 `roadmap/` 内全部内容直接移入 `archive/YYYYMMDDa-<旧目标概括>/`，含额外文件和子目录。日期后字母递增，避免冲突。归档内直接是目标文档，不再套一层 `roadmap/`。
 
-固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.md` 不归档、不重建。恢复任务先读配置、`roadmap/README.md` 和 `roadmap/status.md`，再读相关计划、背景及最近进度；核对完成标记与实际验收记录。
+固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.yaml` 不归档、不重建。恢复任务先读配置、`roadmap/README.md` 和 `roadmap/status.md`，再读相关计划、背景及最近进度；核对完成标记与实际验收记录。
 
 ## 临时工作文件
 
@@ -152,7 +155,7 @@ roadmap/
 - [路线图模板](references/roadmap-templates.md)：文档职责和目标模板。
 - [检查点细节](references/checkpoint-details.md)：进度模板、里程碑复核和验证方法查找。
 
-安装时复制完整技能目录，包含 `references/`。
+安装时复制完整技能目录，包含 `references/`、`scripts/`、`assets/`。
 
 ## 安装
 
@@ -182,7 +185,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development-skills
 请按照仓库里的 INSTALL.md 安装。
 ```
 
-[INSTALL.md](INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`；已有安装先备份到技能扫描目录之外，项目原有的指令文件会保留。
+[INSTALL.md](INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`、`scripts/`、`assets/`；已有安装先备份到技能扫描目录之外，项目原有的指令文件会保留。
 
 安装后重启 harness 或重新加载技能，再要求它使用 `checkpoint-karpathy-development` 处理你的目标。
 

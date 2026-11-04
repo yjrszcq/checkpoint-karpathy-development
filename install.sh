@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the canonical SKILL.md + references/ package. Bash 3.2+.
+# Install the canonical skill, references, scripts, and assets. Bash 3.2+.
 set -euo pipefail
 
 SKILL_NAME=checkpoint-karpathy-development
@@ -229,6 +229,15 @@ validate_package() {
   for file in project-state.md roadmap-templates.md checkpoint-details.md; do
     [[ -s "$package/references/$file" ]] || die "Missing reference: $package/references/$file"
   done
+  for file in init_project.py archive_goal.py project_state.py requirements.txt; do
+    [[ -s "$package/scripts/$file" ]] || die "Missing script resource: $package/scripts/$file"
+  done
+  for file in README.md status.md context.md milestones.md changelog.md progress.md; do
+    [[ -s "$package/assets/roadmap/$file" ]] || die "Missing goal template: $package/assets/roadmap/$file"
+  done
+  for file in en.yaml zh.yaml; do
+    [[ -s "$package/assets/config/$file" ]] || die "Missing configuration template: $package/assets/config/$file"
+  done
 }
 
 if [[ -n "$source_dir" ]]; then
@@ -248,7 +257,7 @@ else
   IFS= read -r archive_root < "$download_dir/archive-list.txt"
   archive_root=${archive_root%%/*}
   [[ -n "$archive_root" && "$archive_root" != . && "$archive_root" != .. && "$archive_root" != *[!a-zA-Z0-9._-]* ]] || die 'Unexpected archive root.'
-  tar -xzf "$download_dir/source.tar.gz" -C "$download_dir" "$archive_root/SKILL.md" "$archive_root/references"
+  tar -xzf "$download_dir/source.tar.gz" -C "$download_dir" "$archive_root/SKILL.md" "$archive_root/references" "$archive_root/scripts" "$archive_root/assets"
   source_dir=$download_dir/$archive_root
   validate_package "$source_dir"
   rm -f "$download_dir/source.tar.gz"
@@ -261,7 +270,9 @@ for ((i=0; i<${#destinations[@]}; i++)); do
   name=${harnesses[$i]}
   if [[ -f "$target/SKILL.md" && -d "$target/references" ]] && \
       cmp -s "$source_dir/SKILL.md" "$target/SKILL.md" && \
-      diff -qr "$source_dir/references" "$target/references" >/dev/null 2>&1; then
+      diff -qr "$source_dir/references" "$target/references" >/dev/null 2>&1 && \
+      diff -qr "$source_dir/scripts" "$target/scripts" >/dev/null 2>&1 && \
+      diff -qr "$source_dir/assets" "$target/assets" >/dev/null 2>&1; then
     printf 'Already up to date: %s\n' "$target"
     continue
   fi
@@ -273,9 +284,13 @@ for ((i=0; i<${#destinations[@]}; i++)); do
   stage=$run_dir/staged-$name
   mkdir "$stage"
   cp "$source_dir/SKILL.md" "$stage/SKILL.md"
-  cp -R "$source_dir/references" "$stage/references"
+  for resource in references scripts assets; do
+    cp -R "$source_dir/$resource" "$stage/$resource"
+  done
   validate_package "$stage"
-  diff -qr "$source_dir/references" "$stage/references" >/dev/null
+  for resource in references scripts assets; do
+    diff -qr "$source_dir/$resource" "$stage/$resource" >/dev/null
+  done
   cmp "$source_dir/SKILL.md" "$stage/SKILL.md"
   mkdir -p "${target%/*}"
   active_target=$target

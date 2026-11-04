@@ -75,9 +75,25 @@ checkpoint-karpathy-development/
     checkpoint-details.md
     project-state.md
     roadmap-templates.md
+  scripts/
+    init_project.py
+    archive_goal.py
+    project_state.py
+    requirements.txt
+  assets/
+    config/
+      en.yaml
+      zh.yaml
+    roadmap/
+      README.md
+      status.md
+      context.md
+      milestones.md
+      changelog.md
+      progress.md
 ```
 
-Copy the entire `references/` directory, including any additional resources in future versions. The repository root is the canonical package source. Do not copy repository instructions, installer files, tests, or project planning state into the skill.
+Copy the entire `references/`, `scripts/`, and `assets/` directories, preserving their relative structure. The repository root is the canonical package source. Do not copy repository instructions, installer files, tests, or project planning state into the skill.
 
 Do not overwrite a project's `AGENTS.md` or `CLAUDE.md`. Those repository files are optional workflow examples, not installation requirements. Installing the skill also does not initialize a project's `.checkpoint-karpathy/` state or edit its `.gitignore`.
 
@@ -95,7 +111,9 @@ The printed backup path includes custom files from the previous installation. If
 
 For manual restoration, first move the current installed bundle to a separate location outside all scanned skills directories, then move the printed previous bundle back to its original installation path. Preserve both versions until the restored skill is verified. Do not put backup skill directories under any `skills/` directory.
 
-If shell installation is unavailable, copy root `SKILL.md` and the complete `references/` directory into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
+If shell installation is unavailable, copy root `SKILL.md` and the complete `references/`, `scripts/`, and `assets/` directories into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
+
+The project-state helpers require Python 3.9+ and PyYAML. Verify the Python environment before using them; if PyYAML is missing, install it in a suitable environment with `python3 -m pip install -r /path/to/checkpoint-karpathy-development/scripts/requirements.txt`. Installing the skill only copies resources and does not install Python dependencies or initialize project state.
 
 ## Verify and report
 
