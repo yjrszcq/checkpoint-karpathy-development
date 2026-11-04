@@ -33,7 +33,7 @@ The state directory is `.checkpoint-karpathy/` in collaborative mode or `.checkp
 - `roadmap/`: fixed directory containing the active goal documents.
 - `archive/`: completed or cancelled goal contents, created as needed.
 
-Use the bundled [initialization command](scripts/init_project.py) to create configuration, the fixed `roadmap/`, all six goal skeletons, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. The [archive command](scripts/archive_goal.py) reads configuration and archives the old goal and creates fresh skeletons in one invocation; pass only the old goal's title and project root. Fill the generated documents with the actual complete plan. Commands, dependencies, and failure handling are in [Project state operations](references/project-state.md#helper-commands).
+Use the bundled [initialization command](scripts/init_project.py) to create configuration, the fixed empty `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. Send agent-prepared structured JSON on standard input to the [creation command](scripts/create_goal.py); it fills templates with actual content, creates all six goal documents with unchecked plan items, and records roadmap generation and the initial plan baseline. Read [Structured goal input](references/goal-input.md) before preparing content. The [archive command](scripts/archive_goal.py) reads configuration and moves a terminal goal's contents into its archive, leaving the fixed roadmap directory empty. Commands, dependencies, and recovery are in [Project state operations](references/project-state.md#helper-commands).
 
 Before initializing directories, creating configuration, filling missing settings, or changing visibility mode, read [Project state operations](references/project-state.md#configuration-and-initialization). It defines the annotated configuration and directory operations. For archiving, read its [Archiving procedure](references/project-state.md#archiving) before moving files.
 
@@ -43,10 +43,10 @@ On requested settings changes, apply only the requested values to subsequent wor
 
 1. Read project instructions and configuration, initialize missing fixed directories, and inspect the actual goal files.
 2. Read `roadmap/README.md` and `roadmap/status.md`, then recent progress and the active milestone, dependencies, and relevant context or blockers. Read plan-change history when needed to understand a decision.
-3. If goal files are absent, plan the full goal. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
+3. If goal files are absent, plan the full goal and create its documents using structured input. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
-6. If `completed` or `cancelled` and starting an explicitly requested new goal, follow the archive procedure using the archive-and-rebuild command, then fill the new goal files inside the same `roadmap/`. Retain configuration and work.
+6. If `completed` or `cancelled` and starting an explicitly requested new goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration and work.
 
 Select and record the work mode in `roadmap/README.md`:
 
@@ -121,7 +121,7 @@ Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completi
 
 Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 
-After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories without an enclosing `roadmap/`. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
+After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories without an enclosing `roadmap/`. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
 
 ## Temporary work and visibility
 

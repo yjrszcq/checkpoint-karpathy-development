@@ -95,10 +95,11 @@ The helpers require Python 3.9+ and PyYAML (`python3 -m pip install -r /path/to/
 
 ```bash
 python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
+python3 /path/to/skill/scripts/create_goal.py --project /path/to/project
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
 ```
 
-Initialization creates annotated YAML configuration, fixed directories, all six document skeletons, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for those user-selected initial settings. Existing configuration and complete goal documents are preserved; reconcile partial state before retrying. The agent fills the actual plan and verifies completion. The archive command reads the mode from configuration, archives a completed/cancelled goal, and creates fresh skeletons in one operation. Configuration and work remain active. See [helper commands](references/project-state.md#helper-commands) for status requirements and recovery.
+Initialization creates annotated YAML configuration, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog; directory/configuration initialization is not logged there. Read [structured goal input](references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration and work persist; archive-only requests need no new goal. See [helper commands](references/project-state.md#helper-commands) for status and recovery.
 
 ### Roadmap documents
 
@@ -152,6 +153,7 @@ Manage temporary material separately, retaining useful evidence or tools and cle
 [SKILL.md](SKILL.md) contains the execution workflow, required constraints, and links to details at the operation that needs them. Read the relevant reference before that operation:
 
 - [Project state](references/project-state.md): configuration, initialization, visibility-mode changes, and archiving.
+- [Structured goal input](references/goal-input.md): fields, validation, and JSON invocation examples.
 - [Roadmap templates](references/roadmap-templates.md): document responsibilities and goal templates.
 - [Checkpoint details](references/checkpoint-details.md): progress templates, milestone reviews, and verification discovery.
 

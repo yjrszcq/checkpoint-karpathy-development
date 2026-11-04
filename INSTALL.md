@@ -74,11 +74,14 @@ checkpoint-karpathy-development/
   references/
     checkpoint-details.md
     project-state.md
+    goal-input.md
     roadmap-templates.md
   scripts/
     init_project.py
+    create_goal.py
     archive_goal.py
     project_state.py
+    goal_documents.py
     requirements.txt
   assets/
     config/
@@ -89,6 +92,8 @@ checkpoint-karpathy-development/
       status.md
       context.md
       milestones.md
+      milestone.md
+      phase.md
       changelog.md
       progress.md
 ```

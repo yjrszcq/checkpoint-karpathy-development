@@ -2,16 +2,15 @@
 
 ## Completion
 incomplete
-<For cancelled: cancellation reason and progress entry link.>
 
 ## Current State
-<Latest snapshot of what exists and what is missing.>
+${current_state}
 
 ## Current Phase
-<Link to the active milestone, subphase, or review in the plan.>
+${current_phase}
 
 ## Next Action
-<Subphase, milestone review, or blocker-resolution action, with a link.>
+${next_action}
 
 ## Related Blockers
-<Links to current blocker entries in context.md, or None.>
+${related_blockers}

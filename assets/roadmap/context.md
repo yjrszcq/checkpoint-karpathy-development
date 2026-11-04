@@ -1,13 +1,13 @@
 # Goal Context
 
 ## Constraints
-- C-01: <Confirmed requirement or boundary.>
+${constraints}
 
 ## Assumptions
-- A-01: <Claim, rationale, validation method, status, evidence link.>
+${assumptions}
 
 ## Risks
-- R-01: <Potential problem, impact, response, current status.>
+${risks}
 
 ## Blockers
-- B-01: <Existing obstacle, affected phase, resolution path, current status.>
+${blockers}

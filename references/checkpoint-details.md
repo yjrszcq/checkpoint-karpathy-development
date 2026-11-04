@@ -4,52 +4,60 @@ Read the progress template before creating or reconstructing a progress log. Rea
 
 ## Progress template
 
-Use this structure in the active `roadmap/progress.md`, under the state directory selected by configuration:
+The creation script records roadmap generation as the first execution entry. Directory and configuration initialization are not goal execution entries. Subsequent entries record actual work and evidence; append them chronologically and preserve useful prior history. Use concise labelled paragraphs or sections in the user's language, keeping the date, stable roadmap reference, commit, completed work, verification, remaining scope, and next step easy to find.
+
+Verification records must make the evidence's scope clear: what was checked, the observed result, and which revision or inputs it covers where that affects the conclusion. Distinguish rerun checks from reused evidence and record limitations. Link to detailed logs in private work when useful, keeping the durable outcome in progress. Keep shared progress free of sensitive details. A completed subphase supports checking that item in milestones.md; parent milestones and full-goal acceptance still require their own evidence. Keep the latest state and next action in status.md.
+
+### Execution entry
 
 ```md
-# Checkpoint Karpathy Progress
+## <YYYY-MM-DD> · <roadmap item ID>: <short title>
 
-## Phase <N or M.S>: <short title>
-
-Date: <YYYY-MM-DD>
-Roadmap item: <milestone/subphase reference>
 Commit: <hash after commit, or pending before commit>
 
-### Goal
-<What this phase was meant to accomplish.>
+Goal: <Intended outcome and scope of this checkpoint.>
 
-### Completed
-- <Concrete completed item>
+Completed: <Concrete changes and resulting behavior; name relevant files or
+interfaces where they help the next agent locate the work.>
 
-### Files Changed
-- `<path>` — <why it changed>
+Verification:
+- `<command or method>` — <observed result and coverage; link to useful evidence>
+- <For reused evidence, identify its source and why it still applies. For omitted
+  checks, record the reason and resulting limitation.>
 
-### Verification
-- `<command or method>` — <result>
-- If not run: <reason>
+Boundaries / remaining: <Unmet acceptance criteria, known issues, or parent
+milestone work still open, with roadmap/context links where useful. A completed
+subphase alone does not establish parent milestone or full-goal completion.>
 
-### Decisions
-- <Important technical decision and rationale>
+Next: <Next roadmap item or blocker-resolution action. Keep the current snapshot
+and next action updated in status.md; this entry records the handoff at this point.>
 
-### Known Issues
-- <Open issue, limitation, or risk>
-- If none: None known.
-
-### Next Step
-<The next roadmap subphase or a roadmap update.>
 ```
 
-For a milestone review checkpoint, use a non-incrementing phase label and include:
+Add the following only when relevant:
 
 ```md
-## Phase <last planned phase> Milestone Review: <short title>
+Decision: <Choice and rationale; link to the maintained design or plan change.>
 
-Date: <YYYY-MM-DD>
+Failure / recovery: <What failed, cause or remaining uncertainty, correction,
+and retest result.>
+
+Ongoing check: <Command, tested revision/input, process or session handle, log
+path, last observed state, and how to inspect or resume it. Record the terminal
+result when observed; a running check is not a pass.>
+
+```
+
+For a milestone review, use the following heading and metadata in place of the
+normal entry heading and metadata. Include Closeout Order alongside the shared
+Goal, Completed, Verification, Boundaries / remaining, and Next fields above.
+Reuse the last planned phase label without incrementing it.
+
+```md
+## <YYYY-MM-DD> · Phase <last planned phase> Milestone Review: <short title>
+
 Roadmap item: Milestone <N> Review after Phase <last planned phase>
 Commit: <hash after commit, or pending before commit>
-
-### Goal
-<What the milestone review was meant to stabilize.>
 
 ### Closeout Order
 - Scope and evidence: <confirmed milestone goal and touched surface>
@@ -59,8 +67,6 @@ Commit: <hash after commit, or pending before commit>
 - Debugging / fixes: <bugs found and fixed, or none>
 - Final verification rerun: <failed checks and broad checks rerun after fixes>
 ```
-
-Append entries. Do not erase useful prior history.
 
 ## Milestone review
 

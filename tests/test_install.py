@@ -1,6 +1,7 @@
 """Isolated installer integration tests; fixtures remain in ignored private work."""
 
 import os
+import json
 from pathlib import Path
 import pty
 import select
@@ -98,24 +99,42 @@ class InstallerTests(unittest.TestCase):
         for filename in ("AGENTS.md", "CLAUDE.md", ".gitignore"):
             self.assertEqual((self.project / filename).read_text(), "existing project instructions\n")
 
-    def test_installed_helpers_initialize_and_archive_with_bundled_templates(self):
+    def test_installed_helpers_initialize_create_archive_and_create(self):
         self.invoke(*self.base)
         scripts = self.target() / "scripts"
+        payload = {
+            "goal": "Installed package creates actual plans", "acceptance": ["Lifecycle succeeds"],
+            "included": ["Actual goal"], "non_goals": [], "work_mode": "maintenance",
+            "initial_state": "No goal yet", "current_state": "Ready", "next_action": "Execute A.1",
+            "context": {"constraints": [], "assumptions": [], "risks": [], "blockers": []},
+            "milestones": [{"id": "A", "title": "Delivery", "purpose": "Meet goal", "dependencies": [],
+                "phases": [{"id": "A.1", "title": "Implement", "scope": "Lifecycle", "dependencies": [],
+                    "success_criteria": "Works", "verification": "Run lifecycle", "commit": "feat(state): implement goal"}],
+                "review": {"verification": "Regression checks", "commit": "chore(review): verify goal"}}],
+        }
         for script, args in (
             ("init_project.py", ["--mode", "privacy", "--language", "zh"]),
+            ("create_goal.py", []),
             ("archive_goal.py", ["--title", "installed-goal"]),
+            ("create_goal.py", []),
         ):
             result = subprocess.run(
                 [sys.executable, "-B", str(scripts / script), "--project", str(self.project), *args],
                 env=self.env, capture_output=True, text=True, timeout=15,
+                input=json.dumps(payload) if script == "create_goal.py" else "",
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             roadmap = self.project / ".checkpoint-karpathy/private/roadmap"
             if script == "init_project.py":
+                self.assertEqual(list(roadmap.iterdir()), [])
+            if script == "create_goal.py":
+                self.assertIn(payload["goal"], (roadmap / "README.md").read_text())
                 (roadmap / "status.md").write_text("## Completion\ncancelled\n")
+            if script == "archive_goal.py":
+                self.assertEqual(list(roadmap.iterdir()), [])
         archive = next((roadmap.parent / "archive").iterdir())
         self.assertIn("cancelled", (archive / "status.md").read_text())
-        self.assertIn("incomplete", (roadmap / "status.md").read_text())
+        self.assertIn("Establish initial plan", (roadmap / "changelog.md").read_text())
         self.assert_package(self.target())
 
     def test_upgrade_backs_up_complete_previous_package_outside_discovery(self):

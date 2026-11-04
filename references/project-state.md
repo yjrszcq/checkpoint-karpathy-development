@@ -33,29 +33,33 @@ When the user requests settings changes, update only the requested values and ap
 
 ### Helper commands
 
-Use the installed skill's scripts for initialization and archive-and-rebuild operations. They require Python 3.9+ and PyYAML; if needed, install `scripts/requirements.txt` in the Python environment used to run them. Replace `/path/to/skill` with the installed package directory. `--project` is the actual project root and defaults to the current directory.
+Use the installed skill's initialization, goal-creation, and archive scripts. They require Python 3.9+ and PyYAML; if needed, install `scripts/requirements.txt` in the Python environment used to run them. Replace `/path/to/skill` with the installed package directory. `--project` is the actual project root and defaults to the current directory.
 
-For a project's first goal, the agent resolves the mode from the user's request or the default and passes it explicitly:
+For first use, resolve the mode from the user's request or the default and pass it explicitly:
 
 ```bash
 python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
 ```
 
-Use `--mode privacy` when requested. `--commit-message-style phase` selects phase subjects on first creation; the default is `conventional`. `--language en|zh` selects the configuration template from [assets/config/](../assets/config/) (default `en`); use `zh` for Chinese. The script substitutes the selected mode and commit style while preserving template comments. Translate comments into another user language when appropriate, keeping keys and values intact.
+Use `--mode privacy` when requested. `--commit-message-style phase` selects phase subjects on first creation; the default is `conventional`. `--language en|zh` selects the configuration template from [assets/config/](../assets/config/) (default `en`); use `zh` for Chinese. Translate comments into another user language when appropriate, keeping keys and values intact.
 
-Initialization creates `config.yaml`, the fixed `roadmap/` with all six skeletons, and `private/work/`, and adds the private ignore rule without replacing `.gitignore`. Existing configuration and complete goal documents are preserved byte-for-byte. On resume, pass the recorded mode; a different mode or commit style is rejected rather than changing existing settings. An existing partial goal or planning content in the other mode requires recovery before retrying. Fill missing configuration fields from recorded/user choices and defaults before running the command.
+Initialization creates missing `config.yaml`, the fixed empty `roadmap/`, and `private/work/`, and adds the private ignore rule without replacing `.gitignore`. It preserves existing configuration and complete goal documents byte-for-byte. It writes no execution or plan-change record. On resume, pass the recorded mode; a different mode or commit style is rejected. Recover partial or opposite-mode goal state first.
 
-When an explicitly requested new goal follows a completed or cancelled goal:
+Before creating a goal, read [Structured goal input](goal-input.md). The agent plans the entire goal and sends structured JSON through standard input to `create_goal.py`. The script validates fields and references and fills the bundled templates; the agent supplies content, not prewritten Markdown files. Standard input supports long plans without command-line argument limits.
+
+Use the complete JSON and invocation example in the linked reference. All six documents are rendered before activation. The script sets completion to `incomplete`, generates unchecked subphases and standalone reviews, and writes an initial progress entry for **roadmap generation** and a changelog entry establishing the initial plan. These entries describe structural validation, not successful development or project acceptance. Directory/configuration initialization is not recorded in either log. After creation, update documents directly as work progresses; creation refuses any nonempty active roadmap.
+
+When starting a new goal after a completed or cancelled goal, first prepare the complete new JSON and run the creation command with `--check-only`. This validates input and template rendering without writing files or requiring an empty active roadmap. Keep the same validated payload for the creation step. The agent must also verify actual completion evidence or explicit user cancellation before archiving.
 
 ```bash
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title linked-market-information
 ```
 
-The title describes the old goal and contains letters or numbers separated by hyphens. The command reads `config.yaml`, determines the mode and paths, and supplies the date and collision suffix. It moves all goal contents into the archive and creates fresh skeletons in the same `roadmap/` in one invocation. It retains configuration and work. The agent then fills in the new goal's plan.
+The title describes the old goal and contains letters or numbers separated by hyphens. The archive command reads `config.yaml`, determines paths, and supplies the date and collision suffix. It moves all goal contents into the archive and leaves the fixed `roadmap/` empty. Configuration and work remain active. Then run `create_goal.py` with the validated new content. If creation fails, the old goal is safe in its archive; inspect the reported state before retrying. Explicitly requested archive-only work needs no replacement goal.
 
-Before archiving, the agent verifies completion evidence or explicit user cancellation. The script checks the `## Completion` section in `status.md`, with `completed` or `cancelled` on its first nonblank line; it does not verify acceptance evidence or infer status from arbitrary prose. Keep this heading and value intact when translating documents. Reconcile a nonstandard or unclear status from evidence before retrying.
+The archive script checks the `## Completion` section in `status.md`, with `completed` or `cancelled` on its first nonblank line. It does not verify acceptance evidence or infer status from arbitrary prose. Keep this heading and value intact when translating documents. Reconcile unclear status from evidence before retrying.
 
-The scripts stop on conflicting configurations, mismatched mode/location, partial goal files, or overwrites. Archive preparation reads every template before moving the old goal. If a move fails, the script attempts to restore the old goal; an unsuccessful recovery reports the roadmap, archive, and staging paths for inspection. Staging lives under `private/work/staging/`; preserve failed operations until recovery. The commands do not commit, push, change existing settings, or clean work files. For a user-requested configuration change, edit the YAML values and follow the visibility operations below; do not use initialization to change settings.
+The scripts reject conflicting configurations, mismatched mode/location, and overwrites. Initialization and archiving also reject partial goal sets. Creation validates all content and templates before writing, stages rendered documents under `private/work/staging/`, and attempts to return activated files to staging on failure. Archiving attempts to restore the old goal if a move fails. Failed recovery reports the actual paths; preserve partial files and evidence until recovery. Neither command offers crash-proof multi-file transactions; inspect state after process or system termination. The commands do not commit, push, change existing settings, or clean work files. For a user-requested configuration change, edit the YAML values and follow the visibility operations below.
 
 For a visibility-mode change, create or reuse the destination `roadmap/`, move the active goal contents into it, and move `config.yaml` into its parent state directory, preserving content and relative links. Check destination conflicts before moving; do not overwrite state. Keep the source `roadmap/` directory in place. Apply the selected Git tracking policy; include removal of formerly tracked active state paths in the next relevant commit when switching to privacy. Existing Git history remains. Archived goals, other private notes, and `private/work/` retain their locations and visibility.
 
@@ -123,11 +127,11 @@ An empty fixed `roadmap/` is not an existing goal. If goal documents are partial
 
 ## Archiving
 
-Archive only when the user invokes the skill for a new goal after the old goal is completed or cancelled. Verify a completed claim against the plan, review commits, and overall acceptance first; cancelled work need not pass unfinished acceptance.
+Archive when the user invokes the skill for a new goal after the old goal is completed or cancelled, or explicitly requests archiving a terminal goal without a replacement. Verify a completed claim against the plan, review commits, and overall acceptance first; cancelled work need not pass unfinished acceptance.
 
 Use `archive/YYYYMMDDa-<summary>/` within the selected state directory. The letter increments (`a` … `z`, `aa`, `ab`, …) to avoid same-day collisions. Read the summary from the old goal and use a short kebab-case name describing that completed or cancelled goal.
 
-Create an unused archive destination, then move **all contents** of the active `roadmap/`, including any added subdirectories, directly into it. Check conflicts and preserve relative links within the goal documents. Keep the fixed `roadmap/` directory itself; create new goal files inside it after archiving succeeds.
+Create an unused archive destination, then move **all contents** of the active `roadmap/`, including any added subdirectories, directly into it. Check conflicts and preserve relative links within the goal documents. Keep the fixed `roadmap/` directory itself. For a new goal, validate the structured content first, archive, then run the separate creation command.
 
 ```text
 archive/
@@ -140,4 +144,4 @@ archive/
     progress.md
 ```
 
-The archive has no extra enclosing `roadmap/` layer. Keep `config.yaml` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal, not immediately upon completion or cancellation.
+The archive has no extra enclosing `roadmap/` layer. Keep `config.yaml` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal or an explicit archive request; completion or cancellation alone does not trigger archiving.

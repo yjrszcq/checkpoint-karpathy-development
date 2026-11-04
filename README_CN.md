@@ -95,10 +95,11 @@ commit_message_style: conventional
 
 ```bash
 python3 /技能路径/scripts/init_project.py --project /项目路径 --mode collaborative --language zh
+python3 /技能路径/scripts/create_goal.py --project /项目路径
 python3 /技能路径/scripts/archive_goal.py --project /项目路径 --title old-goal-summary
 ```
 
-初始化创建带注释的 YAML 配置、固定目录、六份文档骨架，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置和完整目标文档保持原样，部分缺失的状态先恢复再运行。agent 负责填写实际规划、核对完成证据；归档命令从配置读取模式，将已完成／已取消目标归档并一次生成新骨架。配置和 work 持续保留。状态字段要求和失败恢复见[脚本说明](references/project-state.md#helper-commands)。
+初始化创建带注释的 YAML 配置、固定的空目录，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置和完整目标文档保持原样，部分缺失的状态先恢复。agent 将结构化 JSON 通过标准输入传给 `create_goal.py`，脚本校验后按模板生成六份实际文档，计划项均未勾选，并在 progress 记录“生成线路图”、在 changelog 记录“建立初始计划”；创建目录和配置不写入这两份记录。完整输入格式和调用示例见[结构化目标输入](references/goal-input.md)。替换已结束目标时，先用 `--check-only` 校验新内容，再归档旧目标，最后用同一份输入创建新文档。归档脚本读取配置，只移动旧目标内容，保留空的固定 roadmap 目录；配置和 work 持续保留。仅归档时无需创建新目标。状态字段要求和失败恢复见[脚本说明](references/project-state.md#helper-commands)。
 
 ### 路线图文档
 
@@ -152,6 +153,7 @@ roadmap/
 [SKILL.md](SKILL.md) 保留执行流程、强制约束，并在需要细节的操作处提供链接。开始对应操作前，读取相关引用文档：
 
 - [项目状态](references/project-state.md)：配置、初始化、可见性模式切换和归档。
+- [结构化目标输入](references/goal-input.md)：字段、校验规则和 JSON 调用示例。
 - [路线图模板](references/roadmap-templates.md)：文档职责和目标模板。
 - [检查点细节](references/checkpoint-details.md)：进度模板、里程碑复核和验证方法查找。
 
