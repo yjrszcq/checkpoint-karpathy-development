@@ -89,7 +89,7 @@ Execute one coherent subphase or milestone review at a time:
 1. Select the next action and briefly state its goal. Inspect the affected project files and instructions.
 2. Make the smallest coherent change that meets the planned scope and success criteria.
 3. Detect the project stack and run the smallest relevant verification. Follow Verification and Git below.
-4. **Check off completed roadmap items:** change `[ ]` to `[x]` in `roadmap/milestones.md` and any split milestone documents once completion and verification requirements are met. Leave unfinished, blocked, and cancelled items unchecked.
+4. Check off completed roadmap items: change `[ ]` to `[x]` in `roadmap/milestones.md` and any split milestone documents once completion and verification requirements are met. Leave unfinished, blocked, and cancelled items unchecked.
 5. Append the actual work, files changed, verification results, decisions, known issues, and next step to `roadmap/progress.md`. Before creating or reconstructing this log, read the [Progress template](references/checkpoint-details.md#progress-template). Preserve useful prior history.
 6. Update the current snapshot, phase reference, and Next Action in `roadmap/status.md`. Update context and the plan-change log when their information changes. If all subphases of a milestone are done, the next action is its standalone review.
 7. Review status and diffs, stage relevant files, inspect the staged diff, and commit the checkpoint with its plan checkboxes, progress, and current state. Report the commit and next action.
@@ -115,9 +115,9 @@ Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completi
 
 | Value | Meaning |
 |---|---|
-| `incomplete` (未完成) | Goal remains active; resume the next unfinished action. |
-| `completed` (已完成) | All subphases and milestone reviews are done and committed, and overall acceptance has recorded verification evidence. |
-| `cancelled` (已取消) | The user explicitly requests or confirms termination. |
+| `incomplete` | Goal remains active; resume the next unfinished action. |
+| `completed` | All subphases and milestone reviews are done and committed, and overall acceptance has recorded verification evidence. |
+| `cancelled` | The user explicitly requests or confirms termination. |
 
 Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 

@@ -61,7 +61,7 @@ Change each completed item's `[ ]` to `[x]` as soon as its completion and verifi
 
 ## Completion and document growth
 
-Completion is `incomplete`, `completed`, or `cancelled` (未完成／已完成／已取消). Verify full-goal acceptance and all committed milestone reviews before setting `completed`. Cancellation is explicit user direction and preserves the actual stage completion state.
+Completion is `incomplete`, `completed`, or `cancelled`. Verify full-goal acceptance and all committed milestone reviews before setting `completed`. Cancellation is explicit user direction and preserves the actual stage completion state.
 
 Keep the `## Completion` heading and the status value on its own line in `status.md` for the archive command. Other document content can follow the user's language.
 
