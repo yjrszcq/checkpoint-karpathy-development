@@ -4,7 +4,7 @@ Use checkpoint-karpathy development for multi-step software work in this project
 
 ## Core behavior
 
-When the user gives a concrete development goal:
+When the user gives a concrete development goal, first read or create `config.md` using Project configuration below. Resolve roadmap and progress paths relative to the configured state directory.
 
 1. Select the work mode: greenfield, continuation, feature, bugfix, refactor, or maintenance.
 2. Create or update `.checkpoint-karpathy/roadmap.md`. The initial roadmap must plan completely from the current state to the full achievement of all stated goals.
@@ -18,14 +18,30 @@ When the user gives a concrete development goal:
 
 ## Skill lifecycle
 
-- **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. State the current defaults (collaborative mode, Phase-style commits) and tell the user they can switch to privacy mode or Professional-style.
+- **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. Create `config.md` before roadmap and progress files, recording user-specified settings or the defaults (collaborative mode, Conventional Commits). Briefly state the recorded settings and proceed without asking the user to choose.
 - **During execution:** Every development-related conversation must use this skill until the roadmap is complete. A conversation may naturally end (session limit, quota) between subphases — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
 - **After completion:** When every subphase and milestone review is done, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
 - **Re-invocation:** When the user asks to use this skill for a new goal, or when a new conversation continues an unfinished roadmap:
-  - If no roadmap exists, this is first-time use — plan from scratch.
-  - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode; the letter auto-increments to avoid collisions), then create fresh roadmap and progress files for the new goal.
+  - Read `config.md` first and apply any settings changes requested by the user.
+  - If no roadmap exists, plan from scratch using the recorded settings.
+  - If the roadmap is already complete, archive `roadmap.md` and `progress.md` to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode; the letter auto-increments to avoid collisions), then create fresh roadmap and progress files for the new goal. Keep `config.md` in the active directory.
   - If the roadmap is not yet complete, resume from the next unfinished subphase.
-  - **Mode persistence:** When the skill has been used before, keep the previous privacy/collaborative mode and commit style. Only state the defaults on actual first-time use.
+  - **Mode persistence:** Use the mode and commit message style recorded in `config.md` across conversations and goals.
+
+## Project configuration
+
+Before each use, look for `.checkpoint-karpathy/config.md` and `.checkpoint-karpathy/private/config.md`. Read the active configuration; if both exist, ask which one to keep before proceeding. If none exists, create one before roadmap and progress files, recording each user-specified setting or its default:
+
+```md
+# Checkpoint Karpathy Configuration
+
+- Mode: collaborative
+- Commit message style: conventional
+```
+
+`Mode` accepts `collaborative` or `privacy`; `Commit message style` accepts `conventional` (Conventional Commits) or `phase` (Phase-style).
+
+Keep `config.md`, `roadmap.md`, and `progress.md` together in `.checkpoint-karpathy/` for collaborative mode or `.checkpoint-karpathy/private/` for privacy mode. Preserve any existing roadmap and progress files when creating the configuration and align their location with the selected mode. On a user-requested settings change, update only the requested values and uncompleted roadmap commit targets. When the mode changes, move the active three files together without overwriting existing state and apply the selected Git tracking policy. Preserve archived state and other private notes in their existing locations. Keep `config.md` active when archiving completed goals.
 
 ## Karpathy guardrails
 
@@ -40,14 +56,15 @@ When the user gives a concrete development goal:
 
 Default collaborative mode:
 
+- Commit `.checkpoint-karpathy/config.md`.
 - Commit `.checkpoint-karpathy/roadmap.md`.
 - Commit `.checkpoint-karpathy/progress.md`.
 - Ignore `.checkpoint-karpathy/private/`.
 
 Privacy mode:
 
-- If the user asks to keep planning private, place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`.
-- Do not commit roadmap or progress in privacy mode.
+- If the user asks to keep planning private, place `config.md`, `roadmap.md`, and `progress.md` inside `.checkpoint-karpathy/private/`.
+- Keep configuration, roadmap, and progress untracked in privacy mode; include removal of any formerly tracked active state paths in the next relevant commit.
 - Because `.checkpoint-karpathy/private/` is gitignored, all planning state stays private.
 
 Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential business strategy into committed roadmap/progress files.
@@ -62,7 +79,7 @@ Both collaborative and privacy mode use the same single entry:
 .checkpoint-karpathy/private/
 ```
 
-In privacy mode, `roadmap.md` and `progress.md` are inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
+In privacy mode, `config.md`, `roadmap.md`, and `progress.md` are inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
 
 Do not ignore `.checkpoint-karpathy/` wholesale.
 
@@ -83,16 +100,16 @@ git diff --staged
 
 Stage only relevant files. Do not commit unrelated user changes.
 
-Commit messages — pick one style and stay consistent:
+Use the commit message style recorded in `config.md`:
 
-Phase-style (default for roadmap-driven work):
-```text
-Phase X.Y: <description>
-```
-
-Professional-style (Conventional Commits):
+Conventional Commits (default):
 ```text
 type(scope): <summary>
+```
+
+Phase-style (optional):
+```text
+Phase X.Y: <description>
 ```
 
 Description defaults to English; use another language only when the user asks. Do not commit unrelated user changes.

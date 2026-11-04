@@ -31,8 +31,9 @@ The workflow is not limited to starting from zero. It applies to:
 
 When this skill is first invoked for a development goal:
 
+- Create `config.md` using the Project Configuration procedure before creating roadmap or progress files.
 - The roadmap must plan completely from the current state to the full achievement of all stated goals. Every major milestone and subphase needed to reach the end state must be included.
-- The agent should state the current defaults: collaborative mode (roadmap and progress are committed) and Phase-style commit messages. Tell the user these can be changed — privacy mode moves roadmap and progress into the gitignored `private/` directory, and Professional-style uses Conventional Commits format.
+- Briefly state the settings recorded in `config.md` and proceed without asking the user to choose.
 
 Roadmaps are plans, not contracts. They may be updated later if unexpected situations arise, requirements change, or blockers appear. But the initial roadmap must be a complete end-to-end plan, not a partial sketch.
 
@@ -55,22 +56,58 @@ When every subphase and milestone review in the roadmap is complete, the goal is
 
 This procedure applies in two situations: the user explicitly asks to use this skill for a new goal, or a new conversation begins and an unfinished roadmap indicates development should continue.
 
-1. Check whether `.checkpoint-karpathy/roadmap.md` (or `.checkpoint-karpathy/private/roadmap.md` in privacy mode) exists.
-2. **No roadmap exists:** This is first-time use. Follow the First-Time Planning procedure.
+1. Read `config.md` using the Project Configuration procedure, apply any settings changes requested by the user, then check for `roadmap.md` in the configured directory.
+2. **No roadmap exists:** Create a complete roadmap and progress log using the recorded settings.
 3. **Roadmap exists and is complete** (all subphases done, all milestone reviews committed):
    - This is a new goal. Archive the current roadmap and progress files before starting fresh.
    - Archive path: `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/` (or `.checkpoint-karpathy/private/archive/YYYYMMDDa-<summary>/` in privacy mode).
    - The letter (`a`, `b`, …, `z`, `aa`, `ab`, …) auto-increments to avoid collisions when archiving multiple times on the same day.
    - `<summary>` is a brief kebab-case label for **the goal being archived** (the completed one, not the new one). Read it from the old roadmap's Goal section and keep it short — it is a directory name.
    - Move `roadmap.md` and `progress.md` into the archive directory.
+   - Keep `config.md` in the active state directory for use across goals.
    - After archiving, create a fresh `roadmap.md` and `progress.md` for the new goal.
 4. **Roadmap exists and is not yet complete:**
    - Resume from the next unfinished subphase.
    - Do not archive or recreate anything.
 
-**Mode persistence:** When the skill has been used before, keep the previous configuration — privacy or collaborative mode, Phase-style or Professional-style commits. Only state the defaults on actual first-time use.
+Use the settings recorded in `config.md` when resuming work and starting new goals.
 
-To determine the previous mode: check where the existing `roadmap.md` lives (root of `.checkpoint-karpathy/` = collaborative; inside `private/` = privacy) and check the commit history for the message style used. On resume, the file location already determines the mode. When archiving and starting fresh, carry the previous mode forward.
+---
+
+## Project Configuration
+
+Before planning or executing work each time this skill is used, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
+
+- If a configuration exists, read it and use its recorded mode and commit message style.
+- If none exists, create it before roadmap or progress files. For each setting, use the user's explicit choice when provided; otherwise use `collaborative` mode and `conventional` commit message style.
+- If both locations contain a configuration, ask the user which one to keep as the active configuration before proceeding.
+
+Use this Markdown structure, filling in the selected values:
+
+```md
+# Checkpoint Karpathy Configuration
+
+- Mode: collaborative
+- Commit message style: conventional
+```
+
+Supported values:
+
+- `Mode`: `collaborative` or `privacy`.
+- `Commit message style`: `conventional` (Conventional Commits) or `phase` (Phase-style).
+
+Keep the active `config.md`, `roadmap.md`, and `progress.md` together:
+
+- `collaborative`: `.checkpoint-karpathy/`.
+- `privacy`: `.checkpoint-karpathy/private/`.
+
+When creating a configuration for a project that already has roadmap or progress files, preserve them and place them in the selected state directory without overwriting existing files.
+
+When the user requests a mode or style change, update only the requested settings in `config.md` and apply them to subsequent work. Update uncompleted roadmap commit targets to match the selected style.
+
+For a mode change, move the active configuration, roadmap, and progress files together to the selected directory, preserving their contents. Check for destination conflicts before moving; do not overwrite existing state. Keep `.checkpoint-karpathy/private/` gitignored. In collaborative mode, commit the active state files; in privacy mode, keep them untracked and include removal of any formerly tracked active state paths in the next relevant commit. Moving files into privacy mode does not remove their existing Git history. Archived state and other private notes retain their existing locations and visibility.
+
+All state file paths below refer to the directory selected by `config.md`; `.checkpoint-karpathy/` paths illustrate collaborative mode.
 
 ---
 
@@ -81,6 +118,7 @@ Use this namespaced directory for durable workflow state:
 **Collaborative mode:**
 ```text
 .checkpoint-karpathy/
+  config.md
   roadmap.md
   progress.md
   private/
@@ -91,6 +129,7 @@ Use this namespaced directory for durable workflow state:
 ```text
 .checkpoint-karpathy/
   private/
+    config.md
     roadmap.md
     progress.md
     archive/
@@ -100,6 +139,7 @@ Use this namespaced directory for durable workflow state:
 
 By default:
 
+- commit `.checkpoint-karpathy/config.md`,
 - commit `.checkpoint-karpathy/roadmap.md`,
 - commit `.checkpoint-karpathy/progress.md`,
 - ignore `.checkpoint-karpathy/private/`.
@@ -110,11 +150,11 @@ Rationale: roadmap and progress make the work recoverable across sessions and he
 
 If the user asks to keep agent planning private, switch to privacy mode:
 
-- place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`,
+- place `config.md`, `roadmap.md`, and `progress.md` inside `.checkpoint-karpathy/private/`,
 - keep `.checkpoint-karpathy/private/` ignored by Git,
-- do not commit roadmap or progress.
+- do not commit configuration, roadmap, or progress.
 
-Because `.checkpoint-karpathy/private/` is gitignored, the roadmap and progress files are kept private.
+Because `.checkpoint-karpathy/private/` is gitignored, the configuration, roadmap, and progress files are kept private.
 
 Use privacy mode for public repositories or sensitive planning where the user does not want to expose development direction, vulnerability notes, business strategy, or unfinished reasoning.
 
@@ -128,7 +168,7 @@ Put sensitive or non-public notes in:
 
 This directory must be ignored by Git.
 
-In privacy mode, roadmap and progress files live here alongside other private notes.
+In privacy mode, configuration, roadmap, and progress files live here alongside other private notes.
 
 Do not put secrets, credentials, private customer data, or sensitive vulnerability details into committed roadmap or progress files.
 
@@ -245,7 +285,7 @@ If the roadmap changes, record why.
 
 ## Roadmap Template
 
-Use this structure:
+Use this structure, filling commit targets according to the style recorded in `config.md`:
 
 ```md
 # Checkpoint Karpathy Roadmap
@@ -272,13 +312,13 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
+  - Commit target: `<type>(<scope>): <summary>` (default) or `Phase X.Y: <description>` (optional)
 
 - [ ] 1.2 <commit-sized goal>
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
+  - Commit target: `<type>(<scope>): <summary>` (default) or `Phase X.Y: <description>` (optional)
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.
@@ -287,7 +327,7 @@ Milestone review:
 - Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
 - Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
 - Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
-- Commit target: `Phase X.Y Milestone Review: <description>` or `<type>(<scope>): review <English summary>`
+- Commit target: `<type>(<scope>): review <English summary>` (default) or `Phase X.Y Milestone Review: <description>` (optional)
 
 ### Milestone 2: <title>
 Purpose: <why this milestone exists>
@@ -297,7 +337,7 @@ Subphases:
   - Scope: <what will change>
   - Success criteria: <how to know it is done>
   - Verification: <project-appropriate check>
-  - Commit target: `Phase X.Y: <description>` or `<type>(<scope>): <summary>`
+  - Commit target: `<type>(<scope>): <summary>` (default) or `Phase X.Y: <description>` (optional)
 
 Milestone review:
 - Trigger: After the last planned subphase in this milestone is complete.
@@ -306,7 +346,7 @@ Milestone review:
 - Order: confirm scope, simplify, run broad verification, review, debug and fix, rerun verification, record progress, commit.
 - Success criteria: No avoidable complexity, unused artifacts, known regressions, unresolved review findings, or failing checks remain.
 - Verification: <broadest project-appropriate check for this milestone, plus targeted checks for changed behavior after fixes>
-- Commit target: `Phase X.Y Milestone Review: <description>` or `<type>(<scope>): review <English summary>`
+- Commit target: `<type>(<scope>): review <English summary>` (default) or `Phase X.Y Milestone Review: <description>` (optional)
 
 ## Risks / Blockers
 - <Risk or blocker>
@@ -532,17 +572,9 @@ Stage only relevant files.
 
 Do not commit unrelated user changes.
 
-Commit message style — choose one and stay consistent:
+Use the commit message style recorded in `config.md`:
 
-**Phase-style** (default for roadmap-driven work):
-```text
-Phase X.Y: <description>
-```
-- Uses the roadmap phase label as the commit subject prefix.
-- `<description>` is a concise summary of what changed.
-- Description defaults to English; use another language only when the user asks.
-
-**Professional-style** (Conventional Commits):
+**Conventional Commits** (default):
 ```text
 type(scope): <English summary>
 ```
@@ -559,6 +591,14 @@ chore(checkpoint): update roadmap after requirement change
 test(auth): cover expired session refresh
 revert: revert "fix(server): store points count as long"
 ```
+
+**Phase-style** (optional):
+```text
+Phase X.Y: <description>
+```
+- Uses the roadmap phase label as the commit subject prefix.
+- `<description>` is a concise summary of what changed.
+- Description defaults to English; use another language only when the user asks.
 
 General rules:
 - Keep the subject concise, action-oriented, and specific to the completed subphase.
@@ -597,7 +637,7 @@ Both collaborative mode and privacy mode use the same `.gitignore` entry:
 .checkpoint-karpathy/private/
 ```
 
-In collaborative mode, this keeps the `private/` notes directory out of version control. In privacy mode, `roadmap.md` and `progress.md` are placed inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
+In collaborative mode, this keeps the `private/` notes directory out of version control. In privacy mode, `config.md`, `roadmap.md`, and `progress.md` are placed inside `.checkpoint-karpathy/private/`, so they are covered by the same rule.
 
 Do not add `.checkpoint-karpathy/` wholesale to `.gitignore`, because that would hide roadmap and progress even in collaborative mode.
 
@@ -607,6 +647,7 @@ Do not add `.checkpoint-karpathy/` wholesale to `.gitignore`, because that would
 
 A subphase is done only when:
 
+- the active state directory and commit style match `config.md`,
 - its roadmap item is complete or intentionally adjusted,
 - code/project files are coherent,
 - verification was run or honestly documented as unavailable,

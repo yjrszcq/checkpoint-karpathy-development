@@ -8,11 +8,13 @@ It is designed for greenfield development, mid-project continuation, feature wor
 
 ## Core idea
 
+On first use in a project, the agent creates `config.md` alongside roadmap and progress files, recording the user's chosen mode and commit message style. Unspecified settings default to collaborative mode and Conventional Commits. Each later use reads this file; user-requested changes update its settings.
+
 Before substantial work, the agent creates or updates a roadmap that plans completely from the current state to the full achievement of all stated goals.
 
 Once active, the skill stays active across conversations until the roadmap is complete. Each new development conversation automatically resumes from the next unfinished subphase — the user does not need to re-invoke it.
 
-When the roadmap is complete, the skill deactivates. If the user later asks to use it again for a new goal, the completed roadmap and progress are archived to `.checkpoint-karpathy/archive/YYYYMMDDa-<summary>/`.
+When the roadmap is complete, the skill deactivates. If the user later asks to use it again for a new goal, the completed roadmap and progress are archived under `archive/YYYYMMDDa-<summary>/` in the configured state directory. `config.md` stays active across goals.
 
 Each normal subphase must end with:
 
@@ -24,14 +26,14 @@ Each normal subphase must end with:
 
 Commit messages use one of two styles:
 
-Phase-style (default):
-```text
-Phase X.Y: <description>
-```
-
-Professional-style (Conventional Commits):
+Conventional Commits (default):
 ```text
 type(scope): <summary>
+```
+
+Phase-style (optional):
+```text
+Phase X.Y: <description>
 ```
 
 Description defaults to English. Use another language only when the user asks.
@@ -52,6 +54,7 @@ The workflow uses a namespaced directory:
 **Collaborative mode:**
 ```text
 .checkpoint-karpathy/
+  config.md
   roadmap.md
   progress.md
   private/
@@ -62,22 +65,35 @@ The workflow uses a namespaced directory:
 ```text
 .checkpoint-karpathy/
   private/
+    config.md
     roadmap.md
     progress.md
     archive/
 ```
 
+`config.md` contains the selected settings:
+
+```md
+# Checkpoint Karpathy Configuration
+
+- Mode: collaborative
+- Commit message style: conventional
+```
+
+`Mode` accepts `collaborative` or `privacy`; `Commit message style` accepts `conventional` or `phase`. When the user changes the mode, the active configuration, roadmap, and progress files move together to the selected directory and follow its Git tracking policy. Archived state and other private notes stay in their existing locations.
+
 Default collaborative mode:
 
+- commit `.checkpoint-karpathy/config.md`,
 - commit `.checkpoint-karpathy/roadmap.md`,
 - commit `.checkpoint-karpathy/progress.md`,
 - ignore `.checkpoint-karpathy/private/`.
 
 Privacy mode:
 
-- place `roadmap.md` and `progress.md` inside `.checkpoint-karpathy/private/`,
+- place `config.md`, `roadmap.md`, and `progress.md` inside `.checkpoint-karpathy/private/`,
 - keep `.checkpoint-karpathy/private/` ignored by Git,
-- do not commit roadmap or progress.
+- keep configuration, roadmap, and progress untracked.
 
 Use privacy mode for public repositories or when development planning should not be exposed.
 
@@ -101,7 +117,7 @@ Use it:
 ```text
 $checkpoint-karpathy-development
 
-Read AGENTS.md. Create or update .checkpoint-karpathy/roadmap.md for this task, complete one roadmap subphase, update .checkpoint-karpathy/progress.md, run project-appropriate verification, and git commit.
+Read AGENTS.md and read or create config.md. Use its mode and commit message style, create or update the roadmap, complete one roadmap subphase, update progress, run project-appropriate verification, and git commit.
 ```
 
 ## Install for Claude Code
@@ -140,6 +156,6 @@ Add one line to `.gitignore`:
 .checkpoint-karpathy/private/
 ```
 
-In privacy mode, `roadmap.md` and `progress.md` live inside `private/` and are covered automatically. In collaborative mode, this keeps sensitive notes out of version control.
+In privacy mode, `config.md`, `roadmap.md`, and `progress.md` live inside `private/` and are covered automatically. In collaborative mode, this keeps sensitive notes out of version control.
 
 Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.
