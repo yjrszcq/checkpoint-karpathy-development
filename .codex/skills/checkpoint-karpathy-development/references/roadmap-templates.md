@@ -193,6 +193,8 @@ Dependencies: <Other milestones, constraints, or assumptions; None if independen
 
 The review uses the last planned subphase label; it does not increment the Phase/Subphase number. Conventional commit targets use `type(scope): summary`; Phase-style targets use `Phase X.Y: description`, or `Phase X.Y Milestone Review: description` for the review. Subjects default to English.
 
+Change each completed item's `[ ]` to `[x]` as soon as its completion and verification requirements are met, including milestone reviews separately. Update the active plan alongside progress and include both in the checkpoint commit. Unfinished, blocked, and cancelled items remain unchecked.
+
 ## Completion and resizing
 
 Completion is `incomplete`, `completed`, or `cancelled` (未完成／已完成／已取消). Verify full-goal acceptance and all committed milestone reviews before setting `completed`. Cancellation is explicit user direction and preserves the actual stage completion state.
