@@ -16,7 +16,22 @@ Or specify the harness directly:
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-Supports `claude`, `codex`, `pi`, `ohmypi`, `antigravity`, `cursor`, `deepseek`, `gemini`, and `opencode`. Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
+### Harness identifiers
+
+| Harness | `--harness` value |
+|---|---|
+| Claude Code | `claude` |
+| Codex | `codex` |
+| Pi | `pi` |
+| Oh My Pi | `ohmypi` |
+| Antigravity | `antigravity` |
+| Cursor | `cursor` |
+| DeepSeek Harness | `deepseek` |
+| Gemini CLI | `gemini` |
+| OpenCode | `opencode` |
+| Custom | `custom` |
+
+Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
 
 Select `custom` in the interactive menu to enter a skills directory manually, or pass `--harness custom --skills-dir /actual/path/to/skills`. The installer creates `checkpoint-karpathy-development/` inside that directory.
 

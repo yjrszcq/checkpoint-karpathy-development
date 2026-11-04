@@ -16,7 +16,22 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-支持 `claude`、`codex`、`pi`、`ohmypi`、`antigravity`、`cursor`、`deepseek`、`gemini`、`opencode`。多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
+### Harness 参数对应表
+
+| Harness | `--harness` 参数值 |
+|---|---|
+| Claude Code | `claude` |
+| Codex | `codex` |
+| Pi | `pi` |
+| Oh My Pi | `ohmypi` |
+| Antigravity | `antigravity` |
+| Cursor | `cursor` |
+| DeepSeek Harness | `deepseek` |
+| Gemini CLI | `gemini` |
+| OpenCode | `opencode` |
+| Custom | `custom` |
+
+多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
 
 在交互菜单选择 `custom`，即可手动输入技能目录；也可使用参数 `--harness custom --skills-dir /实际路径/skills`。安装器会在该目录下创建 `checkpoint-karpathy-development/`。
 
