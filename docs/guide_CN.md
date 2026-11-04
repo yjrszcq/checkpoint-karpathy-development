@@ -45,7 +45,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 请按照仓库里的 INSTALL.md 安装。
 ```
 
-[INSTALL.md](../INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`、`scripts/`、`assets/`；已有安装先备份到技能扫描目录之外。
+[INSTALL.md](../INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md`、`LICENSE` 和完整 `references/`、`scripts/`、`assets/`；已有安装先备份到技能扫描目录之外。
 
 安装后重启 harness 或重新加载技能，再要求它使用 `checkpoint-karpathy-development` 处理你的目标。
 

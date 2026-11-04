@@ -50,3 +50,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 - [使用指南](docs/guide_CN.md)：配置、项目状态命令、线路图生命周期和临时文件管理。
 - [Agent 安装说明](INSTALL.md)：安装路径、更新、备份和验证。
 - [技能指令](SKILL.md)：agent 的工作流程及配套参考文档。
+
+## 开源协议
+
+[MIT](LICENSE) © 2026 yjrszcq。

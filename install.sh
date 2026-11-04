@@ -231,6 +231,7 @@ trap 'exit 143' TERM
 validate_package() {
   local package=$1 file
   [[ -s "$package/SKILL.md" ]] || die "Missing SKILL.md in $package"
+  [[ -s "$package/LICENSE" ]] || die "Missing LICENSE in $package"
   grep -Eq '^name: checkpoint-karpathy-development[[:space:]]*$' "$package/SKILL.md" || die "Unexpected skill name in $package/SKILL.md"
   for file in project-state.md goal-input.md roadmap-templates.md checkpoint-details.md; do
     [[ -s "$package/references/$file" ]] || die "Missing reference: $package/references/$file"
@@ -263,7 +264,7 @@ else
   IFS= read -r archive_root < "$download_dir/archive-list.txt"
   archive_root=${archive_root%%/*}
   [[ -n "$archive_root" && "$archive_root" != . && "$archive_root" != .. && "$archive_root" != *[!a-zA-Z0-9._-]* ]] || die 'Unexpected archive root.'
-  tar -xzf "$download_dir/source.tar.gz" -C "$download_dir" "$archive_root/SKILL.md" "$archive_root/references" "$archive_root/scripts" "$archive_root/assets"
+  tar -xzf "$download_dir/source.tar.gz" -C "$download_dir" "$archive_root/SKILL.md" "$archive_root/LICENSE" "$archive_root/references" "$archive_root/scripts" "$archive_root/assets"
   source_dir=$download_dir/$archive_root
   validate_package "$source_dir"
   rm -f "$download_dir/source.tar.gz"
@@ -276,6 +277,7 @@ for ((i=0; i<${#destinations[@]}; i++)); do
   name=${harnesses[$i]}
   if [[ -f "$target/SKILL.md" && -d "$target/references" ]] && \
       cmp -s "$source_dir/SKILL.md" "$target/SKILL.md" && \
+      cmp -s "$source_dir/LICENSE" "$target/LICENSE" && \
       diff -qr "$source_dir/references" "$target/references" >/dev/null 2>&1 && \
       diff -qr "$source_dir/scripts" "$target/scripts" >/dev/null 2>&1 && \
       diff -qr "$source_dir/assets" "$target/assets" >/dev/null 2>&1; then
@@ -290,6 +292,7 @@ for ((i=0; i<${#destinations[@]}; i++)); do
   stage=$run_dir/staged-$name
   mkdir "$stage"
   cp "$source_dir/SKILL.md" "$stage/SKILL.md"
+  cp "$source_dir/LICENSE" "$stage/LICENSE"
   for resource in references scripts assets; do
     cp -R "$source_dir/$resource" "$stage/$resource"
   done
@@ -298,6 +301,7 @@ for ((i=0; i<${#destinations[@]}; i++)); do
     diff -qr "$source_dir/$resource" "$stage/$resource" >/dev/null
   done
   cmp "$source_dir/SKILL.md" "$stage/SKILL.md"
+  cmp "$source_dir/LICENSE" "$stage/LICENSE"
   mkdir -p "${target%/*}"
   active_target=$target
   active_backup=
