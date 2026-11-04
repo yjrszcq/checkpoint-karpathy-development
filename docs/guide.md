@@ -30,7 +30,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development-skills
 Follow INSTALL.md in the repository.
 ```
 
-[INSTALL.md](../INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` as its package source. It preserves existing project instructions and backs up previous installations outside skill discovery.
+[INSTALL.md](../INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` as its package source. It backs up previous installations outside skill discovery.
 
 After installation, restart or reload your harness and ask it to use `checkpoint-karpathy-development` for your goal.
 
@@ -64,7 +64,7 @@ Phase X.Y: <description>
 
 Description defaults to English. Use another language only when the user asks.
 
-When a major milestone is complete, the agent must perform a standalone milestone review checkpoint before moving on. This checkpoint does not consume the next planned Phase/Subphase number; it confirms scope, simplifies milestone work, runs the broadest relevant verification, reviews for regressions or integration gaps, debugs and fixes in-scope issues, reruns verification, records progress, and commits the closeout.
+When a major milestone is complete, the agent must perform a standalone milestone review checkpoint before moving on. It uses the last planned phase label with a review suffix, confirms scope, simplifies milestone work, runs the broadest relevant verification, reviews for regressions or integration gaps, debugs and fixes in-scope issues, reruns verification, records progress, and commits the closeout.
 
 The engineering guardrails are:
 
@@ -126,7 +126,7 @@ python3 /path/to/skill/scripts/create_goal.py --project /path/to/project
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
 ```
 
-Initialization creates annotated YAML configuration, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog; directory/configuration initialization is not logged there. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration and work persist; archive-only requests need no new goal. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
+Initialization creates annotated YAML configuration, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration and work persist. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
 
 ### Roadmap documents
 
@@ -165,7 +165,7 @@ Record Completion in `roadmap/status.md`:
 
 Completed and cancelled goals use the same archive flow on the next invocation for a new goal. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions.
 
-Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration across archiving and new goals. On resume, read configuration, `roadmap/README.md`, and `roadmap/status.md`, then relevant plans, context, and recent progress. Check completion claims against acceptance and review evidence.
+Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration across archiving and new goals.
 
 ## Temporary work files
 
@@ -183,8 +183,6 @@ Manage temporary material separately, retaining useful evidence or tools and cle
 - [Structured goal input](../references/goal-input.md): fields, validation, and JSON invocation examples.
 - [Roadmap templates](../references/roadmap-templates.md): document responsibilities and goal templates.
 - [Checkpoint details](../references/checkpoint-details.md): progress templates, milestone reviews, and verification discovery.
-
-Install the complete skill directory, including `references/`, `scripts/`, and `assets/`.
 
 ## Gitignore
 

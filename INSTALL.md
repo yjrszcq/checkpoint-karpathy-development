@@ -1,12 +1,12 @@
 # Installation guide for agents
 
-If a user sends this repository URL and asks you to install the skill, follow this document. Install the skill package; invoking its development workflow is a separate user action.
+If a user sends this repository URL and asks you to install the skill, follow this document.
 
 Repository: <https://github.com/yjrszcq/checkpoint-karpathy-development-skills>
 
 ## Choose the destination
 
-Use the harness and installation scope specified by the user. Otherwise, use the current harness and user scope. If the current harness cannot be identified, ask which harness to use. Do not install for every harness just because several executables are present.
+Use the harness and installation scope specified by the user. Otherwise, use the current harness and user scope. If the current harness cannot be identified, ask which harness to use.
 
 Choose the actual installation location from the user's request and the active harness configuration. The paths below are defaults; inspect local discovery settings, active profiles, and existing installations as needed. Use the directory the running harness actually discovers, passing `--skills-dir` for a custom location. If the user gives the final `checkpoint-karpathy-development/` directory, pass its parent as `--skills-dir`.
 
@@ -30,7 +30,7 @@ Standard skills parent directories are listed below. Each receives a `checkpoint
 
 The installer honors `CLAUDE_CONFIG_DIR`, `PI_CODING_AGENT_DIR`, `DSH_HOME`, and `XDG_CONFIG_HOME` for the corresponding user paths. For profiles, custom homes, or other configuration overrides, determine the actual discovery directory and pass `--skills-dir /absolute/path/to/skills`. For example, an Oh My Pi named profile normally uses `~/.omp/profiles/<name>/agent/skills/`; pass that active profile directory explicitly. With this option select just one harness. Other compatible harnesses can use `--harness custom --skills-dir PATH`; confirm their discovery rules first.
 
-Several harnesses also read shared `.agents/skills/` or other tools' directories. Check for an existing installation before adding another copy; a shared copy may already satisfy the user's request. Resolve differing existing copies with the user rather than deleting them automatically.
+Several harnesses also read shared `.agents/skills/` or other tools' directories. Check for an existing installation before adding another copy; a shared copy may already satisfy the user's request. Resolve differing existing copies with the user before proceeding.
 
 ## Install
 
@@ -46,7 +46,7 @@ Use the chosen harness in place of `codex`. For project scope, supply the actual
 bash install.sh --harness claude --project /absolute/path/to/project --source .
 ```
 
-Use `--dry-run` first when you need to check the resolved destination; it writes nothing and does not download. `--skills-dir` names the parent skills directory, not the final directory containing `SKILL.md`.
+Use `--dry-run` first when you need to check the resolved destination; it writes nothing and does not download. `--skills-dir` names the parent skills directory.
 
 For a custom location, select the known harness with `--skills-dir`, or use `custom` for another compatible harness:
 
@@ -62,7 +62,7 @@ Without a checkout, download and inspect the installer before executing it, or u
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-For interactive human installation, omit the arguments after `bash`. Select `custom` on its own to enter a skills parent directory manually; no scope selection is needed for this explicit path. The menu reads `/dev/tty`, so piping the script does not consume menu input. Agents should pass explicit arguments. Without a terminal, omitting `--harness` fails with guidance.
+For interactive human installation, omit the arguments after `bash`. Select `custom` on its own to enter a skills parent directory manually; no scope selection is needed for this explicit path. The menu reads interactive input from `/dev/tty`. Agents should pass explicit arguments. Without a terminal, omitting `--harness` fails with guidance.
 
 `--ref` chooses the downloaded package's branch, tag, or commit; the default is `main`. To pin the installer as well, use that same ref in the raw installer URL. Remote source files are cached under `${XDG_CACHE_HOME:-~/.cache}/checkpoint-karpathy-installer/`; the installer prints a reusable `--source` path. A failed download or incomplete package leaves existing installations untouched.
 
@@ -116,7 +116,7 @@ For manual restoration, first move the current installed bundle to a separate lo
 
 If shell installation is unavailable, copy root `SKILL.md` and the complete `references/`, `scripts/`, and `assets/` directories into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
 
-The project-state helpers require Python 3.9+ and PyYAML. Verify the Python environment before using them; if PyYAML is missing, install it in a suitable environment with `python3 -m pip install -r /path/to/checkpoint-karpathy-development/scripts/requirements.txt`. Installing the skill only copies resources and does not install Python dependencies or initialize project state.
+The project-state helpers require Python 3.9+ and PyYAML. Verify the Python environment before using them; if PyYAML is missing, install it in a suitable environment with `python3 -m pip install -r /path/to/checkpoint-karpathy-development/scripts/requirements.txt`.
 
 ## Verify and report
 

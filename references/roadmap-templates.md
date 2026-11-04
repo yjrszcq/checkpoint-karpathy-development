@@ -55,7 +55,7 @@ Populate `milestones.md` for every milestone, preserving stable references when 
 
 The [milestone template](../assets/roadmap/milestone.md) includes a standalone review for every milestone. Supply the actual review verification and commit target with the initial structured content.
 
-The review uses the last planned subphase label; it does not increment the Phase/Subphase number. Conventional commit targets use `type(scope): summary`; Phase-style targets use `Phase X.Y: description`, or `Phase X.Y Milestone Review: description` for the review. Subjects default to English.
+The review uses the last planned subphase label. Conventional commit targets use `type(scope): summary`; Phase-style targets use `Phase X.Y: description`, or `Phase X.Y Milestone Review: description` for the review. Subjects default to English.
 
 Change each completed item's `[ ]` to `[x]` as soon as its completion and verification requirements are met, including milestone reviews separately. Update the active plan alongside progress and include both in the checkpoint commit. Unfinished, blocked, and cancelled items remain unchecked.
 
