@@ -144,4 +144,4 @@ archive/
     progress.md
 ```
 
-The archive has no extra enclosing `roadmap/` layer. Keep `config.yaml` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal or an explicit archive request; completion or cancellation alone does not trigger archiving.
+Keep `config.yaml` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal or an explicit archive request; completion or cancellation alone does not trigger archiving.

@@ -1,10 +1,10 @@
 # Structured goal input
 
-Read before generating a new roadmap. The agent supplies actual planning content as JSON on standard input; `create_goal.py` validates it and renders the templates in [assets/roadmap/](../assets/roadmap/). Do not pass Markdown documents or file paths in place of fields. The script controls document structure, unchecked plan items, review structure, initial completion, and initial records. Content completeness and realistic acceptance remain the agent's responsibility.
+Read before generating a new roadmap. The agent supplies actual planning content as JSON on standard input; `create_goal.py` validates it and renders the templates in [assets/roadmap/](../assets/roadmap/). The script controls document structure, unchecked plan items, review structure, initial completion, and initial records. Content completeness and realistic acceptance remain the agent's responsibility.
 
 ## Invocation and content
 
-Initialize the project directories and configuration first. Send one complete JSON object per invocation. A quoted heredoc preserves literal shell characters in content; encode newlines and quotes according to JSON syntax. For large input, use a tool's subprocess standard-input argument where available. Keep a reusable payload in a task-specific private work directory when validating before archiving; the script receives JSON bytes on standard input, not a content directory.
+Initialize the project directories and configuration first. Send one complete JSON object per invocation. A quoted heredoc preserves literal shell characters in content; encode newlines and quotes according to JSON syntax. For large input, use a tool's subprocess standard-input argument where available. Keep a reusable payload in a task-specific private work directory when validating before archiving; the script receives the payload as JSON bytes on standard input.
 
 ```bash
 python3 /path/to/skill/scripts/create_goal.py --project /path/to/project <<'JSON'

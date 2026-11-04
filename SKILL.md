@@ -121,7 +121,7 @@ Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completi
 
 Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 
-After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories without an enclosing `roadmap/`. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
+After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
 
 ## Temporary work and visibility
 
