@@ -303,6 +303,8 @@ Create the entire goal plan inside the selected state directory's fixed `roadmap
 
 Keep the overview focused on the goal, stable background, and navigation. Keep current status as a latest snapshot, and append execution and plan-change histories. Detailed phase and review completion belongs in the milestone plan; current status references it. Assumption, risk, and blocker details belong in context; current status links to them. Progress entries preserve the execution state at that time; their historical Next Step does not override the current next action.
 
+**Keep roadmap checkboxes current.** As each planned item meets its completion and verification requirements, change its `[ ]` to `[x]` in the active plan: `roadmap/roadmap.md` for compact layout, or `roadmap/milestones.md` (and any split milestone documents) for structured layout. Check off milestone reviews separately after they pass. Update the checkboxes with the corresponding progress entry and include them in the checkpoint commit; a progress entry or status update alone does not mark a plan item complete. Leave unfinished, blocked, or cancelled items unchecked.
+
 Plan completely from the current repository state to all stated goals. Include dependencies, commit-sized subphases with concrete success criteria and verification, a standalone review for every milestone, overall goal acceptance, and the next action. A single subphase or milestone example does not limit the total plan. Preserve stable identifiers and use relative links to connect evidence and plan entries.
 
 Update the active plan when requirements, priorities, assumptions, blockers, or repository evidence invalidate it, or when phases need splitting or merging. Record material changes and their reason and impact in the plan-change log. Ordinary checkbox updates and next-action updates need no plan-change entry. Link execution entries to the change record instead of duplicating explanations.
@@ -599,7 +601,7 @@ Do not add `.checkpoint-karpathy/` wholesale to `.gitignore`, because that would
 A subphase is done only when:
 
 - the state directory, commit style, and layout policy match `config.md`,
-- its roadmap item is complete or intentionally adjusted,
+- its completed roadmap item is checked `[x]` in the active plan, or the plan is explicitly adjusted to reflect the actual outcome,
 - code/project files are coherent,
 - verification was run or honestly documented as unavailable,
 - `.checkpoint-karpathy/roadmap/progress.md` is updated,
