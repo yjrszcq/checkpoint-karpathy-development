@@ -8,6 +8,8 @@ Repository: <https://github.com/yjrszcq/checkpoint-karpathy-development-skills>
 
 Use the harness and installation scope specified by the user. Otherwise, use the current harness and user scope. If the current harness cannot be identified, ask which harness to use. Do not install for every harness just because several executables are present.
 
+Choose the actual installation location from the user's request and the active harness configuration. The paths below are defaults; inspect local discovery settings, active profiles, and existing installations as needed. Use the directory the running harness actually discovers, passing `--skills-dir` for a custom location. If the user gives the final `checkpoint-karpathy-development/` directory, pass its parent as `--skills-dir`.
+
 The installer supports Bash 3.2+ on Linux, macOS, and WSL. Remote installation needs `curl` and `tar`; local installation also works offline with `--source`. On other environments, use the manual package-copy procedure below and the harness's supported paths.
 
 Standard skills parent directories are listed below. Each receives a `checkpoint-karpathy-development/` child directory. Links point to the harness's documentation or discovery implementation.
@@ -46,13 +48,21 @@ bash install.sh --harness claude --project /absolute/path/to/project --source .
 
 Use `--dry-run` first when you need to check the resolved destination; it writes nothing and does not download. `--skills-dir` names the parent skills directory, not the final directory containing `SKILL.md`.
 
+For a custom location, select the known harness with `--skills-dir`, or use `custom` for another compatible harness:
+
+```bash
+bash install.sh --harness custom --skills-dir "/actual/path/to/skills" --source .
+```
+
+This installs into `/actual/path/to/skills/checkpoint-karpathy-development/`. Relative paths resolve from the current working directory; a leading `~/` resolves under the user's home directory.
+
 Without a checkout, download and inspect the installer before executing it, or use the user's requested remote command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
-For interactive human installation, omit the arguments after `bash`. The menu reads `/dev/tty`, so piping the script does not consume menu input. Agents should pass explicit arguments. Without a terminal, omitting `--harness` fails with guidance.
+For interactive human installation, omit the arguments after `bash`. Select `custom` on its own to enter a skills parent directory manually; no scope selection is needed for this explicit path. The menu reads `/dev/tty`, so piping the script does not consume menu input. Agents should pass explicit arguments. Without a terminal, omitting `--harness` fails with guidance.
 
 `--ref` chooses the downloaded package's branch, tag, or commit; the default is `main`. To pin the installer as well, use that same ref in the raw installer URL. Remote source files are cached under `${XDG_CACHE_HOME:-~/.cache}/checkpoint-karpathy-installer/`; the installer prints a reusable `--source` path. A failed download or incomplete package leaves existing installations untouched.
 

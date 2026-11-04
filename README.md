@@ -170,6 +170,8 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 
 Supports `claude`, `codex`, `pi`, `ohmypi`, `antigravity`, `cursor`, `deepseek`, `gemini`, and `opencode`. Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
 
+Select `custom` in the interactive menu to enter a skills directory manually, or pass `--harness custom --skills-dir /actual/path/to/skills`. The installer creates `checkpoint-karpathy-development/` inside that directory.
+
 ### Let your agent install it
 
 Send your agent the repository link with an installation request, for example:
