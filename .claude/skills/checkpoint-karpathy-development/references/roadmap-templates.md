@@ -2,7 +2,7 @@
 
 Use these examples when initializing a goal or reorganizing its documents. Match the user's language and project needs. Preserve equivalent content in documents whose headings differ. Fill the complete plan for every milestone, not only the example milestone below.
 
-All paths in this reference are relative to the active `roadmap/`. `config.md` lives one level above it. `progress.md` uses the Progress Log Requirement in the skill in either layout.
+All paths in this reference are relative to the active `roadmap/`. `config.md` lives one level above it. For either layout, read the [Progress template](checkpoint-details.md#progress-template) before creating or reconstructing `progress.md`.
 
 ## Compact layout
 

@@ -2,7 +2,7 @@
 description: "Run checkpoint-karpathy development through commit-sized subphases and milestone reviews."
 ---
 
-Use checkpoint-karpathy development for the requested task. Read its SKILL.md and the relevant document templates when initializing or switching layouts.
+Use checkpoint-karpathy development for the requested task. Read its SKILL.md and follow each operation's linked reference before that operation.
 
 Instructions:
 

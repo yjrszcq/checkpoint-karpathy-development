@@ -5,623 +5,164 @@ description: "Use this skill for roadmap-driven, checkpointed software work acro
 
 # Checkpoint Karpathy Development
 
-Use this skill for software work that may span more than one step or may be interrupted by quota limits, session limits, or context loss.
+Plan the full goal, execute commit-sized subphases, record evidence, and resume reliably across session or context loss. Each major milestone ends with a separate review checkpoint.
 
-This workflow combines two ideas:
+This workflow supports greenfield development, continuation, features, bug fixes, refactoring, maintenance, release preparation, and development-related documentation or configuration work.
 
-1. **Roadmap-driven checkpointing** — plan the requested work inside the fixed `.checkpoint-karpathy/roadmap/` directory using a compact or structured layout, split it into major milestones and commit-sized subphases, update `roadmap/progress.md`, verify and commit each completed subphase, then run a standalone milestone review checkpoint before moving on from a completed major milestone.
-2. **Karpathy-inspired engineering guardrails** — think before coding, keep the solution simple, make surgical changes in existing codebases, and verify against a concrete goal.
+## Engineering guardrails
 
-The workflow is not limited to starting from zero. It applies to:
+- Before meaningful edits, identify the goal, work mode, smallest coherent subphase, assumptions, risks, and verification. For ambiguous or high-risk work, briefly state the plan; proceed directly for clear, low-risk work.
+- Prefer the simplest working vertical slice. Avoid speculative abstractions, unused frameworks, unnecessary layers, broad rewrites, and premature generalization.
+- In existing projects, preserve behavior unless the user requests a change; match local style, touch relevant files only, and avoid unrelated refactors. In greenfield work, build the minimum runnable or inspectable structure needed for the current subphase.
+- Give each subphase a concrete goal, completion condition, verification method, and commit. Verify against observable results.
 
-- greenfield development,
-- mid-project continuation,
-- feature development,
-- bug fixing,
-- refactoring,
-- late-stage maintenance,
-- release preparation,
-- documentation or configuration changes that affect development.
+## Configuration and fixed paths
 
----
+Before every use, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`. Read the active configuration first. If both exist, resolve the active one with the user before proceeding.
 
-## Project Configuration and Initialization
+| Setting | Values | Default |
+|---|---|---|
+| Mode | `collaborative`, `privacy` | `collaborative` |
+| Commit message style | `conventional`, `phase` | `conventional` |
+| Roadmap layout | `auto`, `compact`, `structured` | `auto` |
 
-Before each use, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
+Create configuration only if missing, using user choices and defaults for unspecified settings. Explain every setting's purpose, accepted values and effects, and default in the user's language. Retain existing values when filling missing settings. Keep configuration across goals and archives; change settings only at the user's request. On first use, briefly state the recorded choices and proceed without asking the user to choose unspecified values.
 
-- Read an existing configuration and use its settings across conversations and goals. Change settings only at the user's request.
-- Create it only if missing, before planning. Use each user-specified setting and the default for anything unspecified.
-- If both locations contain a configuration, resolve which is active with the user before proceeding.
-- Preserve existing planning content when initializing configuration or filling missing settings. Retain recorded values and add only missing settings with their descriptions and defaults.
+The state directory is `.checkpoint-karpathy/` in collaborative mode or `.checkpoint-karpathy/private/` in privacy mode. Paths below are relative to it; paths beginning with `.checkpoint-karpathy/` are relative to the project root:
 
-Generate a configuration that explains every setting, its accepted values, effects, and default. Use the user's language for the explanations. Users edit the `Value` for each setting:
+- `config.md`: persistent project configuration.
+- `roadmap/`: fixed directory containing the active goal documents.
+- `archive/`: completed or cancelled goal contents, created as needed.
 
-```md
-# Checkpoint Karpathy Configuration
+During initialization, create the state directory, its fixed `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Reuse directories; preserve existing content. Work categories and `archive/` are created only when needed.
 
-## Mode
-- Value: collaborative
-- Purpose: Select planning visibility and state location.
-- Accepted values:
-  - collaborative: Track configuration, roadmap documents, and goal archives in Git.
-  - privacy: Keep configuration, roadmap documents, and goal archives under Git-ignored private/.
-- Default: collaborative
+Before initializing directories, creating configuration, filling missing settings, or changing visibility mode, read [Project state operations](references/project-state.md#configuration-and-initialization). It defines the annotated configuration and directory operations. For archiving, read its [Archiving procedure](references/project-state.md#archiving) before moving files.
 
-## Commit message style
-- Value: conventional
-- Purpose: Select commit subject format.
-- Accepted values:
-  - conventional: Conventional Commits, for example feat(auth): add login.
-  - phase: Phase-style, for example Phase 1.1: add login.
-- Default: conventional
+On requested settings changes, apply only the requested values to subsequent work. Update uncompleted commit targets for a commit-style change. During visibility-mode changes, move active goal contents into the destination `roadmap/` and configuration into its parent state directory without overwriting state. Keep fixed directories, archives, private notes, and work in place as specified by the project-state procedure.
 
-## Roadmap layout
-- Value: auto
-- Purpose: Select how a goal's planning documents are organized.
-- Accepted values:
-  - auto: Let the agent choose and reassess compact or structured layout for the whole goal.
-  - compact: Use roadmap/roadmap.md and roadmap/progress.md; switch only at the user's request.
-  - structured: Use separate overview, status, context, milestones, changelog, and progress documents in roadmap/; switch only at the user's request.
-- Default: auto
-```
+## Start or resume
 
-The state directory is `.checkpoint-karpathy/` in collaborative mode and `.checkpoint-karpathy/private/` in privacy mode. `config.md` sits directly in that directory, alongside the fixed `roadmap/` directory.
+1. Read project instructions and configuration, initialize missing fixed directories, and inspect the actual goal files.
+2. Read compact `roadmap.md`, or structured `README.md` and `status.md`, then recent progress and the relevant plan, dependencies, context, and blockers.
+3. If goal files are absent, select a layout and plan the full goal. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
+4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
+5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
+6. If `completed` or `cancelled` and starting an explicitly requested new goal, follow the archive procedure, then initialize new goal files inside the same `roadmap/`. Retain configuration and work.
 
-During initialization, create the selected state directory and its `roadmap/`, plus `.checkpoint-karpathy/private/work/` in both modes. Reuse existing directories and ensure `.checkpoint-karpathy/private/` is ignored by Git. Create work categories and `archive/` only as needed. An empty `roadmap/` is a directory ready for planning, not an existing goal.
+Select and record the work mode in compact `roadmap.md` or structured `README.md`:
 
-When the user requests settings changes, update only the requested values and apply them to subsequent work. Update uncompleted commit targets for a commit-style change. Apply layout requests using Layout Selection and Switching below.
+- `greenfield`: empty or near-empty repository.
+- `continuation`: ongoing work in an existing codebase.
+- `feature`: add a capability.
+- `bugfix`: reproduce, isolate, fix, and verify a defect.
+- `refactor`: change structure while preserving behavior.
+- `maintenance`: careful work near release or in a mature project.
 
-For a visibility-mode change, create or reuse the destination `roadmap/`, move the active goal contents into it, and move `config.md` into its parent state directory, preserving content and relative links. Check destination conflicts before moving; do not overwrite state. Keep the source `roadmap/` directory in place. Apply the selected Git tracking policy; include removal of formerly tracked active state paths in the next relevant commit when switching to privacy. Existing Git history remains. Archived goals, other private notes, and `private/work/` retain their locations and visibility.
+## Roadmap and layout
 
-Paths below illustrate collaborative mode. Resolve `config.md`, `roadmap/`, and `archive/` relative to the selected state directory. The work directory always uses `.checkpoint-karpathy/private/work/`.
+Plan completely from the current repository state to every stated goal. Include all milestones, dependencies, commit-sized subphases, scope, success criteria, verification, commit targets, a standalone review for each milestone, overall acceptance, and the next action.
 
----
+Read [Roadmap templates](references/roadmap-templates.md) before creating or reorganizing goal documents. Examples do not limit the number of milestones. Interpret existing documents by meaning even when headings differ.
 
-## State Files and Visibility
+All active goal documents live inside the fixed `roadmap/`:
 
-**Collaborative mode:**
+| Information | Compact layout | Structured layout |
+|---|---|---|
+| Goal, overall acceptance, scope, work mode, initial state, navigation | `roadmap.md` | `README.md` |
+| Completion, current snapshot, current phase reference, Next Action | `roadmap.md` | `status.md` |
+| Constraints, assumptions, risks, blockers, states and evidence | `roadmap.md` | `context.md` |
+| Full plan, dependencies, criteria, verification, commit targets, subphase and review checkboxes | `roadmap.md` | `milestones.md` |
+| Material plan-change reasons, changes, affected phases and impact | Roadmap Change Log in `roadmap.md` | `changelog.md` |
+| Actual work, verification, commits, execution decisions and issue handling | `progress.md` | `progress.md` |
 
-```text
-.checkpoint-karpathy/
-  config.md
-  roadmap/
-  private/
-    work/
-  archive/
-```
+Compact layout needs only `roadmap.md` and `progress.md`. Structured layout uses all six files above. Each detailed item has one maintained home; use stable identifiers and relative links elsewhere. Current status is a latest snapshot; execution and plan-change histories append. Historical Next Step entries in progress do not override the current Next Action.
 
-**Privacy mode:**
+Update the plan when requirements, priorities, assumptions, blockers, repository evidence, or phase organization change materially. Record why and what changed and its impact in the plan-change log; link execution entries to it. Routine checkboxes and next-action updates need no change entry.
 
-```text
-.checkpoint-karpathy/
-  private/
-    config.md
-    roadmap/
-    work/
-    archive/
-```
+For large documents, split further by actual retrieval needs, preserving navigation, full coverage, identifiers, and histories. Added files and subdirectories belong to the goal for conversion and archiving. Keep maintained design documentation in its project location and reference it; record scheduling effects of design changes in the plan-change log.
 
-**Compact layout:**
+### Layout policy
 
-```text
-roadmap/
-  roadmap.md
-  progress.md
-```
+- `auto`: choose and reassess either layout for the whole goal; automatic switches retain `auto` in configuration.
+- `compact` or `structured`: use the requested layout; switch only at the user's request.
 
-**Structured layout:**
+Judge the whole goal's complete plan, dependencies, background, design evolution, and accumulated history. Compact suits focused goals; structured suits complex plans and evolving context. Remaining task count alone does not justify switching. Avoid frequent changes with little benefit.
 
-```text
-roadmap/
-  README.md
-  status.md
-  context.md
-  milestones.md
-  changelog.md
-  progress.md
-```
+Before converting, read [Layout switching](references/layout-switching.md) and the roadmap templates. Back up all original goal contents to a unique `.checkpoint-karpathy/private/work/backups/roadmap-layout/<timestamp>-<source>-to-<target>/` and verify completeness before editing. Preserve custom content, state, IDs, and histories; check conflicts and links, restore originals on failure, and record the switch and backup path. Conversion keeps the same goal and fixed directory.
 
-In collaborative mode, commit configuration, roadmap contents, and goal archives; ignore `.checkpoint-karpathy/private/`. In privacy mode, keep all state under `private/` untracked. Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy into committed planning documents. Sensitive local notes belong under `private/` in either mode.
+## Checkpoint execution
 
-### Temporary work files
+Execute one coherent subphase or milestone review at a time:
 
-Use `.checkpoint-karpathy/private/work/` for temporary project files. Create it during initialization in both modes. It stays in place during mode changes, layout switches, and goal archiving. Do not automatically archive or clear its contents when starting a new goal.
+1. Select the next action and briefly state its goal. Inspect the affected project files and instructions.
+2. Make the smallest coherent change that meets the planned scope and success criteria.
+3. Detect the project stack and run the smallest relevant verification. Follow Verification and Git below.
+4. **Check off completed roadmap items:** change `[ ]` to `[x]` in compact `roadmap.md` or structured `milestones.md` and any split milestone documents once completion and verification requirements are met. Leave unfinished, blocked, and cancelled items unchecked.
+5. Append the actual work, files changed, verification results, decisions, known issues, and next step to `roadmap/progress.md`. Before creating or reconstructing this log, read the [Progress template](references/checkpoint-details.md#progress-template). Preserve useful prior history.
+6. Update the current snapshot, phase reference, and Next Action in compact `roadmap.md` or structured `status.md`. Update context and the plan-change log when their information changes. If all subphases of a milestone are done, the next action is its standalone review.
+7. Review status and diffs, stage relevant files, inspect the staged diff, and commit the checkpoint with its plan checkboxes, progress, and current state. Report the commit and next action.
+8. Continue to the next action until the goal is complete, the conversation ends, or the user pauses or cancels. Resume an incomplete goal across development conversations without requiring re-invocation.
 
-Keep the work root free of loose files. Classify by purpose or task, reuse suitable categories, and create only needed subdirectories. Subdivide large categories by task, phase, or run. Examples:
+A progress entry or status update alone does not mark a plan item complete. Include the updated checkboxes in the same checkpoint commit. A normal commit corresponds to one completed subphase; an item is done only when project files are coherent, verification is recorded honestly, state is updated, and relevant changes are committed.
 
-- `logs/`, `checks/`, `verification/`: command output, test logs, and verification evidence.
-- `tools/`, `probes/`: temporary scripts and diagnostics.
-- `reports/`, `reviews/`, `notes/`: analysis and investigation records.
-- `browser/`, `screenshots/`: browser profiles, traces, and screenshots.
-- `configs/`, `fixtures/`: temporary configurations and inputs.
-- `backups/`, `drafts/`: intermediate copies and drafts.
-- `bin/`, `artifacts/`: temporary executables, build output, and profiling data.
+### Milestone review
 
-A task directory may group its scripts, logs, and reports into subdirectories. Direct tool-created temporary data into work categories where supported. Keep maintained source, tests, and user deliverables in their intended project locations.
+After all planned subphases in a milestone are complete and committed, perform a standalone review before starting the next milestone or declaring the goal done. Read the [Milestone review procedure](references/checkpoint-details.md#milestone-review) before each review.
 
-Manage temporary content separately, retaining useful tools or evidence and cleaning disposable material as needed under project deletion rules. Record durable conclusions and verification summaries in `roadmap/progress.md` so archived documents explain results without depending only on temporary-file links. Raw evidence may remain in task-specific work directories with its path recorded in progress.
+Confirm scope, simplify, verify broadly, review for regressions and integration gaps, debug and fix in-scope issues, then reverify. Record the ordered findings and final results in progress. Only then check off the review and make its separate commit using the shared checkpoint steps above.
 
----
+Reuse the last planned phase label with a review suffix, such as `Phase 1.2 Milestone Review: stabilize authentication`. The review does not increment the planned Phase/Subphase number. This applies regardless of commit message style.
 
-## Skill Lifecycle and Completion
+If a blocking issue cannot be fixed, record it in context and progress, update the plan, and commit only a coherent checkpoint; leave the review unchecked. Scope changes, investigation, urgent fixes, and plan corrections may use a temporary checkpoint for the immediate coherent goal, followed by a return to the roadmap.
 
-On actual first use, initialize configuration and directories, briefly state the selected settings, and proceed without asking the user to choose unspecified settings. For every new goal, plan fully from the current state to all stated goals, including every milestone, commit-sized subphase, and milestone review. Plans may change when evidence or requirements change; record material changes and their reasons.
+For the final review, also verify overall acceptance and record its evidence. Set Completion to `completed` and Next Action to goal completion in the closeout commit only when all planned work and review requirements pass. Completion becomes final when that commit succeeds.
 
-### Completion state
+## Completion and lifecycle
 
-Record `Completion` in `roadmap/roadmap.md` for compact layout or `roadmap/status.md` for structured layout:
+Record Completion in compact `roadmap.md` or structured `status.md`:
 
 | Value | Meaning |
 |---|---|
-| `incomplete` (未完成) | The goal remains active and completion conditions are not all met. |
-| `completed` (已完成) | All subphases, milestone reviews, commits, and overall acceptance criteria are satisfied with recorded verification evidence. |
-| `cancelled` (已取消) | The user explicitly requests or confirms termination of the goal. |
+| `incomplete` (未完成) | Goal remains active; resume the next unfinished action. |
+| `completed` (已完成) | All subphases and milestone reviews are done and committed, and overall acceptance has recorded verification evidence. |
+| `cancelled` (已取消) | The user explicitly requests or confirms termination. |
 
-Paused, blocked, and in-progress describe current execution, not additional completion values; keep `incomplete`. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append a termination entry to progress. Preserve unfinished checkboxes and completed work accurately.
+Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 
-While a goal is `incomplete`, use this workflow across development conversations and resume the next unfinished action without requiring re-invocation. A session ending does not cancel or complete the goal. After `completed` or `cancelled`, deactivate this workflow and leave its documents in place. Use it for a new goal only when the user explicitly invokes it.
+After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories without an enclosing `roadmap/`. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
 
-### Resume and new goals
+## Temporary work and visibility
 
-1. Read configuration, initialize missing fixed directories, and inspect the actual layout. Read the compact roadmap or the structured overview and status, then recent progress and the relevant plan, dependencies, assumptions, and blockers.
-2. If goal documents are absent, select a layout and create a complete plan. Preserve existing content if documents are partial or outside the active directory; organize it without overwriting or treating it as a new goal. Recover missing state from the plan and evidence, and clarify conflicting goals or terminal states rather than guessing.
-3. If `incomplete`, resume the next action. Use milestone review or blocker resolution as the next action when appropriate. Check the complete plan before changing scope or cross-milestone dependencies.
-4. If `completed`, verify the completion claim against plan checkboxes, review records, and overall acceptance. If inconsistent, reconcile the state before archiving.
-5. If `completed` or `cancelled` and starting a new goal, archive the old goal contents as below, select the new goal's layout, and initialize fresh goal documents in the same `roadmap/`. Cancellation does not require unfinished phases to pass acceptance.
+Use `.checkpoint-karpathy/private/work/` in both modes. Keep its root free of loose files; create meaningful purpose- or task-specific subdirectories only as needed. Subdivide large categories by task or run. See [Temporary work files](references/project-state.md#temporary-work-files) for category examples when deciding where material belongs.
 
-### Archiving
+Keep work in place across visibility changes, layout changes, and goal archiving. Do not automatically archive or clear it for a new goal. Retain useful tools and evidence; clean disposable content separately under project deletion rules. Keep maintained source, tests, and deliverables in their intended project locations. Record durable conclusions and verification summaries in progress so archives explain results independently of temporary links; raw evidence can remain in work with its path recorded.
 
-Use `archive/YYYYMMDDa-<summary>/` within the selected state directory. The letter increments (`a` … `z`, `aa`, `ab`, …) to avoid same-day collisions. Read the summary from the old goal and use a short kebab-case name describing that completed or cancelled goal.
+Collaborative mode commits configuration, roadmap contents, and goal archives. Privacy mode keeps them untracked under `private/`; include removal of formerly tracked active paths in the next relevant commit after a privacy switch. Existing Git history remains. Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy in committed state. Sensitive notes belong under `private/` in either mode.
 
-Create an unused archive destination, then move **all contents** of the active `roadmap/`, including any added subdirectories, directly into it. Check conflicts and preserve relative links within the goal documents. Keep the fixed `roadmap/` directory itself; create new goal files inside it after archiving succeeds.
-
-```text
-archive/
-  20261026a-linked-market-information/
-    README.md
-    status.md
-    context.md
-    milestones.md
-    changelog.md
-    progress.md
-```
-
-For compact layout, that archive directly contains `roadmap.md` and `progress.md`. The archive has no extra enclosing `roadmap/` layer. Keep `config.md` active and reuse it; leave `private/work/` and its contents in place. Archive on the next invocation for a new goal, not immediately upon completion or cancellation.
-
----
-
-## Layout Selection and Switching
-
-Visibility mode, commit style, and roadmap layout are separate settings.
-
-- `auto`: Choose a layout for each new goal and reassess during execution. The agent may switch in either direction when it improves readability and maintenance.
-- `compact`: Use compact layout; switch only when the user requests it.
-- `structured`: Use structured layout; switch only when the user requests it.
-
-Judge the **whole goal**, including its complete plan, dependencies, background, design evolution, and accumulated history. Compact fits focused goals with little context and plan history. Structured fits multiple milestones, complex dependencies, or substantial evolving context and history. Remaining task count alone is not a reason to switch; approaching completion does not make a large goal small. Avoid frequent switching with little benefit.
-
-Read existing documents by meaning; headings and wording may differ from the examples. Templates guide organization and should not block recovery of valid user-edited content. Under `auto`, retain `auto` in configuration; the active files identify the actual layout.
-
-### Switching procedure
-
-1. Inspect every goal document and subdirectory. Map all content to the destination layout, preserving goal, acceptance, completion state, stage identifiers, dependencies, reviews, decisions, and all execution and plan-change history.
-2. Before edits, copy the full contents of `roadmap/` to a unique `.checkpoint-karpathy/private/work/backups/roadmap-layout/<timestamp>-<source>-to-<target>/` directory. Use this private path in both modes. Put the original files and subdirectories directly in the backup, verify the copy is complete, and do not overwrite a prior backup.
-3. Prepare and inspect the target documents, using `private/work/drafts/` if needed. Check destination conflicts. Keep progress history intact; preserve meaning when updating its links. Do not discard custom sections merely because they are absent from a template.
-4. Reorganize contents inside the fixed `roadmap/`. Update relative links and anchors; retain stable identifiers. Relocate superseded files individually to a separate subdirectory of the backup rather than leaving conflicting active layouts. Follow project deletion rules.
-5. Verify content coverage, completion and phase states, history, links, and the new entry point against the backup. If the conversion fails, preserve the partial result separately and restore the backed-up content before continuing work.
-6. Record the reason, source and target layouts, and backup path in the active plan-change log. A layout switch is not a new goal and does not trigger goal archiving. Change configuration only to reflect the user's requested setting.
-
----
-
-## Karpathy-Inspired Guardrails
-
-### Think Before Coding
-
-Before meaningful edits, identify:
-
-- the current work mode,
-- the concrete goal,
-- the smallest coherent phase,
-- assumptions,
-- risks,
-- verification method.
-
-For clear, low-risk tasks, proceed directly. For ambiguous or high-risk tasks, briefly restate the plan first.
-
-### Simplicity First
-
-Prefer the simplest thing that works.
-
-Avoid:
-
-- speculative abstractions,
-- unused frameworks,
-- unnecessary layers,
-- broad rewrites,
-- premature generalization.
-
-A small working vertical slice beats a large unfinished architecture.
-
-### Surgical Changes
-
-For existing codebases:
-
-- touch only relevant files,
-- preserve behavior unless the user requested a change,
-- avoid unrelated refactors,
-- match existing style,
-- do not commit unrelated user changes.
-
-For greenfield projects:
-
-- create the minimum coherent structure needed for the current phase,
-- do not scaffold large unused systems,
-- make each subphase runnable or inspectable.
-
-### Goal-Driven Execution
-
-Every subphase must have:
-
-- a goal,
-- a completion condition,
-- a verification method,
-- a commit.
-
-Every major milestone must end with a standalone milestone review checkpoint before the agent starts the next milestone or declares the goal done.
-
----
-
-## Work Mode Selection
-
-At the start of a concrete development request, determine the current work mode.
-
-Use one of these modes:
-
-1. **Greenfield Development** — empty or near-empty repository.
-2. **Mid-Project Continuation** — existing codebase with ongoing work.
-3. **Feature Development** — add a new capability.
-4. **Bug Fixing** — reproduce, isolate, fix, and verify a defect.
-5. **Refactoring** — change structure while preserving behavior.
-6. **Late-Stage Maintenance** — small, careful changes near release or in mature code.
-
-Record the selected work mode in `roadmap/roadmap.md` or `roadmap/README.md`, according to the layout.
-
----
-
-## Roadmap Documents
-
-Create the entire goal plan inside the selected state directory's fixed `roadmap/`. Read [references/roadmap-templates.md](references/roadmap-templates.md) when creating documents or switching layouts. It provides compact and structured examples plus the milestone and change-entry content.
-
-| Information | Compact | Structured |
-|---|---|---|
-| Goal, overall acceptance, scope, work mode, initial state, navigation | `roadmap.md` | `README.md` |
-| Completion, current snapshot, current phase reference, next action | `roadmap.md` | `status.md` |
-| Constraints, assumptions, active risks and blockers, evidence | `roadmap.md` | `context.md` |
-| All milestones and subphases, dependencies, scope, acceptance, verification, commit targets, review requirements and completion checkboxes | `roadmap.md` | `milestones.md` |
-| Material plan adjustments: reason, change, affected phases, impact, links | Roadmap Change Log in `roadmap.md` | `changelog.md` |
-| Actual work, verification results, commits, execution decisions, issue handling | `progress.md` | `progress.md` |
-
-Keep the overview focused on the goal, stable background, and navigation. Keep current status as a latest snapshot, and append execution and plan-change histories. Detailed phase and review completion belongs in the milestone plan; current status references it. Assumption, risk, and blocker details belong in context; current status links to them. Progress entries preserve the execution state at that time; their historical Next Step does not override the current next action.
-
-**Keep roadmap checkboxes current.** As each planned item meets its completion and verification requirements, change its `[ ]` to `[x]` in the active plan: `roadmap/roadmap.md` for compact layout, or `roadmap/milestones.md` (and any split milestone documents) for structured layout. Check off milestone reviews separately after they pass. Update the checkboxes with the corresponding progress entry and include them in the checkpoint commit; a progress entry or status update alone does not mark a plan item complete. Leave unfinished, blocked, or cancelled items unchecked.
-
-Plan completely from the current repository state to all stated goals. Include dependencies, commit-sized subphases with concrete success criteria and verification, a standalone review for every milestone, overall goal acceptance, and the next action. A single subphase or milestone example does not limit the total plan. Preserve stable identifiers and use relative links to connect evidence and plan entries.
-
-Update the active plan when requirements, priorities, assumptions, blockers, or repository evidence invalidate it, or when phases need splitting or merging. Record material changes and their reason and impact in the plan-change log. Ordinary checkbox updates and next-action updates need no plan-change entry. Link execution entries to the change record instead of duplicating explanations.
-
-When a document becomes difficult to read as a whole, split by actual retrieval needs, such as per-milestone documents. Preserve navigation, complete coverage, identifiers, and histories, and include added files in switching and archiving. Keep maintained design documents in their intended project documentation locations and reference them; record the scheduling impact of design changes in the plan-change log.
-
----
-
-## Milestone Review Requirement
-
-When all planned subphases in a major milestone are complete, perform a standalone milestone review checkpoint before starting the next milestone or declaring the goal done.
-
-The milestone review is separate from the final planned subphase. It must update `.checkpoint-karpathy/roadmap/progress.md` and have its own commit, but it does not consume or increment the planned Phase/Subphase number. Reuse the last completed planned phase label with a review suffix, such as:
-
-```md
-## Phase 1.2 Milestone Review: stabilize authentication flow
-```
-
-Do not label this checkpoint as `Phase 1.3` unless `1.3` is an actual planned roadmap subphase.
-
-Use this order for the milestone review:
-
-1. Confirm scope and evidence: restate what the milestone was meant to accomplish and which touched surfaces need review.
-2. Simplify: remove speculative abstractions, unnecessary layers, unused frameworks, unused files, unused imports, and dead paths introduced by the milestone.
-3. Run broad verification: run the broadest project-appropriate verification available for the milestone's touched surface, plus targeted checks for changed behavior.
-4. Review: inspect the whole milestone for regressions, inconsistent behavior, missing tests, stale documentation, roadmap drift, and integration gaps.
-5. Debug and fix: reproduce every failing check or discovered defect that is in scope, isolate the cause, and fix it.
-6. Rerun verification: rerun the failed checks and the broad milestone verification after fixes.
-7. Record and commit: update progress with the review results, update the roadmap if needed, review diffs, and commit the milestone review checkpoint.
-
-Preserve existing behavior unless the user requested a change, and avoid unrelated refactors. Do not mark the milestone complete until simplification, verification results, review findings, debugging, fixes, and final rerun results are recorded in `.checkpoint-karpathy/roadmap/progress.md`. If a blocking issue cannot be fixed in the review checkpoint, update the roadmap, record the blocker in progress, and commit only a coherent checkpoint that leaves the repository understandable.
-
----
-
-## Progress Log Requirement
-
-After each completed subphase, update:
-
-```text
-.checkpoint-karpathy/roadmap/progress.md
-```
-
-Use this structure:
-
-```md
-# Checkpoint Karpathy Progress
-
-## Phase <N or M.S>: <short title>
-
-Date: <YYYY-MM-DD>
-Roadmap item: <milestone/subphase reference>
-Commit: <hash after commit, or pending before commit>
-
-### Goal
-<What this phase was meant to accomplish.>
-
-### Completed
-- <Concrete completed item>
-
-### Files Changed
-- `<path>` — <why it changed>
-
-### Verification
-- `<command or method>` — <result>
-- If not run: <reason>
-
-### Decisions
-- <Important technical decision and rationale>
-
-### Known Issues
-- <Open issue, limitation, or risk>
-- If none: None known.
-
-### Next Step
-<The next roadmap subphase or a roadmap update.>
-```
-
-For a milestone review checkpoint, use a non-incrementing phase label and include:
-
-```md
-## Phase <last planned phase> Milestone Review: <short title>
-
-Date: <YYYY-MM-DD>
-Roadmap item: Milestone <N> Review after Phase <last planned phase>
-Commit: <hash after commit, or pending before commit>
-
-### Goal
-<What the milestone review was meant to stabilize.>
-
-### Closeout Order
-- Scope and evidence: <confirmed milestone goal and touched surface>
-- Simplification: <what was simplified or why no simplification was needed>
-- Broad verification: <initial broad checks and results>
-- Review findings: <findings and outcomes>
-- Debugging / fixes: <bugs found and fixed, or none>
-- Final verification rerun: <failed checks and broad checks rerun after fixes>
-```
-
-Append entries. Do not erase useful prior history.
-
----
-
-## Phase Workflow
-
-For each subphase:
-
-1. Select the next roadmap subphase.
-2. State the subphase goal briefly.
-3. Inspect the repository and project instructions.
-4. Make the smallest coherent change that completes the subphase.
-5. Detect the project stack before choosing verification.
-6. Run the smallest relevant verification.
-7. Update `.checkpoint-karpathy/roadmap/progress.md`.
-8. Update the active milestone plan checkbox from `[ ]` to `[x]` and the current snapshot and Next Action in the completion document. Update context if assumptions, risks, or blockers change; append material plan changes to the plan-change log.
-9. If this subphase completes a major milestone, set the next step to the standalone Milestone Review Requirement using the same planned phase label with a review suffix.
-10. Run `git status`.
-11. Review relevant diffs with `git diff`.
-12. Stage only relevant files.
-13. Review staged diff with `git diff --staged`.
-14. Commit the completed subphase.
-15. Report the commit and next action.
-
-A normal commit should correspond to one completed roadmap subphase.
-
-For each milestone review checkpoint:
-
-1. Confirm that every planned subphase in the milestone is complete and committed.
-2. Use the last planned phase label with a milestone-review suffix; do not increment the planned Phase/Subphase number.
-3. Follow the Milestone Review Requirement order through the final verification rerun.
-4. Update `.checkpoint-karpathy/roadmap/progress.md` with the milestone review entry.
-5. Mark the milestone review checkbox complete in the active plan after review requirements pass. Update current status and Next Action, keep blocker details in context, and record material plan changes. For the final review, verify overall acceptance and set Completion to `completed` only when the full goal meets the definition of done; include this state in the closeout commit.
-6. Run `git status`.
-7. Review relevant diffs with `git diff`.
-8. Stage only relevant files.
-9. Review staged diff with `git diff --staged`.
-10. Commit the milestone review checkpoint.
-11. Report the commit and the next planned subphase or goal completion.
-
-If special circumstances arise, create a temporary checkpoint for the immediate coherent goal, such as:
-
-- roadmap update after requirement change,
-- documentation update needed before coding,
-- blocker investigation,
-- urgent bug fix discovered during development,
-- plan correction after repository inspection.
-
-After such a checkpoint, return to the roadmap.
-
-### Lifecycle Behavior During Execution
-
-Within a conversation, while this skill is active and the roadmap has unfinished items:
-
-- After completing a subphase or milestone review, immediately proceed to the next roadmap item.
-- Keep executing until this conversation ends, the goal is completed, or the user cancels or pauses work.
-
-When the final milestone review is committed, overall acceptance is verified, and Completion is `completed`:
-
-- Report that the goal is complete.
-- The skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
-
----
-
-## Stack-Neutral Verification
-
-Never assume the project stack.
-
-Before running checks, inspect:
-
-- `README.md`, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, docs,
-- `package.json`, lockfiles,
-- `pyproject.toml`, Python config files,
-- `Cargo.toml`,
-- `go.mod`,
-- `pom.xml`, `build.gradle`,
-- `.csproj`, `.sln`,
-- `CMakeLists.txt`, `Makefile`, `meson.build`,
-- `Gemfile`,
-- `composer.json`,
-- `Package.swift`,
-- `Dockerfile`, compose files,
-- `justfile`, `Taskfile.yml`.
-
-Prefer project-declared commands over generic guesses.
-
-Use the smallest relevant check:
-
-- test,
-- build,
-- type check,
-- lint,
-- format check,
-- compile check,
-- smoke check,
-- manual inspection if no command exists.
-
-If no reliable verification exists yet, write that explicitly in progress.
-
-Do not pretend a check passed.
-
----
-
-## Git Rules
-
-Before staging:
-
-```bash
-git status
-git diff
-```
-
-After staging:
-
-```bash
-git diff --staged
-```
-
-Stage only relevant files.
-
-Do not commit unrelated user changes.
-
-Use the commit message style recorded in `config.md`:
-
-**Conventional Commits** (default):
-```text
-type(scope): <English summary>
-```
-- Uses Conventional Commits types and scopes.
-- Description defaults to English; use another language only when the user asks.
-- Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`, `style`, `revert`.
-- Common scopes: `web`, `server`, `docs`, `skill`, `test`, `config`, or omit when forced.
-- Examples:
-```text
-feat(web): add remote login proxy configuration
-fix(server): store points count as long
-docs(skill): require conventional commit messages
-chore(checkpoint): update roadmap after requirement change
-test(auth): cover expired session refresh
-revert: revert "fix(server): store points count as long"
-```
-
-**Phase-style** (optional):
-```text
-Phase X.Y: <description>
-```
-- Uses the roadmap phase label as the commit subject prefix.
-- `<description>` is a concise summary of what changed.
-- Description defaults to English; use another language only when the user asks.
-
-General rules:
-- Keep the subject concise, action-oriented, and specific to the completed subphase.
-- Do not commit unrelated user changes.
-
-Do not run destructive Git commands unless the user explicitly asks.
-
-Avoid without explicit permission:
-
-```bash
-git reset --hard
-git clean
-git rebase
-git commit --amend
-git push --force
-git checkout -- .
-git restore .
-git restore --staged .
-```
-
-If Git is not initialized and the user requested checkpointed development, initialize it:
-
-```bash
-git init
-```
-
-If commit fails because Git identity is missing, do not fabricate identity. Report the issue and tell the user to configure Git identity.
-
----
-
-## Gitignore Policy
-
-Both collaborative mode and privacy mode use the same `.gitignore` entry:
+Both modes require this single Git ignore entry:
 
 ```gitignore
 .checkpoint-karpathy/private/
 ```
 
-In collaborative mode, this covers private notes and all temporary work, including layout backups. In privacy mode, configuration, the fixed `roadmap/`, and goal archives also live under `.checkpoint-karpathy/private/` and are covered automatically.
+Do not ignore `.checkpoint-karpathy/` wholesale. The private rule covers work and layout backups in both modes, plus configuration, roadmap documents, and archives in privacy mode.
 
-Do not add `.checkpoint-karpathy/` wholesale to `.gitignore`, because that would hide roadmap and progress even in collaborative mode.
+## Verification and Git
 
----
+Inspect project documentation, instructions, manifests, and existing checks before choosing commands. Prefer project-declared commands. Use the smallest relevant test, build, typecheck, lint, compile, smoke check, or manual inspection. For unclear checks, consult [Verification discovery](references/checkpoint-details.md#verification-discovery). Record unavailable verification and its reason; never claim an unrun check passed.
 
-## Final Definition of Done
+For every checkpoint, perform these steps in order:
 
-A subphase is done only when:
+1. Run `git status` and `git diff` before staging; inspect relevant changes.
+2. Stage only relevant project and state files, preserving privacy policy and unrelated user changes.
+3. Run `git diff --staged` and inspect it before committing.
+4. Commit with the style in `config.md`, using a concise, specific, action-oriented description. Descriptions default to English; use another language only at the user's request.
 
-- the state directory, commit style, and layout policy match `config.md`,
-- its completed roadmap item is checked `[x]` in the active plan, or the plan is explicitly adjusted to reflect the actual outcome,
-- code/project files are coherent,
-- verification was run or honestly documented as unavailable,
-- `.checkpoint-karpathy/roadmap/progress.md` is updated,
-- the active plan, current snapshot, and Next Action are updated in the files selected by the layout,
-- context and the plan-change log are updated when their information changes,
-- relevant changes are committed,
-- no unrelated user changes were committed,
-- the next step is recorded.
+| Style | Normal checkpoint | Milestone review |
+|---|---|---|
+| `conventional` (default) | `type(scope): summary` | `type(scope): review summary` |
+| `phase` | `Phase X.Y: description` | `Phase X.Y Milestone Review: description` |
 
-A major milestone is done only when:
+Do not commit unrelated user changes. Do not run destructive Git commands without explicit permission, including `git reset --hard`, `git clean`, `git rebase`, `git commit --amend`, `git push --force`, or blanket checkout/restore operations.
 
-- every planned subphase in that milestone is complete and committed,
-- the standalone milestone review checkpoint is complete and committed,
-- progress records the closeout order, findings, fixes, and final verification rerun,
-- the next planned subphase or goal completion is recorded.
-
-The full roadmap is complete only when:
-
-- every major milestone and its review checkpoint are done and committed,
-- progress records the final milestone review and overall acceptance evidence,
-- Completion is `completed` and the next action is recorded as goal completion.
-
-After full roadmap completion, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
+If Git is absent and the user requested checkpointed development, initialize it with `git init`. If a commit fails because identity is missing, do not fabricate identity; report the issue and request Git identity configuration.
