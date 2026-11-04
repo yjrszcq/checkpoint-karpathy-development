@@ -2,7 +2,9 @@
 
 [English](README.md) | 简体中文
 
-这是一个同时支持 Codex 和 Claude Code 的工作流：路线图驱动、阶段 checkpoint、每个小阶段提交一次 Git commit，并结合 Karpathy 风格的工程护栏。
+[安装](#安装) | [Agent 安装文档](INSTALL.md)
+
+这是一个支持 Codex、Claude Code、Pi、Oh My Pi、Antigravity、Cursor、DeepSeek Harness 等 agent 的工作流：路线图驱动、阶段 checkpoint、每个小阶段提交一次 Git commit，并结合 Karpathy 风格的工程护栏。
 
 它适用于从零开发、中途接手、功能开发、Bug 修复、重构、后期维护，以及任何需要在额度耗尽、session 中断、上下文丢失或多人接力时保持可恢复的开发任务。
 
@@ -168,56 +170,35 @@ Phase X.Y: <描述>
 
 安装时复制完整技能目录，包含 `references/`。
 
-## Codex 安装
+## 安装
 
-把 skill 复制到 Codex 的用户级或项目级 skill 目录：
-
-```bash
-mkdir -p ~/.codex/skills/checkpoint-karpathy-development
-cp -R .codex/skills/checkpoint-karpathy-development/. ~/.codex/skills/checkpoint-karpathy-development/
-```
-
-项目级 Codex 指令：
+一键安装，交互选择 harness 和安装范围：
 
 ```bash
-cp AGENTS.md /path/to/your/project/AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
 ```
 
-调用示例：
+也可以直接指定 harness：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+```
+
+支持 `claude`、`codex`、`pi`、`ohmypi`、`antigravity`、`cursor`、`deepseek`、`gemini`、`opencode`。多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
+
+### 让 agent 帮你安装
+
+把仓库链接和安装要求一起发给 agent，例如：
 
 ```text
-$checkpoint-karpathy-development
-
-阅读 AGENTS.md，并读取或创建 config.md。按其中的可见性模式、提交风格和布局策略，在 roadmap/ 内创建或更新当前目标的完整计划，完成一个小阶段，更新 progress，运行项目适用的验证命令，并 git commit。
+帮我给当前使用的 harness 安装这个技能：
+https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+请按照仓库里的 INSTALL.md 安装。
 ```
 
-## Claude Code 安装
+[INSTALL.md](INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`；已有安装先备份到技能扫描目录之外，项目原有的指令文件会保留。
 
-项目级 Claude Code 指令：
-
-```bash
-cp CLAUDE.md /path/to/your/project/CLAUDE.md
-```
-
-复制 Claude Code skill：
-
-```bash
-mkdir -p /path/to/your/project/.claude/skills/checkpoint-karpathy-development
-cp -R .claude/skills/checkpoint-karpathy-development/. /path/to/your/project/.claude/skills/checkpoint-karpathy-development/
-```
-
-可选 slash command：
-
-```bash
-mkdir -p /path/to/your/project/.claude/commands
-cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/commands/checkpoint-karpathy.md
-```
-
-调用示例：
-
-```text
-/checkpoint-karpathy 使用 checkpoint-karpathy development 继续这个项目。先判断工作模式，更新 roadmap，完成一个小阶段，更新 progress，运行验证并 commit。
-```
+安装后重启 harness 或重新加载技能，再要求它使用 `checkpoint-karpathy-development` 处理你的目标。
 
 ## Gitignore
 

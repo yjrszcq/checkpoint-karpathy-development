@@ -2,7 +2,9 @@
 
 English | [简体中文](README_CN.md)
 
-A Codex + Claude Code workflow for roadmap-driven, checkpointed software development with Karpathy-inspired engineering guardrails.
+[Installation](#installation) | [Agent installation guide](INSTALL.md)
+
+Roadmap-driven, checkpointed software development with Karpathy-inspired engineering guardrails. Works with Codex, Claude Code, Pi, Oh My Pi, Antigravity, Cursor, DeepSeek Harness, and other compatible agents.
 
 It is designed for greenfield development, mid-project continuation, feature work, bug fixing, refactoring, late-stage maintenance, and handoffs where work must stay recoverable across quota limits, session resets, and context loss.
 
@@ -168,56 +170,35 @@ Manage temporary material separately, retaining useful evidence or tools and cle
 
 Install the complete skill directory, including `references/`.
 
-## Install for Codex
+## Installation
 
-Copy the skill into Codex's project or user skill directory:
-
-```bash
-mkdir -p ~/.codex/skills/checkpoint-karpathy-development
-cp -R .codex/skills/checkpoint-karpathy-development/. ~/.codex/skills/checkpoint-karpathy-development/
-```
-
-For project-level Codex instructions, copy:
+Install interactively and select your harness and scope:
 
 ```bash
-cp AGENTS.md /path/to/your/project/AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
 ```
 
-Use it:
+Or specify the harness directly:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+```
+
+Supports `claude`, `codex`, `pi`, `ohmypi`, `antigravity`, `cursor`, `deepseek`, `gemini`, and `opencode`. Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
+
+### Let your agent install it
+
+Send your agent the repository link with an installation request, for example:
 
 ```text
-$checkpoint-karpathy-development
-
-Read AGENTS.md and read or create config.md. Use its visibility mode, commit message style, and layout policy, create or update the complete goal plan inside roadmap/, complete one roadmap subphase, update progress, run project-appropriate verification, and git commit.
+Install this skill for my current harness:
+https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+Follow INSTALL.md in the repository.
 ```
 
-## Install for Claude Code
+[INSTALL.md](INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/` as its package source. It preserves existing project instructions and backs up previous installations outside skill discovery.
 
-For project-level Claude Code instructions, copy:
-
-```bash
-cp CLAUDE.md /path/to/your/project/CLAUDE.md
-```
-
-Copy the Claude Code skill:
-
-```bash
-mkdir -p /path/to/your/project/.claude/skills/checkpoint-karpathy-development
-cp -R .claude/skills/checkpoint-karpathy-development/. /path/to/your/project/.claude/skills/checkpoint-karpathy-development/
-```
-
-Optional slash command:
-
-```bash
-mkdir -p /path/to/your/project/.claude/commands
-cp .claude/commands/checkpoint-karpathy.md /path/to/your/project/.claude/commands/checkpoint-karpathy.md
-```
-
-Use it:
-
-```text
-/checkpoint-karpathy Continue this project using checkpoint-karpathy development. Select the work mode, update the roadmap, complete one subphase, update progress, verify, and commit.
-```
+After installation, restart or reload your harness and ask it to use `checkpoint-karpathy-development` for your goal.
 
 ## Gitignore
 
