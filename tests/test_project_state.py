@@ -96,6 +96,21 @@ class ProjectStateTests(unittest.TestCase):
         self.invoke("init_project.py", "--mode", "collaborative", "--commit-message-style", "phase", success=False)
         self.assertEqual(self.snapshot(self.project), before)
 
+    def test_private_ignore_survives_later_exception_rules(self):
+        subprocess.run(["git", "init", "--quiet", str(self.project)], check=True)
+        ignore = self.project / ".gitignore"
+        original = ".checkpoint-karpathy/private/\n!.checkpoint-karpathy/private/\n"
+        ignore.write_text(original)
+        folder, roadmap = self.initialize("privacy")
+        for path in (folder / "config.yaml", roadmap / "README.md", folder / "work/evidence.log"):
+            result = subprocess.run(["git", "-C", str(self.project), "check-ignore", "--no-index", str(path)],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(ignore.read_text().startswith(original))
+        before = self.snapshot(self.project)
+        self.invoke("init_project.py", "--mode", "privacy")
+        self.assertEqual(self.snapshot(self.project), before)
+
     def test_existing_complete_goal_without_config_is_preserved(self):
         roadmap = self.base / "roadmap"
         roadmap.mkdir(parents=True)
@@ -388,6 +403,36 @@ class ProjectStateTests(unittest.TestCase):
         self.invoke("create_goal.py", payload=payload)
         plan = (self.base / "roadmap/milestones.md").read_text()
         self.assertIn("Phase 1.1 Milestone Review: review feature", plan)
+
+    def test_dependencies_follow_an_executable_plan_order(self):
+        self.initialize(goal=False)
+        baseline = self.snapshot(self.project)
+        payload = self.payload()
+        first = payload["milestones"][0]
+        second = copy.deepcopy(first)
+        second["id"] = "2"
+        second["phases"][0]["id"] = "2.1"
+        payload["milestones"].append(second)
+        cases = []
+        cyclic = copy.deepcopy(payload)
+        cyclic["milestones"][0]["dependencies"] = ["2"]
+        cyclic["milestones"][1]["dependencies"] = ["1"]
+        cases.append(cyclic)
+        forward = copy.deepcopy(payload)
+        forward["milestones"][0]["phases"][0]["dependencies"] = ["2.1"]
+        cases.append(forward)
+        own_parent = copy.deepcopy(payload)
+        own_parent["milestones"][0]["phases"][0]["dependencies"] = ["1"]
+        cases.append(own_parent)
+        for invalid in cases:
+            for arguments in ((), ("--check-only",)):
+                self.invoke("create_goal.py", *arguments, payload=invalid, success=False)
+                self.assertEqual(self.snapshot(self.project), baseline)
+        second["dependencies"] = ["1"]
+        second["phases"][0]["dependencies"] = ["1.1"]
+        self.invoke("create_goal.py", "--check-only", payload=payload)
+        self.assertEqual(self.snapshot(self.project), baseline)
+        self.invoke("create_goal.py", payload=payload)
 
 
 if __name__ == "__main__":

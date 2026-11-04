@@ -85,7 +85,8 @@ def config_text(mode, style, language):
 def ensure_ignore(project):
     path = local_path(project, project / ".gitignore")
     text = path.read_text(encoding="utf-8") if path.exists() else ""
-    if IGNORE not in text.splitlines():
+    rules = [line for line in text.splitlines() if line.strip() and not line.startswith("#")]
+    if not rules or rules[-1] != IGNORE:
         with path.open("a", encoding="utf-8") as stream:
             stream.write(("\n" if text and not text.endswith("\n") else "") + IGNORE + "\n")
 
