@@ -98,9 +98,7 @@ checkpoint-karpathy-development/
       progress.md
 ```
 
-Copy the entire `references/`, `scripts/`, and `assets/` directories, preserving their relative structure. The repository root is the canonical package source. Do not copy repository instructions, installer files, tests, or project planning state into the skill.
-
-Do not overwrite a project's `AGENTS.md` or `CLAUDE.md`. Those repository files are optional workflow examples, not installation requirements. Installing the skill also does not initialize a project's `.checkpoint-karpathy/` state or edit its `.gitignore`.
+Install the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` directories into the selected skill directory, preserving their relative structure. The repository root is the canonical package source. Keep installation confined to that destination.
 
 ## Updates and recovery
 

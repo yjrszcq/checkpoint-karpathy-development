@@ -226,11 +226,13 @@ class InstallerTests(unittest.TestCase):
 
     def test_downloaded_package_ref_and_full_references(self):
         archive = self.case / "release.tar.gz"
+        project_instructions = self.case / "AGENTS.md"
+        project_instructions.write_text("Project-specific instructions.\n")
         with tarfile.open(archive, "w:gz") as bundle:
             bundle.add(ROOT / "SKILL.md", arcname="release/SKILL.md")
             for resource in ("references", "scripts", "assets"):
                 bundle.add(ROOT / resource, arcname="release/" + resource)
-            bundle.add(ROOT / "AGENTS.md", arcname="release/AGENTS.md")
+            bundle.add(project_instructions, arcname="release/AGENTS.md")
         self.env["TEST_ARCHIVE"] = str(archive)
         self.env["TEST_REQUEST"] = str(self.case / "request.txt")
         self.fake_tool("curl", "import os, shutil, sys\nfrom pathlib import Path\na=sys.argv[1:]\nPath(os.environ['TEST_REQUEST']).write_text(' '.join(a))\nshutil.copyfile(os.environ['TEST_ARCHIVE'], a[a.index('-o')+1])\n")
