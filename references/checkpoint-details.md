@@ -4,7 +4,7 @@ Read the progress template before creating or reconstructing a progress log. Rea
 
 ## Progress template
 
-The creation script records roadmap generation as the first execution entry. Directory and configuration initialization are not goal execution entries. Subsequent entries record actual work and evidence; append them chronologically and preserve useful prior history. Use concise labelled paragraphs or sections in the user's language, keeping the date, stable roadmap reference, commit, completed work, verification, remaining scope, and next step easy to find.
+The creation script records roadmap generation as the first execution entry. Subsequent entries record actual work and evidence; append them chronologically and preserve useful prior history. Use concise labelled paragraphs or sections in the user's language, keeping the date, stable roadmap reference, commit, completed work, verification, remaining scope, and next step easy to find.
 
 Verification records must make the evidence's scope clear: what was checked, the observed result, and which revision or inputs it covers where that affects the conclusion. Distinguish rerun checks from reused evidence and record limitations. Link to detailed logs in private work when useful, keeping the durable outcome in progress. Keep shared progress free of sensitive details. A completed subphase supports checking that item in milestones.md; parent milestones and full-goal acceptance still require their own evidence. Keep the latest state and next action in status.md.
 
@@ -51,7 +51,7 @@ result when observed; a running check is not a pass.>
 For a milestone review, use the following heading and metadata in place of the
 normal entry heading and metadata. Include Closeout Order alongside the shared
 Goal, Completed, Verification, Boundaries / remaining, and Next fields above.
-Reuse the last planned phase label without incrementing it.
+Reuse the last planned phase label.
 
 ```md
 ## <YYYY-MM-DD> · Phase <last planned phase> Milestone Review: <short title>
@@ -72,13 +72,11 @@ Commit: <hash after commit, or pending before commit>
 
 When all planned subphases in a major milestone are complete, perform a standalone milestone review checkpoint before starting the next milestone or declaring the goal done.
 
-The milestone review is separate from the final planned subphase. It must update `.checkpoint-karpathy/roadmap/progress.md` and have its own commit, but it does not consume or increment the planned Phase/Subphase number. Reuse the last completed planned phase label with a review suffix, such as:
+Give the milestone review its own progress entry and commit. Reuse the last completed planned phase label with a review suffix, such as:
 
 ```md
 ## Phase 1.2 Milestone Review: stabilize authentication flow
 ```
-
-Do not label this checkpoint as `Phase 1.3` unless `1.3` is an actual planned roadmap subphase.
 
 Use this order for the milestone review:
 

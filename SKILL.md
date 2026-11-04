@@ -43,7 +43,7 @@ On requested settings changes, apply only the requested values to subsequent wor
 
 1. Read project instructions and configuration, initialize missing fixed directories, and inspect the actual goal files.
 2. Read `roadmap/README.md` and `roadmap/status.md`, then recent progress and the active milestone, dependencies, and relevant context or blockers. Read plan-change history when needed to understand a decision.
-3. If goal files are absent, plan the full goal and create its documents using structured input. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
+3. If goal files are absent, plan the full goal and create its documents using structured input. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
 6. If `completed` or `cancelled` and starting an explicitly requested new goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration and work.
@@ -61,7 +61,7 @@ Select and record the work mode in `roadmap/README.md`:
 
 Plan completely from the current repository state to every stated goal. Include all milestones, dependencies, commit-sized subphases, scope, success criteria, verification, commit targets, a standalone review for each milestone, overall acceptance, and the next action.
 
-Read [Roadmap templates](references/roadmap-templates.md) before creating or reorganizing goal documents. Examples do not limit the number of milestones. Interpret existing documents by meaning even when headings differ.
+Read [Roadmap templates](references/roadmap-templates.md) before creating or reorganizing goal documents. Choose milestones to cover the complete goal. Interpret existing documents by meaning even when headings differ.
 
 All active goal documents live inside the fixed `roadmap/`:
 
@@ -74,7 +74,7 @@ All active goal documents live inside the fixed `roadmap/`:
 | `changelog.md` | Material plan-change reasons, changes, affected phases and impact |
 | `progress.md` | Actual work, verification, commits, execution decisions and issue handling |
 
-Create all six files. Keep content proportional to the goal; brief entries or an explicit None suffice where there is little to record. Each detailed item has one maintained home; use stable identifiers and relative links elsewhere. Current status is a latest snapshot; execution and plan-change histories append. Historical Next Step entries in progress do not override the current Next Action.
+Create all six files. Keep content proportional to the goal; brief entries or an explicit None suffice where there is little to record. Each detailed item has one maintained home; use stable identifiers and relative links elsewhere. Keep the authoritative current snapshot and Next Action in status; append execution and plan-change histories.
 
 Read the sections needed for the current action. Review the complete plan when initially planning, changing scope or dependencies across milestones, or checking full-goal completion. Update documents only when their information changes; routine checkpoints update milestone checkboxes, status, and progress together.
 
@@ -95,7 +95,7 @@ Execute one coherent subphase or milestone review at a time:
 7. Review status and diffs, stage relevant files, inspect the staged diff, and commit the checkpoint with its plan checkboxes, progress, and current state. Report the commit and next action.
 8. Continue to the next action until the goal is complete, the conversation ends, or the user pauses or cancels. Resume an incomplete goal across development conversations without requiring re-invocation.
 
-A progress entry or status update alone does not mark a plan item complete. Include the updated checkboxes in the same checkpoint commit. A normal commit corresponds to one completed subphase; an item is done only when project files are coherent, verification is recorded honestly, state is updated, and relevant changes are committed.
+Each subphase checkpoint commit includes coherent project changes, verified plan checkboxes, progress, and current status.
 
 ### Milestone review
 
@@ -103,7 +103,7 @@ After all planned subphases in a milestone are complete and committed, perform a
 
 Confirm scope, simplify, verify broadly, review for regressions and integration gaps, debug and fix in-scope issues, then reverify. Record the ordered findings and final results in progress. Only then check off the review and make its separate commit using the shared checkpoint steps above.
 
-Reuse the last planned phase label with a review suffix, such as `Phase 1.2 Milestone Review: stabilize authentication`. The review does not increment the planned Phase/Subphase number. This applies regardless of commit message style.
+Reuse the last planned phase label with a review suffix, such as `Phase 1.2 Milestone Review: stabilize authentication`. Use this phase reference with either commit message style.
 
 If a blocking issue cannot be fixed, record it in context and progress, update the plan, and commit only a coherent checkpoint; leave the review unchecked. Scope changes, investigation, urgent fixes, and plan corrections may use a temporary checkpoint for the immediate coherent goal, followed by a return to the roadmap.
 

@@ -30,7 +30,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development-skills
 请按照仓库里的 INSTALL.md 安装。
 ```
 
-[INSTALL.md](../INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`、`scripts/`、`assets/`；已有安装先备份到技能扫描目录之外，项目原有的指令文件会保留。
+[INSTALL.md](../INSTALL.md) 提供 agent 安装流程、支持路径、自定义目录、更新、备份和验证说明。安装源统一为根目录的 `SKILL.md` 和完整 `references/`、`scripts/`、`assets/`；已有安装先备份到技能扫描目录之外。
 
 安装后重启 harness 或重新加载技能，再要求它使用 `checkpoint-karpathy-development` 处理你的目标。
 
@@ -64,7 +64,7 @@ Phase X.Y: <描述>
 
 描述默认英文，只有用户明确要求时才使用中文或其他语言。
 
-当一个大阶段完成时，agent 必须先单独执行 milestone review checkpoint 再继续。这个 checkpoint 不占用下一个规划 Phase/Subphase 编号；它先确认范围，再精简本大阶段工作，运行最完整且相关的验证，审查回归或集成缺口，debug 并修复范围内的问题，重新验证，记录 progress，并提交这次收尾。
+当一个大阶段完成时，agent 必须先单独执行 milestone review checkpoint 再继续。这个 checkpoint 沿用最后一个规划阶段的编号并添加复核后缀，先确认范围，再精简本大阶段工作，运行最完整且相关的验证，审查回归或集成缺口，debug 并修复范围内的问题，重新验证，记录 progress，并提交这次收尾。
 
 工程护栏是：
 
@@ -126,7 +126,7 @@ python3 /技能路径/scripts/create_goal.py --project /项目路径
 python3 /技能路径/scripts/archive_goal.py --project /项目路径 --title old-goal-summary
 ```
 
-初始化创建带注释的 YAML 配置、固定的空目录，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置和完整目标文档保持原样，部分缺失的状态先恢复。agent 将结构化 JSON 通过标准输入传给 `create_goal.py`，脚本校验后按模板生成六份实际文档，计划项均未勾选，并在 progress 记录“生成线路图”、在 changelog 记录“建立初始计划”；创建目录和配置不写入这两份记录。完整输入格式和调用示例见[结构化目标输入](../references/goal-input.md)。替换已结束目标时，先用 `--check-only` 校验新内容，再归档旧目标，最后用同一份输入创建新文档。归档脚本读取配置，只移动旧目标内容，保留空的固定 roadmap 目录；配置和 work 持续保留。仅归档时无需创建新目标。状态字段要求和失败恢复见[脚本说明](../references/project-state.md#helper-commands)。
+初始化创建带注释的 YAML 配置、固定的空目录，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置和完整目标文档保持原样，部分缺失的状态先恢复。agent 将结构化 JSON 通过标准输入传给 `create_goal.py`，脚本校验后按模板生成六份实际文档，计划项均未勾选，并在 progress 记录“生成线路图”、在 changelog 记录“建立初始计划”。完整输入格式和调用示例见[结构化目标输入](../references/goal-input.md)。替换已结束目标时，先用 `--check-only` 校验新内容，再归档旧目标，最后用同一份输入创建新文档。归档脚本读取配置，只移动旧目标内容，保留空的固定 roadmap 目录；配置和 work 持续保留。状态字段要求和失败恢复见[脚本说明](../references/project-state.md#helper-commands)。
 
 ### 路线图文档
 
@@ -165,7 +165,7 @@ roadmap/
 
 已完成和已取消采用相同归档流程：下次启用技能开展新目标时，将 `roadmap/` 内全部内容直接移入 `archive/YYYYMMDDa-<旧目标概括>/`，含额外文件和子目录。日期后字母递增，避免冲突。
 
-固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.yaml` 持续保留并复用。恢复任务先读配置、`roadmap/README.md` 和 `roadmap/status.md`，再读相关计划、背景及最近进度；核对完成标记与实际验收记录。
+固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.yaml` 持续保留并复用。
 
 ## 临时工作文件
 
@@ -183,8 +183,6 @@ roadmap/
 - [结构化目标输入](../references/goal-input.md)：字段、校验规则和 JSON 调用示例。
 - [路线图模板](../references/roadmap-templates.md)：文档职责和目标模板。
 - [检查点细节](../references/checkpoint-details.md)：进度模板、里程碑复核和验证方法查找。
-
-安装时复制完整技能目录，包含 `references/`、`scripts/`、`assets/`。
 
 ## Gitignore
 
