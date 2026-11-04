@@ -13,13 +13,13 @@
 运行安装脚本，交互选择 harness 和安装范围：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash
 ```
 
 也可以直接指定：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
 自定义路径、项目级安装和其他 harness 见[安装选项](docs/guide_CN.md#安装)。
@@ -30,7 +30,7 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 
 ```text
 请按照仓库中的 INSTALL.md，为我当前使用的 harness 安装这个技能：
-https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+https://github.com/yjrszcq/checkpoint-karpathy-development
 ```
 
 也可以在请求中指定 harness、项目级安装或自定义安装路径。详细流程见 [Agent 安装说明](INSTALL.md)。

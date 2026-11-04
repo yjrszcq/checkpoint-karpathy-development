@@ -13,13 +13,13 @@ The project-state helpers require **Python 3.9+** and **PyYAML >= 6.0** for proj
 Run the installer and select your harness and installation scope:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash
 ```
 
 Or specify them directly:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
 For custom paths, project installations, and other harnesses, see the [installation options](docs/guide.md#installation).
@@ -30,7 +30,7 @@ Send this request to your agent:
 
 ```text
 Install this skill for my current harness by following INSTALL.md in the repository:
-https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+https://github.com/yjrszcq/checkpoint-karpathy-development
 ```
 
 You can specify a harness, project scope, or custom installation path in the request. See the [agent installation guide](INSTALL.md) for details.

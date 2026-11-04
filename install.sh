@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SKILL_NAME=checkpoint-karpathy-development
-REPOSITORY=yjrszcq/checkpoint-karpathy-development-skills
+REPOSITORY=yjrszcq/checkpoint-karpathy-development
 HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode custom)
 selected=()
 scope=
