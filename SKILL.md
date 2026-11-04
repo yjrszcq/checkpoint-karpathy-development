@@ -24,7 +24,6 @@ Before every use, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoi
 |---|---|---|
 | Mode | `collaborative`, `privacy` | `collaborative` |
 | Commit message style | `conventional`, `phase` | `conventional` |
-| Roadmap layout | `auto`, `compact`, `structured` | `auto` |
 
 Create configuration only if missing, using user choices and defaults for unspecified settings. Explain every setting's purpose, accepted values and effects, and default in the user's language. Retain existing values when filling missing settings. Keep configuration across goals and archives; change settings only at the user's request. On first use, briefly state the recorded choices and proceed without asking the user to choose unspecified values.
 
@@ -43,13 +42,13 @@ On requested settings changes, apply only the requested values to subsequent wor
 ## Start or resume
 
 1. Read project instructions and configuration, initialize missing fixed directories, and inspect the actual goal files.
-2. Read compact `roadmap.md`, or structured `README.md` and `status.md`, then recent progress and the relevant plan, dependencies, context, and blockers.
-3. If goal files are absent, select a layout and plan the full goal. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
+2. Read `roadmap/README.md` and `roadmap/status.md`, then recent progress and the active milestone, dependencies, and relevant context or blockers. Read plan-change history when needed to understand a decision.
+3. If goal files are absent, plan the full goal. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
 6. If `completed` or `cancelled` and starting an explicitly requested new goal, follow the archive procedure, then initialize new goal files inside the same `roadmap/`. Retain configuration and work.
 
-Select and record the work mode in compact `roadmap.md` or structured `README.md`:
+Select and record the work mode in `roadmap/README.md`:
 
 - `greenfield`: empty or near-empty repository.
 - `continuation`: ongoing work in an existing codebase.
@@ -58,7 +57,7 @@ Select and record the work mode in compact `roadmap.md` or structured `README.md
 - `refactor`: change structure while preserving behavior.
 - `maintenance`: careful work near release or in a mature project.
 
-## Roadmap and layout
+## Roadmap documents
 
 Plan completely from the current repository state to every stated goal. Include all milestones, dependencies, commit-sized subphases, scope, success criteria, verification, commit targets, a standalone review for each milestone, overall acceptance, and the next action.
 
@@ -66,29 +65,22 @@ Read [Roadmap templates](references/roadmap-templates.md) before creating or reo
 
 All active goal documents live inside the fixed `roadmap/`:
 
-| Information | Compact layout | Structured layout |
-|---|---|---|
-| Goal, overall acceptance, scope, work mode, initial state, navigation | `roadmap.md` | `README.md` |
-| Completion, current snapshot, current phase reference, Next Action | `roadmap.md` | `status.md` |
-| Constraints, assumptions, risks, blockers, states and evidence | `roadmap.md` | `context.md` |
-| Full plan, dependencies, criteria, verification, commit targets, subphase and review checkboxes | `roadmap.md` | `milestones.md` |
-| Material plan-change reasons, changes, affected phases and impact | Roadmap Change Log in `roadmap.md` | `changelog.md` |
-| Actual work, verification, commits, execution decisions and issue handling | `progress.md` | `progress.md` |
+| Document | Information |
+|---|---|
+| `README.md` | Goal, overall acceptance, scope, work mode, initial state, navigation |
+| `status.md` | Completion, current snapshot, current phase reference, Next Action |
+| `context.md` | Constraints, assumptions, risks, blockers, states and evidence |
+| `milestones.md` | Full plan, dependencies, criteria, verification, commit targets, subphase and review checkboxes |
+| `changelog.md` | Material plan-change reasons, changes, affected phases and impact |
+| `progress.md` | Actual work, verification, commits, execution decisions and issue handling |
 
-Compact layout needs only `roadmap.md` and `progress.md`. Structured layout uses all six files above. Each detailed item has one maintained home; use stable identifiers and relative links elsewhere. Current status is a latest snapshot; execution and plan-change histories append. Historical Next Step entries in progress do not override the current Next Action.
+Create all six files. Keep content proportional to the goal; brief entries or an explicit None suffice where there is little to record. Each detailed item has one maintained home; use stable identifiers and relative links elsewhere. Current status is a latest snapshot; execution and plan-change histories append. Historical Next Step entries in progress do not override the current Next Action.
+
+Read the sections needed for the current action. Review the complete plan when initially planning, changing scope or dependencies across milestones, or checking full-goal completion. Update documents only when their information changes; routine checkpoints update milestone checkboxes, status, and progress together.
 
 Update the plan when requirements, priorities, assumptions, blockers, repository evidence, or phase organization change materially. Record why and what changed and its impact in the plan-change log; link execution entries to it. Routine checkboxes and next-action updates need no change entry.
 
-For large documents, split further by actual retrieval needs, preserving navigation, full coverage, identifiers, and histories. Added files and subdirectories belong to the goal for conversion and archiving. Keep maintained design documentation in its project location and reference it; record scheduling effects of design changes in the plan-change log.
-
-### Layout policy
-
-- `auto`: choose and reassess either layout for the whole goal; automatic switches retain `auto` in configuration.
-- `compact` or `structured`: use the requested layout; switch only at the user's request.
-
-Judge the whole goal's complete plan, dependencies, background, design evolution, and accumulated history. Compact suits focused goals; structured suits complex plans and evolving context. Remaining task count alone does not justify switching. Avoid frequent changes with little benefit.
-
-Before converting, read [Layout switching](references/layout-switching.md) and the roadmap templates. Back up all original goal contents to a unique `.checkpoint-karpathy/private/work/backups/roadmap-layout/<timestamp>-<source>-to-<target>/` and verify completeness before editing. Preserve custom content, state, IDs, and histories; check conflicts and links, restore originals on failure, and record the switch and backup path. Conversion keeps the same goal and fixed directory.
+For large documents, split further by actual retrieval needs, preserving navigation, full coverage, identifiers, and histories. Added files and subdirectories belong to the goal for archiving. Keep maintained design documentation in its project location and reference it; record scheduling effects of design changes in the plan-change log.
 
 ## Checkpoint execution
 
@@ -97,9 +89,9 @@ Execute one coherent subphase or milestone review at a time:
 1. Select the next action and briefly state its goal. Inspect the affected project files and instructions.
 2. Make the smallest coherent change that meets the planned scope and success criteria.
 3. Detect the project stack and run the smallest relevant verification. Follow Verification and Git below.
-4. **Check off completed roadmap items:** change `[ ]` to `[x]` in compact `roadmap.md` or structured `milestones.md` and any split milestone documents once completion and verification requirements are met. Leave unfinished, blocked, and cancelled items unchecked.
+4. **Check off completed roadmap items:** change `[ ]` to `[x]` in `roadmap/milestones.md` and any split milestone documents once completion and verification requirements are met. Leave unfinished, blocked, and cancelled items unchecked.
 5. Append the actual work, files changed, verification results, decisions, known issues, and next step to `roadmap/progress.md`. Before creating or reconstructing this log, read the [Progress template](references/checkpoint-details.md#progress-template). Preserve useful prior history.
-6. Update the current snapshot, phase reference, and Next Action in compact `roadmap.md` or structured `status.md`. Update context and the plan-change log when their information changes. If all subphases of a milestone are done, the next action is its standalone review.
+6. Update the current snapshot, phase reference, and Next Action in `roadmap/status.md`. Update context and the plan-change log when their information changes. If all subphases of a milestone are done, the next action is its standalone review.
 7. Review status and diffs, stage relevant files, inspect the staged diff, and commit the checkpoint with its plan checkboxes, progress, and current state. Report the commit and next action.
 8. Continue to the next action until the goal is complete, the conversation ends, or the user pauses or cancels. Resume an incomplete goal across development conversations without requiring re-invocation.
 
@@ -119,7 +111,7 @@ For the final review, also verify overall acceptance and record its evidence. Se
 
 ## Completion and lifecycle
 
-Record Completion in compact `roadmap.md` or structured `status.md`:
+Record Completion in `roadmap/status.md`:
 
 | Value | Meaning |
 |---|---|
@@ -135,7 +127,7 @@ After completion or cancellation, report the outcome, deactivate this workflow, 
 
 Use `.checkpoint-karpathy/private/work/` in both modes. Keep its root free of loose files; create meaningful purpose- or task-specific subdirectories only as needed. Subdivide large categories by task or run. See [Temporary work files](references/project-state.md#temporary-work-files) for category examples when deciding where material belongs.
 
-Keep work in place across visibility changes, layout changes, and goal archiving. Do not automatically archive or clear it for a new goal. Retain useful tools and evidence; clean disposable content separately under project deletion rules. Keep maintained source, tests, and deliverables in their intended project locations. Record durable conclusions and verification summaries in progress so archives explain results independently of temporary links; raw evidence can remain in work with its path recorded.
+Keep work in place across visibility changes and goal archiving. Do not automatically archive or clear it for a new goal. Retain useful tools and evidence; clean disposable content separately under project deletion rules. Keep maintained source, tests, and deliverables in their intended project locations. Record durable conclusions and verification summaries in progress so archives explain results independently of temporary links; raw evidence can remain in work with its path recorded.
 
 Collaborative mode commits configuration, roadmap contents, and goal archives. Privacy mode keeps them untracked under `private/`; include removal of formerly tracked active paths in the next relevant commit after a privacy switch. Existing Git history remains. Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy in committed state. Sensitive notes belong under `private/` in either mode.
 
@@ -145,7 +137,7 @@ Both modes require this single Git ignore entry:
 .checkpoint-karpathy/private/
 ```
 
-Do not ignore `.checkpoint-karpathy/` wholesale. The private rule covers work and layout backups in both modes, plus configuration, roadmap documents, and archives in privacy mode.
+Do not ignore `.checkpoint-karpathy/` wholesale. The private rule covers work in both modes, plus configuration, roadmap documents, and archives in privacy mode.
 
 ## Verification and Git
 

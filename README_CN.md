@@ -10,9 +10,9 @@
 
 ## 核心思路
 
-每次使用先读取 `config.md`，仅在缺失时创建。配置记录可见性模式、提交风格和文档布局，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认协作模式、Conventional Commits 和 `auto` 布局；已有值持续沿用，用户要求时修改。
+每次使用先读取 `config.md`，仅在缺失时创建。配置记录可见性模式和提交风格，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认协作模式和 Conventional Commits；已有值持续沿用，用户要求时修改。
 
-初始化时创建所选模式下固定的 `roadmap/` 和两种模式共用的 `private/work/`。目标文档全部放在 `roadmap/` 中：精简布局适合集中、简单的目标；拆分布局适合多里程碑、复杂依赖和持续演变的计划。初次规划均须完整覆盖全部目标。
+初始化时创建所选模式下固定的 `roadmap/` 和两种模式共用的 `private/work/`。目标文档全部放在 `roadmap/` 中，分别记录总览、状态、背景、里程碑计划、计划变更历史和执行历史。初次规划须完整覆盖全部目标。
 
 目标未完成时，技能跨对话持续使用，恢复当前下一行动。完成或经用户明确要求取消后，技能停用，文档留在原位；下次明确启用技能开展新目标时，将旧文档内容归档，再在原 `roadmap/` 中创建新文档。`config.md` 和 `private/work/` 持续保留。
 
@@ -93,27 +93,14 @@ Phase X.Y: <描述>
   - conventional：约定式提交，例如 feat(auth): add login。
   - phase：阶段式提交，例如 Phase 1.1: add login。
 - 默认值：conventional
-
-## Roadmap layout
-- Value: auto
-- 作用：选择当前目标的文档组织方式。
-- 可填值：
-  - auto：Agent 根据整个目标选择并评估是否切换布局。
-  - compact：固定精简布局，仅在用户要求时切换。
-  - structured：固定拆分布局，仅在用户要求时切换。
-- 默认值：auto
 ```
 
 切换协作／隐私模式时，在目标位置创建或复用 `roadmap/`，先检查冲突，再将活动目标内容迁入该目录、将 `config.md` 迁入其上一级状态目录。保留源目录，保全文档内容及内部链接。已有归档、隐私笔记和 work 保留原位。切到隐私模式时，在下次相关提交中移除旧路径的跟踪；已有 Git 历史仍然存在。
 
-### 两种布局
+### 路线图文档
 
 ```text
-精简布局 roadmap/
-  roadmap.md
-  progress.md
-
-拆分布局 roadmap/
+roadmap/
   README.md
   status.md
   context.md
@@ -122,26 +109,24 @@ Phase X.Y: <描述>
   progress.md
 ```
 
-| 内容 | 精简布局 | 拆分布局 |
-|---|---|---|
-| 目标、整体验收、范围、工作类型、初始状态、导航 | roadmap.md | README.md |
-| 完成状态、当前状态、当前阶段、下一行动 | roadmap.md | status.md |
-| 约束、假设、风险、阻塞及其证据和状态 | roadmap.md | context.md |
-| 完整里程碑、子阶段、依赖、验收、验证、提交目标、复核及完成状态 | roadmap.md | milestones.md |
-| 实质性计划变更的原因、内容和影响 | roadmap.md 中的变更记录 | changelog.md |
-| 实际改动、验证结果、提交、执行决策及问题处理 | progress.md | progress.md |
+| 文档 | 内容 |
+|---|---|
+| README.md | 目标、整体验收、范围、工作类型、初始状态、导航 |
+| status.md | 完成状态、当前状态、当前阶段、下一行动 |
+| context.md | 约束、假设、风险、阻塞及其证据和状态 |
+| milestones.md | 完整里程碑、子阶段、依赖、验收、验证、提交目标、复核及完成状态 |
+| changelog.md | 实质性计划变更的原因、内容和影响 |
+| progress.md | 实际改动、验证结果、提交、执行决策及问题处理 |
 
-精简布局无需单独 README。详细状态只在一处维护，其他文档通过稳定编号和相对链接引用。最新状态覆盖更新，历史追加；普通勾选和下一行动更新无需写计划变更记录。下一行动也可能是里程碑复核或解除阻塞。
+创建这六份文档，内容详略与任务规模相称。详细状态只在一处维护，其他文档通过稳定编号和相对链接引用。最新状态覆盖更新，历史追加；普通勾选和下一行动更新无需写计划变更记录。下一行动也可能是里程碑复核或解除阻塞。
 
-`auto` 在规划和执行时评估整个目标的计划、依赖、背景、设计演变和累计历史，可双向切换。不能仅凭剩余任务变少就合并文档，也应避免频繁切换。固定布局仅在用户要求时切换；自动切换后配置仍保留 `auto`。
+恢复任务时先读 `README.md`、`status.md`、最近进度和当前里程碑，再按需读取相关背景及依赖。需要了解决策原因时读取计划变更历史；变更范围、跨里程碑依赖或进行最终验收时核对完整计划。普通检查点同步更新里程碑勾选、状态和进度，其他文档在对应信息变化时更新。
 
-切换前，将完整原文档及子目录备份到 `.checkpoint-karpathy/private/work/backups/roadmap-layout/<时间>-<原布局>-to-<目标布局>/`，核对完整性。按内容含义重组，保留自定义章节、目标、状态、编号、验收和全部历史，检查冲突并更新链接。逐项安置被替代文件，核对新文档与备份；失败时保留部分结果并恢复原内容。在计划变更记录中说明切换原因、布局和备份路径。切换不触发任务归档。
-
-文档模板见 [roadmap-templates.md](references/roadmap-templates.md)，布局转换操作见 [layout-switching.md](references/layout-switching.md)。文档较长时可继续按里程碑或查阅需要拆分，保持完整规划和导航。正式设计文档留在项目文档位置，由路线图引用。
+文档模板见 [roadmap-templates.md](references/roadmap-templates.md)。文档较长时可继续按里程碑或查阅需要拆分，保持完整规划和导航。正式设计文档留在项目文档位置，由路线图引用。
 
 ### 完成状态与归档
 
-完成状态记录在精简布局的 `roadmap.md` 或拆分布局的 `status.md`：
+完成状态记录在 `roadmap/status.md`：
 
 - `incomplete`（未完成）：目标有效，继续当前任务；进行中、暂停、受阻写入当前状态。
 - `completed`（已完成）：所有阶段、里程碑复核、提交和整体验收均完成，有验证记录。
@@ -149,11 +134,11 @@ Phase X.Y: <描述>
 
 已完成和已取消采用相同归档流程：下次启用技能开展新目标时，将 `roadmap/` 内全部内容直接移入 `archive/YYYYMMDDa-<旧目标概括>/`，含额外文件和子目录。日期后字母递增，避免冲突。归档内直接是目标文档，不再套一层 `roadmap/`。
 
-固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.md` 不归档、不重建。恢复任务先读配置和当前布局的入口、完成状态，再读相关计划、背景及最近进度；核对完成标记与实际验收记录。
+固定 `roadmap/` 目录保留，再在其中创建新目标文档。`config.md` 不归档、不重建。恢复任务先读配置、`roadmap/README.md` 和 `roadmap/status.md`，再读相关计划、背景及最近进度；核对完成标记与实际验收记录。
 
 ## 临时工作文件
 
-两种模式都在初始化时创建 `.checkpoint-karpathy/private/work/`，由 `.checkpoint-karpathy/private/` 的 gitignore 规则覆盖。切换模式、布局和归档目标时保持原位；不自动归档，也不在新任务开始时自动清空。
+两种模式都在初始化时创建 `.checkpoint-karpathy/private/work/`，由 `.checkpoint-karpathy/private/` 的 gitignore 规则覆盖。切换模式和归档目标时保持原位；不自动归档，也不在新任务开始时自动清空。
 
 根目录不平铺文件。按用途或任务分类，按需创建 `logs/`、`verification/`、`tools/`、`reports/`、`browser/`、`screenshots/`、`configs/`、`fixtures/`、`backups/`、`drafts/`、`bin/`、`artifacts/` 等目录，再按任务或批次细分。
 
@@ -165,7 +150,6 @@ Phase X.Y: <描述>
 
 - [项目状态](references/project-state.md)：配置、初始化、可见性模式切换和归档。
 - [路线图模板](references/roadmap-templates.md)：文档职责和目标模板。
-- [布局切换](references/layout-switching.md)：备份、转换、核对和恢复。
 - [检查点细节](references/checkpoint-details.md)：进度模板、里程碑复核和验证方法查找。
 
 安装时复制完整技能目录，包含 `references/`。

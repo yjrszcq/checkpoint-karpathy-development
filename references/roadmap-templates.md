@@ -2,67 +2,11 @@
 
 Use these examples when initializing a goal or reorganizing its documents. Match the user's language and project needs. Preserve equivalent content in documents whose headings differ. Fill the complete plan for every milestone, not only the example milestone below.
 
-All paths in this reference are relative to the active `roadmap/`. `config.md` lives one level above it. For either layout, read the [Progress template](checkpoint-details.md#progress-template) before creating or reconstructing `progress.md`.
+All paths in this reference are relative to the active `roadmap/`. `config.md` lives one level above it. Read the [Progress template](checkpoint-details.md#progress-template) before creating or reconstructing `progress.md`.
 
-## Compact layout
+## Goal documents
 
-Create `roadmap.md` and `progress.md`. `roadmap.md` is the entry point:
-
-```md
-# Checkpoint Karpathy Roadmap
-
-## Goal
-<Concrete goal.>
-
-## Overall Acceptance Criteria
-- <Observable condition for the complete goal, with its verification method.>
-
-## Scope
-- Included: <scope>
-- Non-goals: <boundaries>
-
-## Work Mode
-<greenfield | continuation | feature | bugfix | refactor | maintenance>
-
-## Initial State
-<Repository baseline when this goal started.>
-
-## Completion
-incomplete
-<For cancelled: cancellation reason and progress entry link.>
-
-## Current State
-<Latest snapshot; paused or blocked if applicable.>
-
-## Current Phase
-<Stable phase or review reference in Major Milestones.>
-
-## Next Action
-<Subphase, milestone review, or blocker-resolution action.>
-
-## Constraints
-- C-01: <Confirmed requirement or boundary.>
-
-## Assumptions
-- A-01: <Claim, rationale, validation method, status, evidence link.>
-
-## Risks / Blockers
-- R-01: <Risk, impact, response, current status.>
-- B-01: <Active blocker, affected phase, resolution path, evidence link.>
-
-## Major Milestones
-<Insert every milestone using the Milestone Content example below.>
-
-## Roadmap Change Log
-- <Dated material adjustment with reason, affected phase IDs, impact, and links.>
-
-## Navigation
-- [Execution history](progress.md)
-```
-
-## Structured layout
-
-Create all six files. Each detailed item has one maintained home; other documents link to it.
+Create all six files, keeping entries proportional to the goal. Use brief content or None where appropriate. Each detailed item has one maintained home; other documents link to it.
 
 ### README.md
 
@@ -156,11 +100,11 @@ Keep assumptions distinct from confirmed constraints, and risks distinct from cu
 - Evidence / related execution: <Links to context, design, or progress.>
 ```
 
-Use equivalent entries inside the compact roadmap's Roadmap Change Log. Layout conversions also record source and target layouts and the backup path. Keep plan changes separate from execution history; ordinary checkbox and next-action updates need no change entry.
+Keep plan changes separate from execution history; ordinary checkbox and next-action updates need no change entry.
 
 ## Milestone content
 
-Use this content in the compact roadmap's Major Milestones section or in the structured milestone plan. Repeat for every milestone, preserving stable references when inserting or reorganizing work. Add an explicit anchor where needed to preserve an existing link.
+Use this content in `milestones.md`. Repeat for every milestone, preserving stable references when inserting or reorganizing work. Add an explicit anchor where needed to preserve an existing link.
 
 ```md
 ## Milestone 1: <Title>
@@ -195,8 +139,8 @@ The review uses the last planned subphase label; it does not increment the Phase
 
 Change each completed item's `[ ]` to `[x]` as soon as its completion and verification requirements are met, including milestone reviews separately. Update the active plan alongside progress and include both in the checkpoint commit. Unfinished, blocked, and cancelled items remain unchecked.
 
-## Completion and resizing
+## Completion and document growth
 
 Completion is `incomplete`, `completed`, or `cancelled` (未完成／已完成／已取消). Verify full-goal acceptance and all committed milestone reviews before setting `completed`. Cancellation is explicit user direction and preserves the actual stage completion state.
 
-Use the skill's layout policy to decide when to split or merge documents. Preserve user-added sections and all historical entries during either conversion. Larger structured plans may use a `milestones/` directory with a navigable index; added files and directories are part of the goal and travel with its contents during archiving.
+Preserve user-added sections and all historical entries when reorganizing documents. Larger plans may use a `milestones/` directory with a navigable index; added files and directories are part of the goal and travel with its contents during archiving.
