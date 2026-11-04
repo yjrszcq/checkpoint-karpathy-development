@@ -71,6 +71,7 @@ def render_goal(payload, style, package):
     if not isinstance(milestones, list) or not milestones:
         raise ValueError("milestones must be a nonempty array.")
     identifiers, dependencies, rendered = set(), {}, []
+    finish_order, start_order = {}, {}
 
     def identifier(value, path):
         value = text(value, path)
@@ -100,6 +101,7 @@ def render_goal(payload, style, package):
         if "\n" in mvalues["title"]:
             raise ValueError(f"{path}.title must fit on one line.")
         dependencies[mid] = strings(milestone["dependencies"], path + ".dependencies")
+        start_order[mid] = len(finish_order)
         mvalues.update(id=mid, dependencies=", ".join(dependencies[mid]) or "None.")
         phases = milestone["phases"]
         if not isinstance(phases, list) or not phases:
@@ -114,8 +116,10 @@ def render_goal(payload, style, package):
             if "\n" in pvalues["title"]:
                 raise ValueError(f"{ppath}.title must fit on one line.")
             dependencies[pid] = strings(phase["dependencies"], ppath + ".dependencies")
+            start_order[pid] = len(finish_order)
             pvalues.update(id=pid, dependencies=", ".join(dependencies[pid]) or "None.", commit=subject(phase["commit"], pid))
             entries.append(fill("phase.md", pvalues))
+            finish_order[pid] = len(finish_order)
             if index == pindex == 0:
                 values["current_phase"] = f"[{pid} — {phase['title']}](milestones.md#milestone-{mid})"
         review = milestone["review"]
@@ -124,10 +128,13 @@ def render_goal(payload, style, package):
                        review_verification=indent(text(review["verification"], path + ".review.verification")),
                        review_commit=subject(review["commit"], pid, review=True))
         rendered.append(fill("milestone.md", mvalues))
+        finish_order[mid] = len(finish_order)
     # Dependency IDs must refer to the actual plan, not silently dropped input.
     for item, refs in dependencies.items():
         if item in refs or any(ref not in identifiers for ref in refs):
             raise ValueError(f"Unknown or self dependency in {item}: {refs}")
+        if any(finish_order[ref] >= start_order[item] for ref in refs):
+            raise ValueError(f"Dependencies of {item} must finish before it starts: {refs}. Supply milestones and phases in executable order.")
     values["milestones"] = "\n".join(rendered).rstrip()
     values["date"] = f"{date.today():%Y-%m-%d}"
     if language == "zh":

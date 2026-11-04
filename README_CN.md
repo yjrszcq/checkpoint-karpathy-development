@@ -95,6 +95,7 @@ commit_message_style: conventional
 
 ```bash
 python3 /技能路径/scripts/init_project.py --project /项目路径 --mode collaborative --language zh
+# 通过标准输入传入完整的结构化 JSON，见下方链接中的调用示例。
 python3 /技能路径/scripts/create_goal.py --project /项目路径
 python3 /技能路径/scripts/archive_goal.py --project /项目路径 --title old-goal-summary
 ```

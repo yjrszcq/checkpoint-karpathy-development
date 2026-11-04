@@ -95,6 +95,7 @@ The helpers require Python 3.9+ and PyYAML (`python3 -m pip install -r /path/to/
 
 ```bash
 python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
+# Send complete structured JSON on stdin; see the input example linked below.
 python3 /path/to/skill/scripts/create_goal.py --project /path/to/project
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
 ```
