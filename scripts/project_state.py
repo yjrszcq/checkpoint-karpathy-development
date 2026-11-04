@@ -2,6 +2,7 @@
 
 import argparse
 from datetime import date
+import json
 from pathlib import Path
 import re
 from string import Template
@@ -89,14 +90,15 @@ def ensure_ignore(project):
             stream.write(("\n" if text and not text.endswith("\n") else "") + IGNORE + "\n")
 
 
-def prepare(project):
-    # Read every template before creating any new goal documents.
-    templates = {name: (PACKAGE / "assets/roadmap" / name).read_bytes() for name in DOCUMENTS}
+def prepare(project, documents):
     staging = local_path(project, project / ".checkpoint-karpathy/private/work/staging")
     staging.mkdir(parents=True, exist_ok=True)
     prepared = Path(tempfile.mkdtemp(prefix="goal-", dir=staging))
-    for name, content in templates.items():
-        (prepared / name).write_bytes(content)
+    try:
+        for name, content in documents.items():
+            (prepared / name).write_text(content, encoding="utf-8")
+    except (OSError, KeyboardInterrupt) as error:
+        raise StateError(f"Preparation failed ({error}); inspect staging {prepared}. No goal files activated.") from error
     return prepared
 
 
@@ -117,12 +119,11 @@ def initialize(project, mode, style=None, language="en"):
     if other.exists() and any(other.iterdir()):
         raise StateError(f"Planning content exists outside the selected mode: {other}. Reconcile it first.")
     existing = list(roadmap.iterdir()) if roadmap.exists() else []
-    if existing and not all((roadmap / name).is_file() for name in DOCUMENTS):
+    if existing and not all(local_path(project, roadmap / name).is_file() for name in DOCUMENTS):
         raise StateError(f"Partial goal documents in {roadmap}; recover them from evidence before initialization.")
     # Validate the ignore file before creating state.
     local_path(project, project / ".gitignore")
     new_config = config_text(mode, style or "conventional", language) if config_path is None else None
-    prepared = prepare(project) if not existing else None
     roadmap.mkdir(parents=True, exist_ok=True)
     local_path(project, project / ".checkpoint-karpathy/private/work").mkdir(parents=True, exist_ok=True)
     ensure_ignore(project)
@@ -130,13 +131,44 @@ def initialize(project, mode, style=None, language="en"):
         config_path = state / "config.yaml"
         with config_path.open("x", encoding="utf-8") as stream:
             stream.write(new_config)
-    if prepared:
+    return roadmap
+
+
+def create(project, payload, check_only=False):
+    from goal_documents import render_goal
+
+    config_path, config = read_config(project)
+    if config is None:
+        raise StateError("No config.yaml found. Run init_project.py first.")
+    # Render and validate the complete set before changing any project files.
+    documents = render_goal(payload, config["commit_message_style"], PACKAGE)
+    roadmap = local_path(project, config_path.parent / "roadmap")
+    other_mode = MODES[1 - MODES.index(config["mode"])]
+    other = local_path(project, state_paths(project)[other_mode] / "roadmap")
+    if other.exists() and any(other.iterdir()):
+        raise StateError(f"Planning content exists outside the selected mode: {other}. Reconcile it first.")
+    if check_only:
+        return roadmap
+    if not roadmap.is_dir():
+        raise StateError("Fixed roadmap directory is missing. Run init_project.py first.")
+    if any(roadmap.iterdir()):
+        raise StateError(f"Refusing to overwrite nonempty roadmap: {roadmap}. Resume, recover, or archive the existing goal first.")
+    local_path(project, project / ".gitignore")
+    ensure_ignore(project)
+    prepared = prepare(project, documents)
+    activated = []
+    try:
+        for name in DOCUMENTS:
+            move(prepared / name, roadmap / name)
+            activated.append(name)
+    except (OSError, StateError, KeyboardInterrupt) as error:
         try:
-            for name in DOCUMENTS:
-                move(prepared / name, roadmap / name)
-            prepared.rmdir()
-        except (OSError, StateError) as error:
-            raise StateError(f"Initialization interrupted: {error}. Preserve {roadmap} and staging {prepared}; recover partial state before retrying.") from error
+            for name in reversed(activated):
+                move(roadmap / name, prepared / name)
+        except (OSError, StateError, KeyboardInterrupt) as recovery_error:
+            raise StateError(f"Creation failed ({error}); recovery also failed ({recovery_error}). Inspect roadmap {roadmap} and staging {prepared}. No further operations attempted.") from error
+        raise StateError(f"Creation failed ({error}); newly activated files restored to staging {prepared}. Roadmap: {roadmap}.") from error
+    prepared.rmdir()
     return roadmap
 
 
@@ -167,12 +199,11 @@ def archive(project, title):
     state = config_path.parent
     roadmap = local_path(project, state / "roadmap")
     for name in DOCUMENTS:
-        if not (roadmap / name).is_file():
+        if not local_path(project, roadmap / name).is_file():
             raise StateError(f"Missing {name}; recover partial goal state before archiving.")
     completion(roadmap)
     archive_root = local_path(project, state / "archive")
     local_path(project, project / ".gitignore")
-    prepared = prepare(project)
     ensure_ignore(project)
     archive_root.mkdir(parents=True, exist_ok=True)
     index = 1
@@ -187,35 +218,36 @@ def archive(project, title):
             break
         except FileExistsError:
             index += 1
-    archived, activated = [], []
+    archived = []
     try:
         for item in list(roadmap.iterdir()):
             move(item, destination / item.name)
             archived.append(item.name)
-        for name in DOCUMENTS:
-            move(prepared / name, roadmap / name)
-            activated.append(name)
     except (OSError, StateError, KeyboardInterrupt) as error:
         try:
-            for name in reversed(activated):
-                move(roadmap / name, prepared / name)
             for name in reversed(archived):
                 move(destination / name, roadmap / name)
             destination.rmdir()
         except (OSError, StateError, KeyboardInterrupt) as recovery_error:
-            raise StateError(f"Archive failed ({error}); recovery also failed ({recovery_error}). Inspect roadmap {roadmap}, archive {destination}, staging {prepared}. No further operations attempted.") from error
-        raise StateError(f"Archive failed ({error}); original goal restored in {roadmap}. Staging retained at {prepared}.") from error
-    prepared.rmdir()
+            raise StateError(f"Archive failed ({error}); recovery also failed ({recovery_error}). Inspect roadmap {roadmap} and archive {destination}. No further operations attempted.") from error
+        raise StateError(f"Archive failed ({error}); original goal restored in {roadmap}.") from error
     return destination, roadmap
 
 
 def main(command):
-    parser = argparse.ArgumentParser(description=("Initialize project configuration, fixed directories, and goal skeletons." if command == "init" else "Archive a terminal goal and create fresh goal skeletons using config.yaml."))
+    descriptions = {
+        "init": "Initialize project configuration and fixed directories.",
+        "create": "Render six roadmap documents from structured JSON on stdin, using config.yaml.",
+        "archive": "Archive a terminal goal, leaving the fixed roadmap directory empty.",
+    }
+    parser = argparse.ArgumentParser(description=descriptions[command])
     parser.add_argument("--project", type=Path, default=Path.cwd(), help="Project root (default: current directory).")
     if command == "init":
         parser.add_argument("--mode", choices=MODES, required=True)
         parser.add_argument("--commit-message-style", choices=STYLES)
         parser.add_argument("--language", choices=("en", "zh"), default="en", help="New configuration comment language (default: en).")
+    elif command == "create":
+        parser.add_argument("--check-only", action="store_true", help="Validate JSON and render templates without writing, including while an old goal exists.")
     else:
         parser.add_argument("--title", required=True, help="Short hyphenated title describing the old goal.")
     args = parser.parse_args()
@@ -224,10 +256,16 @@ def main(command):
         parser.error(f"Project directory does not exist: {project}")
     try:
         if command == "init":
-            print(f"Active roadmap: {initialize(project, args.mode, args.commit_message_style, args.language)}")
+            print(f"Initialized directories and configuration. Roadmap: {initialize(project, args.mode, args.commit_message_style, args.language)}")
+        elif command == "create":
+            from goal_documents import unique_object
+
+            payload = json.load(sys.stdin, object_pairs_hook=unique_object)
+            roadmap = create(project, payload, args.check_only)
+            print("Goal input and templates validated; no files written." if args.check_only else f"Created roadmap: {roadmap}")
         else:
             destination, roadmap = archive(project, args.title)
-            print(f"Archived goal: {destination}\nFresh roadmap: {roadmap}")
+            print(f"Archived goal: {destination}\nEmpty roadmap: {roadmap}")
     except (StateError, OSError, yaml.YAMLError, KeyError, ValueError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1

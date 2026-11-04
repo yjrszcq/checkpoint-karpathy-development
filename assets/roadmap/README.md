@@ -1,20 +1,23 @@
 # Goal Overview
 
 ## Goal
-<Concrete goal.>
+${goal}
 
 ## Overall Acceptance Criteria
-- <Observable condition for the complete goal, with its verification method.>
+${acceptance}
 
 ## Scope
-- Included: <scope>
-- Non-goals: <boundaries>
+### Included
+${included}
+
+### Non-goals
+${non_goals}
 
 ## Work Mode
-<greenfield | continuation | feature | bugfix | refactor | maintenance>
+${work_mode}
 
 ## Initial State
-<Repository baseline when this goal started.>
+${initial_state}
 
 ## Navigation
 - [Current status and completion](status.md)

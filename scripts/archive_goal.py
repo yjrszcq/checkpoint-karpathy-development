@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Archive a completed/cancelled goal and prepare the next goal in one command."""
+"""Archive a completed/cancelled goal, retaining the empty roadmap directory."""
 
 import sys
 

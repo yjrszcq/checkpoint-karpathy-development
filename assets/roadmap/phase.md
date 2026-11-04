@@ -1,0 +1,6 @@
+- [ ] ${id} ${title}
+  - Dependencies: ${dependencies}
+  - Scope: ${scope}
+  - Success criteria: ${success_criteria}
+  - Verification: ${verification}
+  - Commit target: ${commit}
