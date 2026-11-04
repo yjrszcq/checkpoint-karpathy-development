@@ -135,7 +135,7 @@ Phase X.Y: <描述>
 
 切换前，将完整原文档及子目录备份到 `.checkpoint-karpathy/private/work/backups/roadmap-layout/<时间>-<原布局>-to-<目标布局>/`，核对完整性。按内容含义重组，保留自定义章节、目标、状态、编号、验收和全部历史，检查冲突并更新链接。逐项安置被替代文件，核对新文档与备份；失败时保留部分结果并恢复原内容。在计划变更记录中说明切换原因、布局和备份路径。切换不触发任务归档。
 
-模板和转换指导见 [roadmap-templates.md](references/roadmap-templates.md)。文档较长时可继续按里程碑或查阅需要拆分，保持完整规划和导航。正式设计文档留在项目文档位置，由路线图引用。
+文档模板见 [roadmap-templates.md](references/roadmap-templates.md)，布局转换操作见 [layout-switching.md](references/layout-switching.md)。文档较长时可继续按里程碑或查阅需要拆分，保持完整规划和导航。正式设计文档留在项目文档位置，由路线图引用。
 
 ### 完成状态与归档
 
@@ -156,6 +156,17 @@ Phase X.Y: <描述>
 根目录不平铺文件。按用途或任务分类，按需创建 `logs/`、`verification/`、`tools/`、`reports/`、`browser/`、`screenshots/`、`configs/`、`fixtures/`、`backups/`、`drafts/`、`bin/`、`artifacts/` 等目录，再按任务或批次细分。
 
 临时内容单独按需保留或清理，遵循项目删除规则。长期结论与验证摘要写入 `roadmap/progress.md`，使归档文档不依赖临时文件也能说明结果。需保留的原始证据可按任务放在 work 中并记录路径；正式源码、长期维护的测试和交付物留在各自项目位置。
+
+## 技能文件组织
+
+[SKILL.md](SKILL.md) 保留执行流程、强制约束，并在需要细节的操作处提供链接。开始对应操作前，读取相关引用文档：
+
+- [项目状态](references/project-state.md)：配置、初始化、可见性模式切换和归档。
+- [路线图模板](references/roadmap-templates.md)：文档职责和目标模板。
+- [布局切换](references/layout-switching.md)：备份、转换、核对和恢复。
+- [检查点细节](references/checkpoint-details.md)：进度模板、里程碑复核和验证方法查找。
+
+安装时复制完整技能目录，包含 `references/`。
 
 ## Codex 安装
 

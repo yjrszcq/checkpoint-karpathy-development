@@ -135,7 +135,7 @@ With `auto`, assess the whole goal's plan, dependencies, background, design evol
 
 Before switching, back up all original goal files and subdirectories directly into a unique `.checkpoint-karpathy/private/work/backups/roadmap-layout/<timestamp>-<source>-to-<target>/`. Verify the backup. Reorganize by meaning, preserving custom sections, goal, state, identifiers, acceptance, and all history. Check conflicts and links; relocate superseded files individually and compare the result with the backup. Preserve partial output and restore original content on failure. Record the reason, layouts, and backup path in the plan-change log. Layout switching does not archive a goal.
 
-See [roadmap-templates.md](references/roadmap-templates.md) for templates and conversion guidance. Larger documents may be split further by milestone or retrieval needs while retaining complete planning and navigation. Maintained design documents remain in their intended project locations and are referenced by the roadmap.
+See [roadmap-templates.md](references/roadmap-templates.md) for document templates and [layout-switching.md](references/layout-switching.md) for conversion operations. Larger documents may be split further by milestone or retrieval needs while retaining complete planning and navigation. Maintained design documents remain in their intended project locations and are referenced by the roadmap.
 
 ### Completion and archiving
 
@@ -156,6 +156,17 @@ Create `.checkpoint-karpathy/private/work/` during initialization in both modes,
 Keep the root free of loose files. Create purpose- or task-specific categories as needed, such as `logs/`, `verification/`, `tools/`, `reports/`, `browser/`, `screenshots/`, `configs/`, `fixtures/`, `backups/`, `drafts/`, `bin/`, and `artifacts/`. Subdivide by task or run when useful.
 
 Manage temporary material separately, retaining useful evidence or tools and cleaning disposable content as needed under project deletion rules. Put durable conclusions and verification summaries in `roadmap/progress.md` so archived documents explain results independently of temporary-file links. Raw evidence may remain in task-specific work directories with paths recorded in progress. Keep maintained source, tests, and user deliverables in their intended project locations.
+
+## Skill organization
+
+[SKILL.md](SKILL.md) contains the execution workflow, required constraints, and links to details at the operation that needs them. Read the relevant reference before that operation:
+
+- [Project state](references/project-state.md): configuration, initialization, visibility-mode changes, and archiving.
+- [Roadmap templates](references/roadmap-templates.md): document responsibilities and goal templates.
+- [Layout switching](references/layout-switching.md): backups, conversion, verification, and recovery.
+- [Checkpoint details](references/checkpoint-details.md): progress templates, milestone reviews, and verification discovery.
+
+Install the complete skill directory, including `references/`.
 
 ## Install for Codex
 
