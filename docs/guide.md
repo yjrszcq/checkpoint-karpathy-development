@@ -163,7 +163,7 @@ Record Completion in `roadmap/status.md`:
 - `completed`: All subphases, reviews, commits, and overall acceptance are satisfied with verification evidence.
 - `cancelled`: Explicit user termination or confirmation; record its reason and termination history, preserving unfinished items accurately.
 
-Completed and cancelled goals use the same archive flow on the next invocation for a new goal. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions. Archive documents sit directly in this destination, without an extra enclosing `roadmap/` layer.
+Completed and cancelled goals use the same archive flow on the next invocation for a new goal. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions.
 
 Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration across archiving and new goals. On resume, read configuration, `roadmap/README.md`, and `roadmap/status.md`, then relevant plans, context, and recent progress. Check completion claims against acceptance and review evidence.
 
