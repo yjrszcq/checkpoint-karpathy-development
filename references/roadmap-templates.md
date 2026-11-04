@@ -1,139 +1,42 @@
 # Roadmap document templates
 
-Use these examples when initializing a goal or reorganizing its documents. Match the user's language and project needs. Preserve equivalent content in documents whose headings differ. Fill the complete plan for every milestone, not only the example milestone below.
+Use these examples when initializing a goal or reorganizing its documents. Match the user's language and project needs. Preserve equivalent content in documents whose headings differ. Fill the complete plan for every milestone, using the linked milestone skeleton as needed.
 
-All paths in this reference are relative to the active `roadmap/`. `config.md` lives one level above it. Read the [Progress template](checkpoint-details.md#progress-template) before creating or reconstructing `progress.md`.
+All paths in this reference are relative to the active `roadmap/`. `config.yaml` lives one level above it. The [progress skeleton](../assets/roadmap/progress.md) starts empty. Read the [Progress template](checkpoint-details.md#progress-template) before creating or reconstructing `progress.md`.
 
 ## Goal documents
 
-Create all six files, keeping entries proportional to the goal. Use brief content or None where appropriate. Each detailed item has one maintained home; other documents link to it.
+The scripts copy the six skeletons from [assets/roadmap/](../assets/roadmap/). Fill them in the user's language, keeping entries proportional to the goal. Use brief content or None where appropriate. Each detailed item has one maintained home; other documents link to it.
 
 ### README.md
 
-```md
-# Goal Overview
-
-## Goal
-<Concrete goal.>
-
-## Overall Acceptance Criteria
-- <Observable condition for the complete goal, with its verification method.>
-
-## Scope
-- Included: <scope>
-- Non-goals: <boundaries>
-
-## Work Mode
-<greenfield | continuation | feature | bugfix | refactor | maintenance>
-
-## Initial State
-<Repository baseline when this goal started.>
-
-## Navigation
-- [Current status and completion](status.md)
-- [Constraints, assumptions, risks, and blockers](context.md)
-- [Complete milestone plan](milestones.md)
-- [Plan-change history](changelog.md)
-- [Execution history](progress.md)
-```
+Skeleton: [README.md](../assets/roadmap/README.md).
 
 ### status.md
 
-```md
-# Goal Status
-
-## Completion
-incomplete
-<For cancelled: cancellation reason and progress entry link.>
-
-## Current State
-<Latest snapshot of what exists and what is missing.>
-
-## Current Phase
-<Link to the active milestone, subphase, or review in the plan.>
-
-## Next Action
-<Subphase, milestone review, or blocker-resolution action, with a link.>
-
-## Related Blockers
-<Links to current blocker entries in context.md, or None.>
-```
+Skeleton: [status.md](../assets/roadmap/status.md).
 
 ### context.md
 
-```md
-# Goal Context
-
-## Constraints
-- C-01: <Confirmed requirement or boundary.>
-
-## Assumptions
-- A-01: <Claim, rationale, validation method, status, evidence link.>
-
-## Risks
-- R-01: <Potential problem, impact, response, current status.>
-
-## Blockers
-- B-01: <Existing obstacle, affected phase, resolution path, current status.>
-```
+Skeleton: [context.md](../assets/roadmap/context.md).
 
 Keep assumptions distinct from confirmed constraints, and risks distinct from current obstacles. Assumption states can be unverified, confirmed, or disproved; link to evidence and affected plan changes. Retain useful context when resolving an item, keeping active entries easy to find; append the handling history to progress.
 
 ### milestones.md
 
-```md
-# Milestone Plan
-
-<Insert every milestone using the Milestone Content example below.>
-```
+Skeleton: [milestones.md](../assets/roadmap/milestones.md).
 
 ### changelog.md
 
-```md
-# Roadmap Change Log
-
-## <YYYY-MM-DD> CH-01: <Adjustment title>
-- Reason: <Requirement or evidence that changed the plan.>
-- Change: <What changed in the current plan.>
-- Affected items: <Stable milestone and subphase IDs, with links.>
-- Impact: <Scope, dependencies, acceptance, verification, or priorities.>
-- Evidence / related execution: <Links to context, design, or progress.>
-```
+Skeleton: [changelog.md](../assets/roadmap/changelog.md).
 
 Keep plan changes separate from execution history; ordinary checkbox and next-action updates need no change entry.
 
 ## Milestone content
 
-Use this content in `milestones.md`. Repeat for every milestone, preserving stable references when inserting or reorganizing work. Add an explicit anchor where needed to preserve an existing link.
+Populate `milestones.md` for every milestone, preserving stable references when inserting or reorganizing work. Add an explicit anchor where needed to preserve an existing link.
 
-```md
-## Milestone 1: <Title>
-Purpose: <Contribution to the overall goal.>
-Dependencies: <Other milestones, constraints, or assumptions; None if independent.>
-
-- [ ] 1.1 <Commit-sized goal>
-  - Dependencies: <Prerequisite phase IDs or None.>
-  - Scope: <What changes.>
-  - Success criteria: <Observable completion condition.>
-  - Verification: <Project-appropriate command or inspection.>
-  - Commit target: <Subject in the configured commit style.>
-
-- [ ] 1.2 <Commit-sized goal>
-  - Dependencies: <Prerequisite phase IDs or None.>
-  - Scope: <What changes.>
-  - Success criteria: <Observable completion condition.>
-  - Verification: <Project-appropriate command or inspection.>
-  - Commit target: <Subject in the configured commit style.>
-
-- [ ] Milestone 1 Review
-  - Trigger: After every planned subphase above is complete and committed.
-  - Phase label: Phase 1.2 Milestone Review: <Summary>
-  - Scope: Work introduced or substantially touched by this milestone.
-  - Order: Confirm scope, simplify, verify broadly, review, debug and fix, reverify, record, commit.
-  - Success criteria: No unresolved in-scope defects, failing checks, or avoidable complexity remain.
-  - Verification: <Broadest relevant check and targeted checks after fixes.>
-  - Commit target: <Review subject in the configured commit style.>
-```
+Use the [milestone skeleton](../assets/roadmap/milestones.md) for every milestone, including its standalone review.
 
 The review uses the last planned subphase label; it does not increment the Phase/Subphase number. Conventional commit targets use `type(scope): summary`; Phase-style targets use `Phase X.Y: description`, or `Phase X.Y Milestone Review: description` for the review. Subjects default to English.
 
@@ -142,5 +45,7 @@ Change each completed item's `[ ]` to `[x]` as soon as its completion and verifi
 ## Completion and document growth
 
 Completion is `incomplete`, `completed`, or `cancelled` (未完成／已完成／已取消). Verify full-goal acceptance and all committed milestone reviews before setting `completed`. Cancellation is explicit user direction and preserves the actual stage completion state.
+
+Keep the `## Completion` heading and the status value on its own line in `status.md` for the archive command. Other document content can follow the user's language.
 
 Preserve user-added sections and all historical entries when reorganizing documents. Larger plans may use a `milestones/` directory with a navigable index; added files and directories are part of the goal and travel with its contents during archiving.

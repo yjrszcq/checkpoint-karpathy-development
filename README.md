@@ -10,7 +10,7 @@ It is designed for greenfield development, mid-project continuation, feature wor
 
 ## Core idea
 
-Read `config.md` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to collaborative visibility and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
+Read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to collaborative visibility and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
 
 Initialization creates the fixed `roadmap/` under the selected state directory and `private/work/` in both modes. Goal documents live inside `roadmap/`, with separate overview, status, context, milestone plan, plan-change history, and execution history. The initial plan must cover every stated goal completely.
 
@@ -52,7 +52,7 @@ The engineering guardrails are:
 **Collaborative mode:**
 ```text
 .checkpoint-karpathy/
-  config.md
+  config.yaml
   roadmap/
   private/
     work/
@@ -63,7 +63,7 @@ The engineering guardrails are:
 ```text
 .checkpoint-karpathy/
   private/
-    config.md
+    config.yaml
     roadmap/
     work/
     archive/
@@ -73,29 +73,32 @@ Create `roadmap/` and `private/work/` during initialization, reusing existing di
 
 ### Configuration
 
-Generate `config.md` with explanations in the user's language. Users edit the `Value` for each setting:
+Generate `config.yaml` with explanations in the user's language. Users edit the YAML values; comments explain each setting:
 
-```md
-# Checkpoint Karpathy Configuration
+```yaml
+# Planning visibility and location. Default: collaborative.
+# collaborative: Track configuration, roadmap documents, and archives in Git.
+# privacy: Keep them under Git-ignored private/.
+mode: collaborative
 
-## Mode
-- Value: collaborative
-- Purpose: Select planning visibility and state location.
-- Accepted values:
-  - collaborative: Track configuration, roadmap documents, and goal archives in Git.
-  - privacy: Keep configuration, roadmap documents, and goal archives under Git-ignored private/.
-- Default: collaborative
-
-## Commit message style
-- Value: conventional
-- Purpose: Select commit subject format.
-- Accepted values:
-  - conventional: Conventional Commits, for example feat(auth): add login.
-  - phase: Phase-style, for example Phase 1.1: add login.
-- Default: conventional
+# Commit subject format. Default: conventional.
+# conventional: Conventional Commits, e.g. feat(auth): add login.
+# phase: Phase-style, e.g. Phase 1.1: add login.
+commit_message_style: conventional
 ```
 
-On a visibility-mode change, create or reuse the destination `roadmap/`, check conflicts, move active goal contents into it, and move `config.md` into its parent state directory. Preserve the source directory, content, and internal links. Existing archives, private notes, and work stay in place. When switching to privacy, include removal of old tracked active paths in the next relevant commit; existing Git history remains.
+On a visibility-mode change, create or reuse the destination `roadmap/`, check conflicts, move active goal contents into it, and move `config.yaml` into its parent state directory. Preserve the source directory, content, and internal links. Existing archives, private notes, and work stay in place. When switching to privacy, include removal of old tracked active paths in the next relevant commit; existing Git history remains.
+
+### Project-state commands
+
+The helpers require Python 3.9+ and PyYAML (`python3 -m pip install -r /path/to/skill/scripts/requirements.txt` in a suitable Python environment). Run the installed scripts with the actual project root:
+
+```bash
+python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
+python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
+```
+
+Initialization creates annotated YAML configuration, fixed directories, all six document skeletons, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for those user-selected initial settings. Existing configuration and complete goal documents are preserved; reconcile partial state before retrying. The agent fills the actual plan and verifies completion. The archive command reads the mode from configuration, archives a completed/cancelled goal, and creates fresh skeletons in one operation. Configuration and work remain active. See [helper commands](references/project-state.md#helper-commands) for status requirements and recovery.
 
 ### Roadmap documents
 
@@ -152,7 +155,7 @@ Manage temporary material separately, retaining useful evidence or tools and cle
 - [Roadmap templates](references/roadmap-templates.md): document responsibilities and goal templates.
 - [Checkpoint details](references/checkpoint-details.md): progress templates, milestone reviews, and verification discovery.
 
-Install the complete skill directory, including `references/`.
+Install the complete skill directory, including `references/`, `scripts/`, and `assets/`.
 
 ## Installation
 
@@ -182,7 +185,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development-skills
 Follow INSTALL.md in the repository.
 ```
 
-[INSTALL.md](INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/` as its package source. It preserves existing project instructions and backs up previous installations outside skill discovery.
+[INSTALL.md](INSTALL.md) provides agent instructions, supported paths, custom-directory options, updates, backups, and verification. The installer uses the root `SKILL.md` and complete `references/`, `scripts/`, and `assets/` as its package source. It preserves existing project instructions and backs up previous installations outside skill discovery.
 
 After installation, restart or reload your harness and ask it to use `checkpoint-karpathy-development` for your goal.
 

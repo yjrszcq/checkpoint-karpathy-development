@@ -18,22 +18,22 @@ This workflow supports greenfield development, continuation, features, bug fixes
 
 ## Configuration and fixed paths
 
-Before every use, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`. Read the active configuration first. If both exist, resolve the active one with the user before proceeding.
+Before every use, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`. Read the active configuration first. If both exist, resolve the active one with the user before proceeding.
 
 | Setting | Values | Default |
 |---|---|---|
-| Mode | `collaborative`, `privacy` | `collaborative` |
-| Commit message style | `conventional`, `phase` | `conventional` |
+| `mode` | `collaborative`, `privacy` | `collaborative` |
+| `commit_message_style` | `conventional`, `phase` | `conventional` |
 
 Create configuration only if missing, using user choices and defaults for unspecified settings. Explain every setting's purpose, accepted values and effects, and default in the user's language. Retain existing values when filling missing settings. Keep configuration across goals and archives; change settings only at the user's request. On first use, briefly state the recorded choices and proceed without asking the user to choose unspecified values.
 
 The state directory is `.checkpoint-karpathy/` in collaborative mode or `.checkpoint-karpathy/private/` in privacy mode. Paths below are relative to it; paths beginning with `.checkpoint-karpathy/` are relative to the project root:
 
-- `config.md`: persistent project configuration.
+- `config.yaml`: persistent project configuration.
 - `roadmap/`: fixed directory containing the active goal documents.
 - `archive/`: completed or cancelled goal contents, created as needed.
 
-During initialization, create the state directory, its fixed `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Reuse directories; preserve existing content. Work categories and `archive/` are created only when needed.
+Use the bundled [initialization command](scripts/init_project.py) to create configuration, the fixed `roadmap/`, all six goal skeletons, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. The [archive command](scripts/archive_goal.py) reads configuration and archives the old goal and creates fresh skeletons in one invocation; pass only the old goal's title and project root. Fill the generated documents with the actual complete plan. Commands, dependencies, and failure handling are in [Project state operations](references/project-state.md#helper-commands).
 
 Before initializing directories, creating configuration, filling missing settings, or changing visibility mode, read [Project state operations](references/project-state.md#configuration-and-initialization). It defines the annotated configuration and directory operations. For archiving, read its [Archiving procedure](references/project-state.md#archiving) before moving files.
 
@@ -46,7 +46,7 @@ On requested settings changes, apply only the requested values to subsequent wor
 3. If goal files are absent, plan the full goal. An empty fixed directory is not an existing goal. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
-6. If `completed` or `cancelled` and starting an explicitly requested new goal, follow the archive procedure, then initialize new goal files inside the same `roadmap/`. Retain configuration and work.
+6. If `completed` or `cancelled` and starting an explicitly requested new goal, follow the archive procedure using the archive-and-rebuild command, then fill the new goal files inside the same `roadmap/`. Retain configuration and work.
 
 Select and record the work mode in `roadmap/README.md`:
 
@@ -111,7 +111,7 @@ For the final review, also verify overall acceptance and record its evidence. Se
 
 ## Completion and lifecycle
 
-Record Completion in `roadmap/status.md`:
+Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completion` heading followed by the plain value below on its own line, even when translating other headings:
 
 | Value | Meaning |
 |---|---|
@@ -148,7 +148,7 @@ For every checkpoint, perform these steps in order:
 1. Run `git status` and `git diff` before staging; inspect relevant changes.
 2. Stage only relevant project and state files, preserving privacy policy and unrelated user changes.
 3. Run `git diff --staged` and inspect it before committing.
-4. Commit with the style in `config.md`, using a concise, specific, action-oriented description. Descriptions default to English; use another language only at the user's request.
+4. Commit with the style in `config.yaml`, using a concise, specific, action-oriented description. Descriptions default to English; use another language only at the user's request.
 
 | Style | Normal checkpoint | Milestone review |
 |---|---|---|
