@@ -7,13 +7,13 @@
 一键安装，交互选择 harness 和安装范围：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash
 ```
 
 也可以直接指定 harness：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
 支持 `claude`、`codex`、`pi`、`ohmypi`、`antigravity`、`cursor`、`deepseek`、`gemini`、`opencode`。多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
@@ -26,7 +26,7 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 
 ```text
 帮我给当前使用的 harness 安装这个技能：
-https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+https://github.com/yjrszcq/checkpoint-karpathy-development
 请按照仓库里的 INSTALL.md 安装。
 ```
 

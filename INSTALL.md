@@ -2,7 +2,7 @@
 
 If a user sends this repository URL and asks you to install the skill, follow this document.
 
-Repository: <https://github.com/yjrszcq/checkpoint-karpathy-development-skills>
+Repository: <https://github.com/yjrszcq/checkpoint-karpathy-development>
 
 ## Choose the destination
 
@@ -59,7 +59,7 @@ This installs into `/actual/path/to/skills/checkpoint-karpathy-development/`. Re
 Without a checkout, download and inspect the installer before executing it, or use the user's requested remote command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
 For interactive human installation, omit the arguments after `bash`. Select `custom` on its own to enter a skills parent directory manually; no scope selection is needed for this explicit path. The menu reads interactive input from `/dev/tty`. Agents should pass explicit arguments. Without a terminal, omitting `--harness` fails with guidance.

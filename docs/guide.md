@@ -7,13 +7,13 @@
 Install interactively and select your harness and scope:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash
 ```
 
 Or specify the harness directly:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development-skills/main/install.sh | bash -s -- --harness codex --scope user
+curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-development/main/install.sh | bash -s -- --harness codex --scope user
 ```
 
 Supports `claude`, `codex`, `pi`, `ohmypi`, `antigravity`, `cursor`, `deepseek`, `gemini`, and `opencode`. Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
@@ -26,7 +26,7 @@ Send your agent the repository link with an installation request, for example:
 
 ```text
 Install this skill for my current harness:
-https://github.com/yjrszcq/checkpoint-karpathy-development-skills
+https://github.com/yjrszcq/checkpoint-karpathy-development
 Follow INSTALL.md in the repository.
 ```
 
