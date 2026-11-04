@@ -31,7 +31,7 @@ The workflow is not limited to starting from zero. It applies to:
 
 When this skill is first invoked for a development goal:
 
-- Create `config.md` using the Project Configuration procedure before creating roadmap or progress files.
+- Read `config.md` using the Project Configuration procedure before creating roadmap or progress files; create it only if missing.
 - The roadmap must plan completely from the current state to the full achievement of all stated goals. Every major milestone and subphase needed to reach the end state must be included.
 - Briefly state the settings recorded in `config.md` and proceed without asking the user to choose.
 
@@ -78,7 +78,7 @@ Use the settings recorded in `config.md` when resuming work and starting new goa
 
 Before planning or executing work each time this skill is used, look for `config.md` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
 
-- If a configuration exists, read it and use its recorded mode and commit message style.
+- If a configuration exists, read it and use its recorded mode and commit message style. Keep it across goal completion, archiving, and new roadmap creation; change its settings only when the user requests a change.
 - If none exists, create it before roadmap or progress files. For each setting, use the user's explicit choice when provided; otherwise use `collaborative` mode and `conventional` commit message style.
 - If both locations contain a configuration, ask the user which one to keep as the active configuration before proceeding.
 

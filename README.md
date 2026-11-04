@@ -8,7 +8,7 @@ It is designed for greenfield development, mid-project continuation, feature wor
 
 ## Core idea
 
-On first use in a project, the agent creates `config.md` alongside roadmap and progress files, recording the user's chosen mode and commit message style. Unspecified settings default to collaborative mode and Conventional Commits. Each later use reads this file; user-requested changes update its settings.
+Each time the skill is used, the agent reads `config.md` alongside roadmap and progress files, creating it only if missing. On creation, it records the user's chosen mode and commit message style; unspecified settings default to collaborative mode and Conventional Commits. The configuration persists across goals, archiving, and roadmap creation; its settings change only at the user's request.
 
 Before substantial work, the agent creates or updates a roadmap that plans completely from the current state to the full achievement of all stated goals.
 

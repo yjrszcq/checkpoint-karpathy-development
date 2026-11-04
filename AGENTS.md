@@ -18,7 +18,7 @@ When the user gives a concrete development goal, first read or create `config.md
 
 ## Skill lifecycle
 
-- **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. Create `config.md` before roadmap and progress files, recording user-specified settings or the defaults (collaborative mode, Conventional Commits). Briefly state the recorded settings and proceed without asking the user to choose.
+- **First-time planning:** The roadmap must cover every milestone and subphase needed to achieve all goals. Read `config.md` before roadmap and progress files; create it only if missing, recording user-specified settings or the defaults (collaborative mode, Conventional Commits). Briefly state the recorded settings and proceed without asking the user to choose.
 - **During execution:** Every development-related conversation must use this skill until the roadmap is complete. A conversation may naturally end (session limit, quota) between subphases — the skill remains active, and the next development conversation should automatically resume from the next unfinished subphase.
 - **After completion:** When every subphase and milestone review is done, the skill is no longer active. Do not invoke it again unless the user explicitly asks for checkpoint-karpathy development on a new goal.
 - **Re-invocation:** When the user asks to use this skill for a new goal, or when a new conversation continues an unfinished roadmap:
@@ -30,7 +30,7 @@ When the user gives a concrete development goal, first read or create `config.md
 
 ## Project configuration
 
-Before each use, look for `.checkpoint-karpathy/config.md` and `.checkpoint-karpathy/private/config.md`. Read the active configuration; if both exist, ask which one to keep before proceeding. If none exists, create one before roadmap and progress files, recording each user-specified setting or its default:
+Before each use, look for `.checkpoint-karpathy/config.md` and `.checkpoint-karpathy/private/config.md`. Read the active configuration and retain it across goal completion, archiving, and new roadmap creation; change its settings only at the user's request. If both exist, ask which one to keep before proceeding. If none exists, create one before roadmap and progress files, recording each user-specified setting or its default:
 
 ```md
 # Checkpoint Karpathy Configuration
