@@ -117,7 +117,13 @@ On a visibility-mode change, create or reuse the destination `roadmap/`, check c
 
 ### Project-state commands
 
-The helpers require Python 3.9+ and PyYAML (`python3 -m pip install -r /path/to/skill/scripts/requirements.txt` in a suitable Python environment). Run the installed scripts with the actual project root:
+The project-state helpers require **Python 3.9+** and **PyYAML >= 6.0**. Before using them, install dependencies in the Python environment that will run the scripts:
+
+```bash
+python3 -m pip install -r /path/to/skill/scripts/requirements.txt
+```
+
+Run the installed scripts with the actual project root:
 
 ```bash
 python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en

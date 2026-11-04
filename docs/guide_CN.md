@@ -117,7 +117,13 @@ commit_message_style: conventional
 
 ### 项目状态脚本
 
-脚本需要 Python 3.9+ 和 PyYAML；可在合适的 Python 环境中运行 `python3 -m pip install -r /技能路径/scripts/requirements.txt`。使用已安装技能中的脚本，并填写实际项目根目录：
+项目状态脚本需要 **Python 3.9+** 和 **PyYAML >= 6.0**。使用前，在运行脚本的 Python 环境中安装依赖：
+
+```bash
+python3 -m pip install -r /技能路径/scripts/requirements.txt
+```
+
+使用已安装技能中的脚本，并填写实际项目根目录：
 
 ```bash
 python3 /技能路径/scripts/init_project.py --project /项目路径 --mode collaborative --language zh
