@@ -4,7 +4,7 @@ Read before generating a new roadmap. The agent supplies actual planning content
 
 ## Invocation and content
 
-Initialize the project directories and configuration first. Send one complete JSON object per invocation. A quoted heredoc preserves literal shell characters in content; encode newlines and quotes according to JSON syntax. For large input, use a tool's subprocess standard-input argument where available. Keep a reusable payload in a task-specific private work directory when validating before archiving.
+Initialize the project directories, configuration, and project-level `memory.md` first, then read memory when preparing the plan. Memory is maintained separately and is not an input field or generated goal document. Send one complete JSON object per invocation. A quoted heredoc preserves literal shell characters in content; encode newlines and quotes according to JSON syntax. For large input, use a tool's subprocess standard-input argument where available. Keep a reusable payload in a task-specific private work directory when validating before archiving.
 
 ```bash
 python3 /path/to/skill/scripts/create_goal.py --project /path/to/project <<'JSON'

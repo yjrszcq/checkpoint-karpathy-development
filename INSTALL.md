@@ -90,6 +90,9 @@ checkpoint-karpathy-development/
     config/
       en.yaml
       zh.yaml
+    memory/
+      en.md
+      zh.md
     roadmap/
       README.md
       status.md
@@ -118,6 +121,8 @@ The printed backup path includes custom files from the previous installation. If
 For manual restoration, first move the current installed bundle to a separate location outside all scanned skills directories, then move the printed previous bundle back to its original installation path. Preserve both versions until the restored skill is verified. Do not put backup skill directories under any `skills/` directory.
 
 If shell installation is unavailable, copy root `SKILL.md`, `LICENSE`, and the complete `references/`, `scripts/`, and `assets/` directories into the destination shown above, preserving their relative structure. Stage and verify the new package first, back up any existing bundle outside discovery, and restore it if replacement fails. Respect the user's environment and deletion rules.
+
+Initialization creates project-level `memory.md` alongside configuration using the selected language, preserving existing memory. Goal creation and archiving leave it in place. Memory templates under `assets/memory/` are required package resources.
 
 The project-state helpers require Python 3.9+ and PyYAML. Verify the Python environment before using them; if PyYAML is missing, install it in a suitable environment with `python3 -m pip install -r /path/to/checkpoint-karpathy-development/scripts/requirements.txt`.
 

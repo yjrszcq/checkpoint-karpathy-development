@@ -242,6 +242,9 @@ validate_package() {
   for file in README.md status.md context.md milestones.md milestone.md phase.md changelog.md progress.md; do
     [[ -s "$package/assets/roadmap/$file" ]] || die "Missing goal template: $package/assets/roadmap/$file"
   done
+  for file in en.md zh.md; do
+    [[ -s "$package/assets/memory/$file" ]] || die "Missing memory template: $package/assets/memory/$file"
+  done
   for file in en.yaml zh.yaml; do
     [[ -s "$package/assets/config/$file" ]] || die "Missing configuration template: $package/assets/config/$file"
   done
