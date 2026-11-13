@@ -1,7 +1,7 @@
 # 规划文档的可见性和位置，默认 collaborative。
-# collaborative：协作模式，配置、目标文档和归档纳入 Git。
+# collaborative：协作模式，配置、项目记忆、目标文档和归档纳入 Git。
 # privacy：隐私模式，放在 Git 忽略的 private/ 下。
-# 切换模式时，需将活动配置和 roadmap 一起迁到对应位置。
+# 切换模式时，需将活动配置、memory 和 roadmap 一起迁到对应位置。
 mode: ${mode}
 
 # 提交信息格式，默认 conventional。

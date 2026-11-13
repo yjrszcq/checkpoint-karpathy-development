@@ -2,7 +2,7 @@
 
 Use these templates when generating a goal or reorganizing its documents. Match the user's language and project needs. Preserve equivalent content in documents whose headings differ. Plan completely for every milestone and supply its content through the structured creation input.
 
-All paths in this reference are relative to the active `roadmap/`. `config.yaml` lives one level above it.
+All paths in this reference are relative to the active `roadmap/`. `config.yaml` and project-level `memory.md` live one level above it; memory is not a goal document and is not archived with the goal.
 
 ## Goal documents
 
@@ -20,7 +20,7 @@ Template: [status.md](../assets/roadmap/status.md).
 
 Template: [context.md](../assets/roadmap/context.md).
 
-Keep assumptions distinct from confirmed constraints, and risks distinct from current obstacles. Assumption states can be unverified, confirmed, or disproved; link to evidence and affected plan changes. Retain useful context when resolving an item, keeping active entries easy to find; append the handling history to progress.
+Keep reusable project preferences, conventions, and lessons in `../memory.md`; use this document for goal-specific context. Keep assumptions distinct from confirmed constraints, and risks distinct from current obstacles. Assumption states can be unverified, confirmed, or disproved; link to evidence and affected plan changes. Retain useful context when resolving an item, keeping active entries easy to find; append the handling history to progress.
 
 ### milestones.md
 

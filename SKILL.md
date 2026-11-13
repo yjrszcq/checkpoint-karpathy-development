@@ -31,23 +31,24 @@ Create configuration only if missing, using user choices and defaults for unspec
 The state directory is `.checkpoint-karpathy/` in collaborative mode or `.checkpoint-karpathy/private/` in privacy mode. Paths below are relative to it; paths beginning with `.checkpoint-karpathy/` are relative to the project root:
 
 - `config.yaml`: persistent project configuration.
+- `memory.md`: project preferences, conventions, and reusable lessons across goals.
 - `roadmap/`: fixed directory containing the active goal documents.
 - `archive/`: completed or cancelled goal contents, created as needed.
 
-Use the bundled [initialization command](scripts/init_project.py) to create configuration, the fixed empty `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. Send agent-prepared structured JSON on standard input to the [creation command](scripts/create_goal.py); it fills templates with actual content, creates all six goal documents with unchecked plan items, and records roadmap generation and the initial plan baseline. Read [Structured goal input](references/goal-input.md) before preparing content. The [archive command](scripts/archive_goal.py) reads configuration and moves a terminal goal's contents into its archive, leaving the fixed roadmap directory empty. Commands, dependencies, and recovery are in [Project state operations](references/project-state.md#helper-commands).
+Use the bundled [initialization command](scripts/init_project.py) to create configuration, `memory.md`, the fixed empty `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. Send agent-prepared structured JSON on standard input to the [creation command](scripts/create_goal.py); it fills templates with actual content, creates all six goal documents with unchecked plan items, and records roadmap generation and the initial plan baseline. Read [Structured goal input](references/goal-input.md) before preparing content. The [archive command](scripts/archive_goal.py) reads configuration and moves a terminal goal's contents into its archive, leaving the fixed roadmap directory empty. Commands, dependencies, and recovery are in [Project state operations](references/project-state.md#helper-commands).
 
 Before initializing directories, creating configuration, filling missing settings, or changing visibility mode, read [Project state operations](references/project-state.md#configuration-and-initialization). It defines the annotated configuration and directory operations. For archiving, read its [Archiving procedure](references/project-state.md#archiving) before moving files.
 
-On requested settings changes, apply only the requested values to subsequent work. Update uncompleted commit targets for a commit-style change. During visibility-mode changes, move active goal contents into the destination `roadmap/` and configuration into its parent state directory without overwriting state. Keep fixed directories, archives, private notes, and work in place as specified by the project-state procedure.
+On requested settings changes, apply only the requested values to subsequent work. Update uncompleted commit targets for a commit-style change. During visibility-mode changes, move active goal contents into the destination `roadmap/` and configuration and `memory.md` into its parent state directory without overwriting state. Check conflicts for all destinations before moving; preserve existing memory and reconcile competing copies before proceeding. Keep fixed directories, archives, private notes, and work in place as specified by the project-state procedure.
 
 ## Start or resume
 
-1. Read project instructions and configuration, initialize missing fixed directories, and inspect the actual goal files.
+1. Read project instructions and configuration, initialize missing fixed directories and `memory.md`, then read project memory before planning or resuming work. Inspect the actual goal files. Memory provides background and does not override current user instructions or project rules.
 2. Read `roadmap/README.md` and `roadmap/status.md`, then recent progress and the active milestone, dependencies, and relevant context or blockers. Read plan-change history when needed to understand a decision.
 3. If goal files are absent, plan the full goal and create its documents using structured input. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
-6. If `completed` or `cancelled` and starting an explicitly requested new goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration and work.
+6. If `completed` or `cancelled` and starting an explicitly requested new goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration, project memory, and work.
 
 Select and record the work mode in `roadmap/README.md`:
 
@@ -57,6 +58,14 @@ Select and record the work mode in `roadmap/README.md`:
 - `bugfix`: reproduce, isolate, fix, and verify a defect.
 - `refactor`: change structure while preserving behavior.
 - `maintenance`: careful work near release or in a mature project.
+
+## Project memory
+
+Maintain `memory.md` alongside `config.yaml`, using the user's language. Initialization creates a template with User Preferences, Project Conventions, and Lessons Learned, or backfills it for an existing project; never replace existing content. Read it at every start or resume, including when planning a new goal.
+
+Record explicit user preferences, confirmed project conventions, and reusable lessons from actual work. Note scope and source or evidence when useful. For lessons, capture the trigger, symptom, confirmed cause or remaining uncertainty, effective solution and actions to avoid, and applicable environment or version. Do not turn guesses into established rules.
+
+Keep entries concise and update or remove obsolete information. Update memory when durable information changes, not mechanically at every checkpoint. Keep current status and next actions in `roadmap/status.md`, goal-specific context in `roadmap/context.md`, and investigation or execution history in `roadmap/progress.md`; retain the reusable conclusion in memory. Memory persists after goal completion, cancellation, and archiving. It follows configuration during visibility changes and uses the same tracking policy. Keep sensitive details in private notes in either mode.
 
 ## Roadmap documents
 
@@ -122,7 +131,7 @@ Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completi
 
 Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 
-After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories. Keep the fixed `roadmap/` and reuse configuration and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
+After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories. Keep the fixed `roadmap/` and reuse configuration, project memory, and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
 
 ## Temporary work and visibility
 
@@ -130,7 +139,7 @@ Use `.checkpoint-karpathy/private/work/` in both modes. Keep its root free of lo
 
 Keep work in place across visibility changes and goal archiving. Do not automatically archive or clear it for a new goal. Retain useful tools and evidence; clean disposable content separately under project deletion rules. Keep maintained source, tests, and deliverables in their intended project locations. Record durable conclusions and verification summaries in progress so archives explain results independently of temporary links; raw evidence can remain in work with its path recorded.
 
-Collaborative mode commits configuration, roadmap contents, and goal archives. Privacy mode keeps them untracked under `private/`; include removal of formerly tracked active paths in the next relevant commit after a privacy switch. Existing Git history remains. Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy in committed state. Sensitive notes belong under `private/` in either mode.
+Collaborative mode commits configuration, project memory, roadmap contents, and goal archives. Privacy mode keeps them untracked under `private/`; include removal of formerly tracked active paths in the next relevant commit after a privacy switch. Existing Git history remains. Never put secrets, credentials, private customer data, sensitive vulnerability details, or confidential strategy in committed state. Sensitive notes belong under `private/` in either mode.
 
 Both modes require this single Git ignore entry:
 
@@ -138,7 +147,7 @@ Both modes require this single Git ignore entry:
 .checkpoint-karpathy/private/
 ```
 
-Do not ignore `.checkpoint-karpathy/` wholesale. The private rule covers work in both modes, plus configuration, roadmap documents, and archives in privacy mode.
+Do not ignore `.checkpoint-karpathy/` wholesale. The private rule covers work in both modes, plus configuration, project memory, roadmap documents, and archives in privacy mode.
 
 ## Verification and Git
 

@@ -135,8 +135,12 @@ class InstallerTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             roadmap = self.project / ".checkpoint-karpathy/private/roadmap"
+            memory = roadmap.parent / "memory.md"
             if script == "init_project.py":
+                self.assertIn("## 踩坑经验", memory.read_text())
+                memory.write_text("# 项目记忆\n保留跨目标经验。\n")
                 self.assertEqual(list(roadmap.iterdir()), [])
+            self.assertEqual(memory.read_text(), "# 项目记忆\n保留跨目标经验。\n")
             if script == "create_goal.py":
                 self.assertIn(payload["goal"], (roadmap / "README.md").read_text())
                 (roadmap / "status.md").write_text("## Completion\ncancelled\n")
@@ -208,6 +212,17 @@ class InstallerTests(unittest.TestCase):
             with self.subTest(args=args):
                 self.invoke(*args, source=False, success=False)
                 self.assertEqual((self.target() / "SKILL.md").read_bytes(), before)
+
+    def test_missing_memory_template_preserves_existing_installation(self):
+        self.invoke(*self.base)
+        original = (self.target() / "SKILL.md").read_bytes()
+        source = self.case / "incomplete-source"
+        shutil.copytree(ROOT, source, ignore=shutil.ignore_patterns(".checkpoint-karpathy", ".git", "__pycache__"))
+        (source / "assets/memory/zh.md").unlink()
+        result = self.invoke(*self.base, "--source", str(source), source=False, success=False)
+        self.assertIn("Missing memory template", result.stderr)
+        self.assertEqual((self.target() / "SKILL.md").read_bytes(), original)
+        self.assert_package(self.target())
 
     def test_user_directory_overrides_without_installing(self):
         overrides = {

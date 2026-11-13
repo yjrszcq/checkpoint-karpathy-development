@@ -43,7 +43,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 使用 checkpoint-karpathy-development，帮我完成：<目标>
 ```
 
-默认使用协作模式和 Conventional Commits，设置保存在 `config.yaml` 中。隐私模式下，规划文档不会进入 Git。目标文档统一放在固定的 `roadmap/` 目录中，分别记录总览、状态、上下文、里程碑、计划变更和执行历史。
+默认使用协作模式和 Conventional Commits，设置保存在 `config.yaml` 中；项目偏好、约定和踩坑经验保存在跨目标保留的 `memory.md` 中。隐私模式下，规划文档不会进入 Git。目标文档统一放在固定的 `roadmap/` 目录中，分别记录总览、状态、上下文、里程碑、计划变更和执行历史。
 
 ## 文档
 

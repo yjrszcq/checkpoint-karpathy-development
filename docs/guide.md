@@ -53,9 +53,9 @@ After installation, restart or reload your harness and ask it to use `checkpoint
 
 Read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to collaborative visibility and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
 
-Initialization creates the fixed `roadmap/` under the selected state directory and `private/work/` in both modes. Goal documents live inside `roadmap/`, with separate overview, status, context, milestone plan, plan-change history, and execution history. The initial plan must cover every stated goal completely.
+Initialization creates `memory.md` and the fixed `roadmap/` under the selected state directory and `private/work/` in both modes. Goal documents live inside `roadmap/`, with separate overview, status, context, milestone plan, plan-change history, and execution history. The initial plan must cover every stated goal completely.
 
-While a goal is incomplete, the workflow persists across development conversations and resumes its next action. After completion or explicit user cancellation, it deactivates and leaves the documents in place. On the next explicit invocation for a new goal, archive the old contents and initialize new documents inside the same `roadmap/`. Keep configuration and private work.
+While a goal is incomplete, the workflow persists across development conversations and resumes its next action. After completion or explicit user cancellation, it deactivates and leaves the documents in place. On the next explicit invocation for a new goal, archive the old contents and initialize new documents inside the same `roadmap/`. Keep configuration, project memory, and private work.
 
 Each normal subphase must end with:
 
@@ -94,6 +94,7 @@ The engineering guardrails are:
 ```text
 .checkpoint-karpathy/
   config.yaml
+  memory.md
   roadmap/
   private/
     work/
@@ -105,12 +106,13 @@ The engineering guardrails are:
 .checkpoint-karpathy/
   private/
     config.yaml
+    memory.md
     roadmap/
     work/
     archive/
 ```
 
-Create `roadmap/` and `private/work/` during initialization, reusing existing directories. Create archives and work categories when needed. Collaborative mode tracks configuration, goal documents, and archives; privacy mode keeps them under Git-ignored `private/`.
+Create `config.yaml`, `memory.md`, `roadmap/`, and `private/work/` during initialization, reusing existing directories. Create archives and work categories when needed. Collaborative mode tracks configuration, memory, goal documents, and archives; privacy mode keeps them under Git-ignored `private/`.
 
 ### Configuration
 
@@ -118,7 +120,7 @@ Generate `config.yaml` with explanations in the user's language. Users edit the 
 
 ```yaml
 # Planning visibility and location. Default: collaborative.
-# collaborative: Track configuration, roadmap documents, and archives in Git.
+# collaborative: Track configuration, project memory, roadmap documents, and archives in Git.
 # privacy: Keep them under Git-ignored private/.
 mode: collaborative
 
@@ -128,7 +130,15 @@ mode: collaborative
 commit_message_style: conventional
 ```
 
-On a visibility-mode change, create or reuse the destination `roadmap/`, check conflicts, move active goal contents into it, and move `config.yaml` into its parent state directory. Preserve the source directory, content, and internal links. Existing archives, private notes, and work stay in place. When switching to privacy, include removal of old tracked active paths in the next relevant commit; existing Git history remains.
+On a visibility-mode change, create or reuse the destination `roadmap/`, check conflicts, move active goal contents into it, and move `config.yaml` and `memory.md` into its parent state directory. Check all destinations before moving and reconcile competing memory copies without overwriting either. Preserve the source directory, content, and internal links. Existing archives, private notes, and work stay in place. When switching to privacy, include removal of old tracked active paths in the next relevant commit; existing Git history remains.
+
+### Project memory
+
+`memory.md` preserves user preferences, project conventions, and lessons learned across sessions and goals. Initialization creates three empty categories in the language selected by `--language en|zh`; repeated initialization preserves existing content, and older projects receive the file only if missing.
+
+Read it before planning or resuming work. Record confirmed information with its scope and useful source or evidence; clearly label uncertainty. For lessons, note the trigger, symptom and cause, effective solution, actions to avoid, and relevant environment or version. Keep entries concise and update obsolete information when durable knowledge changes, rather than appending at every checkpoint. Current user instructions and project rules take precedence.
+
+Current progress, next actions, goal-specific context, and investigation history remain in the six roadmap documents. Creation, completion, cancellation, and archiving preserve memory; visibility changes move it with configuration. Collaborative mode tracks it in Git; privacy mode ignores it. Sensitive details belong in private notes in either mode.
 
 ### Project-state commands
 
@@ -147,7 +157,7 @@ python3 /path/to/skill/scripts/create_goal.py --project /path/to/project
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
 ```
 
-Initialization creates annotated YAML configuration, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration and work persist. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
+Initialization creates annotated YAML configuration, the project memory template, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration, memory, and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration, memory, and work persist. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
 
 ### Roadmap documents
 
@@ -172,7 +182,7 @@ roadmap/
 
 Create all six files, keeping entries proportional to the goal. Maintain detailed state in one place and reference it using stable identifiers and relative links. Current status is a latest snapshot; histories append. Routine checkbox and next-action updates need no plan-change entry. The next action can be a milestone review or blocker resolution.
 
-On resume, read `README.md`, `status.md`, recent progress, and the active milestone with relevant context and dependencies. Read plan-change history when needed to understand a decision. Review the complete plan for scope or cross-milestone dependency changes and final acceptance. Routine checkpoints update milestone checkboxes, status, and progress together; update other documents when their information changes.
+On resume, read project-level `memory.md`, then `README.md`, `status.md`, recent progress, and the active milestone with relevant context and dependencies. Read plan-change history when needed to understand a decision. Review the complete plan for scope or cross-milestone dependency changes and final acceptance. Routine checkpoints update milestone checkboxes, status, and progress together; update other documents when their information changes.
 
 See [roadmap-templates.md](../references/roadmap-templates.md) for document templates. Larger documents may be split further by milestone or retrieval needs while retaining complete planning and navigation. Maintained design documents remain in their intended project locations and are referenced by the roadmap.
 
@@ -186,7 +196,7 @@ Record Completion in `roadmap/status.md`:
 
 Completed and cancelled goals use the same archive flow on the next invocation for a new goal. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions.
 
-Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration across archiving and new goals.
+Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration and project memory across archiving and new goals.
 
 ## Temporary work files
 
@@ -213,6 +223,6 @@ Add one line to `.gitignore`:
 .checkpoint-karpathy/private/
 ```
 
-In privacy mode, configuration, `roadmap/`, and archives are under `private/`. In both modes the same rule covers work, backups, and sensitive notes.
+In privacy mode, configuration, memory, `roadmap/`, and archives are under `private/`. In both modes the same rule covers work, backups, and sensitive notes.
 
 Do not ignore `.checkpoint-karpathy/` wholesale unless you intentionally want to hide all workflow state.

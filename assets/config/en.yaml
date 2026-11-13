@@ -1,7 +1,7 @@
 # Planning visibility and location. Default: collaborative.
-# collaborative: Track configuration, roadmap documents, and archives in Git.
+# collaborative: Track configuration, project memory, roadmap documents, and archives in Git.
 # privacy: Keep them under Git-ignored private/.
-# A mode change requires moving the active config and roadmap to the matching location.
+# A mode change requires moving the active config, memory, and roadmap to the matching location.
 mode: ${mode}
 
 # Commit subject format. Default: conventional.

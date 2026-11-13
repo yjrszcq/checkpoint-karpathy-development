@@ -82,6 +82,50 @@ class ProjectStateTests(unittest.TestCase):
         self.assertEqual((self.project / ".gitignore").read_text(), "existing-rule\n.checkpoint-karpathy/private/\n")
         self.assertEqual(list((config.parent / "roadmap").iterdir()), [])
 
+    def test_memory_initialization_and_backfill_preserve_project_state(self):
+        for mode in state.MODES:
+            for language, heading in (("en", "## Lessons Learned"), ("zh", "## 踩坑经验")):
+                with self.subTest(mode=mode, language=language):
+                    project = self.project / f"{mode}-{language}"
+                    project.mkdir()
+                    roadmap = state.initialize(project, mode, language=language)
+                    memory = roadmap.parent / "memory.md"
+                    self.assertIn(heading, memory.read_text())
+                    state.create(project, self.payload())
+                    memory.write_text("# 用户约定\n保留格式和经验。\n", encoding="utf-8")
+                    before = self.snapshot(project)
+                    state.initialize(project, mode, language="en" if language == "zh" else "zh")
+                    self.assertEqual(self.snapshot(project), before)
+                    memory.unlink()  # Simulate a project initialized by the older version.
+                    before = self.snapshot(project)
+                    state.initialize(project, mode, language=language)
+                    after = self.snapshot(project)
+                    self.assertIn(heading, memory.read_text())
+                    del after[str(memory.relative_to(project))]
+                    self.assertEqual(after, before)
+
+    def test_invalid_memory_paths_stop_before_initialization_writes(self):
+        for kind in ("directory", "symlink", "dangling-symlink"):
+            with self.subTest(kind=kind):
+                project = self.project / kind
+                project.mkdir()
+                base = project / ".checkpoint-karpathy"
+                base.mkdir()
+                memory = base / "memory.md"
+                target = project / "external.md"
+                if kind == "directory":
+                    memory.mkdir()
+                else:
+                    if kind == "symlink":
+                        target.write_text("keep original")
+                    memory.symlink_to(target)
+                before = self.snapshot(project)
+                with self.assertRaises(state.StateError):
+                    state.initialize(project, "collaborative")
+                self.assertEqual(self.snapshot(project), before)
+                self.assertFalse((base / "config.yaml").exists())
+                self.assertFalse((base / "roadmap").exists())
+
     def test_repeat_initialization_preserves_user_content_and_configuration(self):
         folder, roadmap = self.initialize()
         config = folder / "config.yaml"
@@ -160,7 +204,11 @@ class ProjectStateTests(unittest.TestCase):
                 project = self.project / mode
                 project.mkdir()
                 roadmap = state.initialize(project, mode)
+                memory = roadmap.parent / "memory.md"
+                memory.write_text("# Project memory\nA confirmed reusable lesson.\n")
+                memory_before = memory.read_bytes()
                 state.create(project, self.payload())
+                self.assertEqual(memory.read_bytes(), memory_before)
                 self.terminal(roadmap, terminal)
                 (roadmap / ".hidden").write_text("hidden evidence")
                 (roadmap / "design").mkdir()
@@ -175,6 +223,8 @@ class ProjectStateTests(unittest.TestCase):
                 destination, active = state.archive(project, "旧目标-summary")
                 self.assertEqual(destination.parent, roadmap.parent / "archive")
                 self.assertEqual(self.snapshot(destination), old_goal)
+                self.assertNotIn("memory.md", self.snapshot(destination))
+                self.assertEqual(memory.read_bytes(), memory_before)
                 self.assertFalse((destination / "roadmap").exists())
                 self.assertEqual(active, roadmap)
                 self.assertEqual(roadmap.stat().st_ino, inode)
@@ -183,6 +233,7 @@ class ProjectStateTests(unittest.TestCase):
                 self.assertEqual(self.snapshot(work), old_work)
                 state.create(project, self.payload())
                 self.assertIn("\nincomplete\n", (roadmap / "status.md").read_text())
+                self.assertEqual(memory.read_bytes(), memory_before)
 
     def test_archive_rejects_active_unclear_status_and_invalid_titles(self):
         _, roadmap = self.initialize()

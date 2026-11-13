@@ -122,6 +122,10 @@ def initialize(project, mode, style=None, language="en"):
     existing = list(roadmap.iterdir()) if roadmap.exists() else []
     if existing and not all(local_path(project, roadmap / name).is_file() for name in DOCUMENTS):
         raise StateError(f"Partial goal documents in {roadmap}; recover them from evidence before initialization.")
+    memory = local_path(project, state / "memory.md")
+    if memory.exists() and not memory.is_file():
+        raise StateError(f"Expected a memory file: {memory}. Resolve it before initialization.")
+    new_memory = (PACKAGE / "assets/memory" / f"{language}.md").read_text(encoding="utf-8") if not memory.exists() else None
     # Validate the ignore file before creating state.
     local_path(project, project / ".gitignore")
     new_config = config_text(mode, style or "conventional", language) if config_path is None else None
@@ -132,6 +136,9 @@ def initialize(project, mode, style=None, language="en"):
         config_path = state / "config.yaml"
         with config_path.open("x", encoding="utf-8") as stream:
             stream.write(new_config)
+    if new_memory is not None:
+        with memory.open("x", encoding="utf-8") as stream:
+            stream.write(new_memory)
     return roadmap
 
 
@@ -237,7 +244,7 @@ def archive(project, title):
 
 def main(command):
     descriptions = {
-        "init": "Initialize project configuration and fixed directories.",
+        "init": "Initialize project configuration, memory, and fixed directories.",
         "create": "Render six roadmap documents from structured JSON on stdin, using config.yaml.",
         "archive": "Archive a terminal goal, leaving the fixed roadmap directory empty.",
     }
@@ -246,7 +253,7 @@ def main(command):
     if command == "init":
         parser.add_argument("--mode", choices=MODES, required=True)
         parser.add_argument("--commit-message-style", choices=STYLES)
-        parser.add_argument("--language", choices=("en", "zh"), default="en", help="New configuration comment language (default: en).")
+        parser.add_argument("--language", choices=("en", "zh"), default="en", help="New configuration comments and memory template language (default: en).")
     elif command == "create":
         parser.add_argument("--check-only", action="store_true", help="Validate JSON and render templates without writing, including while an old goal exists.")
     else:
@@ -257,7 +264,7 @@ def main(command):
         parser.error(f"Project directory does not exist: {project}")
     try:
         if command == "init":
-            print(f"Initialized directories and configuration. Roadmap: {initialize(project, args.mode, args.commit_message_style, args.language)}")
+            print(f"Initialized directories, configuration, and project memory. Roadmap: {initialize(project, args.mode, args.commit_message_style, args.language)}")
         elif command == "create":
             from goal_documents import unique_object
 
