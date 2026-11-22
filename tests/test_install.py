@@ -123,7 +123,7 @@ class InstallerTests(unittest.TestCase):
                 "review": {"verification": "Regression checks", "commit": "chore(review): verify goal"}}],
         }
         for script, args in (
-            ("init_project.py", ["--mode", "privacy", "--language", "zh"]),
+            ("init_project.py", ["--language", "zh"]),
             ("create_goal.py", []),
             ("archive_goal.py", ["--title", "installed-goal"]),
             ("create_goal.py", []),

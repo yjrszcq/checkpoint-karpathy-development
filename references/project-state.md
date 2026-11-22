@@ -7,17 +7,17 @@ Read the relevant section before initializing directories, creating configuratio
 Before each use, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
 
 - Read an existing configuration and use its settings across conversations and goals. Change settings only at the user's request.
-- Create it only if missing, before planning. Use each user-specified setting and the default for anything unspecified.
+- Create it only if missing, before planning. Use each user-specified setting and the default for anything unspecified: privacy mode and Conventional Commits. Existing configuration is not migrated when defaults change.
 - If both locations contain a configuration, resolve which is active with the user before proceeding.
 - Preserve existing planning content when initializing configuration or filling missing settings. Retain recorded values and add only missing settings with their descriptions and defaults.
 
 Generate a configuration that explains every setting, its accepted values, effects, and default. Use the user's language for the explanations. Users edit the YAML values; comments explain each setting:
 
 ```yaml
-# Planning visibility and location. Default: collaborative.
+# Planning visibility and location. Default: privacy.
 # collaborative: Track configuration, project memory, roadmap documents, and archives in Git.
 # privacy: Keep them under Git-ignored private/.
-mode: collaborative
+mode: privacy
 
 # Commit subject format. Default: conventional.
 # conventional: Conventional Commits, e.g. feat(auth): add login.
@@ -43,15 +43,15 @@ Creation, completion, cancellation, and archiving preserve memory. It is not one
 
 Use the installed skill's initialization, goal-creation, and archive scripts. They require Python 3.9+ and PyYAML; if needed, install `scripts/requirements.txt` in the Python environment used to run them. Replace `/path/to/skill` with the installed package directory. `--project` is the actual project root and defaults to the current directory.
 
-For first use, resolve the mode from the user's request or the default and pass it explicitly:
+On first use, omitting `--mode` selects privacy. On resume, omitting it retains the recorded mode, including collaborative mode:
 
 ```bash
-python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
+python3 /path/to/skill/scripts/init_project.py --project /path/to/project --language en
 ```
 
-Use `--mode privacy` when requested. `--commit-message-style phase` selects phase subjects on first creation; the default is `conventional`. `--language en|zh` selects configuration comments from [assets/config/](../assets/config/) and the memory template from [assets/memory/](../assets/memory/) (default `en`); use `zh` for Chinese. Translate comments into another user language when appropriate, keeping keys and values intact.
+Use `--mode collaborative` when the user requests shared project state; `--mode privacy` can also be supplied explicitly. `--commit-message-style phase` selects phase subjects on first creation; the default is `conventional`. `--language en|zh` selects configuration comments from [assets/config/](../assets/config/) and the memory template from [assets/memory/](../assets/memory/) (default `en`); use `zh` for Chinese. Translate comments into another user language when appropriate, keeping keys and values intact.
 
-Initialization creates missing `config.yaml` and `memory.md`, the fixed empty `roadmap/`, and `private/work/`, and adds the private ignore rule without replacing `.gitignore`. It preserves existing configuration, memory, and complete goal documents byte-for-byte. On resume, pass the recorded mode; a different mode or commit style is rejected. Recover partial or opposite-mode goal state first.
+Initialization creates missing `config.yaml` and `memory.md`, the fixed empty `roadmap/`, and `private/work/`, and adds the private ignore rule without replacing `.gitignore`. It preserves existing configuration, memory, and complete goal documents byte-for-byte. On resume, omit `--mode` to retain the recorded mode or pass it explicitly; a different mode or commit style is rejected. Recover partial or opposite-mode goal state first.
 
 Before creating a goal, read [Structured goal input](goal-input.md). The agent plans the entire goal and sends structured JSON through standard input to `create_goal.py`. The script validates fields and references and fills the bundled templates.
 

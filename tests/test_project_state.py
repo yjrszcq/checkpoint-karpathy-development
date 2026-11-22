@@ -69,6 +69,39 @@ class ProjectStateTests(unittest.TestCase):
     def terminal(self, roadmap, value="completed"):
         (roadmap / "status.md").write_text(f"# 状态\n\n## Completion\n{value}\n\n## Current State\n已结束\n", encoding="utf-8")
 
+    def test_first_initialization_defaults_to_privacy(self):
+        self.invoke("init_project.py")
+        folder = self.base / "private"
+        self.assertEqual(yaml.safe_load((folder / "config.yaml").read_text()),
+                         {"mode": "privacy", "commit_message_style": "conventional"})
+        self.assertTrue((folder / "memory.md").is_file())
+        self.assertTrue((folder / "roadmap").is_dir())
+        self.assertFalse((self.base / "config.yaml").exists())
+        self.assertFalse((self.base / "roadmap").exists())
+        self.assertIn(state.IGNORE, (self.project / ".gitignore").read_text())
+        direct = self.project / "direct"
+        direct.mkdir()
+        self.assertEqual(state.initialize(direct), direct / ".checkpoint-karpathy/private/roadmap")
+
+    def test_omitting_mode_retains_existing_configuration_and_goal(self):
+        for mode in state.MODES:
+            with self.subTest(mode=mode):
+                project = self.project / mode
+                project.mkdir()
+                roadmap = state.initialize(project, mode, style="phase")
+                memory = roadmap.parent / "memory.md"
+                memory.write_text("Keep project habits.\n")
+                # An existing complete goal is retained even after the default changes.
+                for name in state.DOCUMENTS:
+                    (roadmap / name).write_text("Existing goal content.\n")
+                before = self.snapshot(project)
+                result = subprocess.run(
+                    [sys.executable, "-B", str(ROOT / "scripts/init_project.py"), "--project", str(project)],
+                    capture_output=True, text=True, timeout=15)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(state.initialize(project), roadmap)
+                self.assertEqual(self.snapshot(project), before)
+
     def test_initialization_modes_defaults_and_private_ignore(self):
         (self.project / ".gitignore").write_text("existing-rule")
         self.invoke("init_project.py", "--mode", "privacy", "--language", "zh", "--commit-message-style", "phase")

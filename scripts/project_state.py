@@ -109,8 +109,10 @@ def move(source, destination):
     source.rename(destination)
 
 
-def initialize(project, mode, style=None, language="en"):
+def initialize(project, mode=None, style=None, language="en"):
     config_path, config = read_config(project)
+    if mode is None:
+        mode = config["mode"] if config else "privacy"
     if config and (config["mode"] != mode or (style and config["commit_message_style"] != style)):
         raise StateError("Initialization preserves existing configuration. Apply user-requested settings changes separately.")
     paths = state_paths(project)
@@ -251,7 +253,7 @@ def main(command):
     parser = argparse.ArgumentParser(description=descriptions[command])
     parser.add_argument("--project", type=Path, default=Path.cwd(), help="Project root (default: current directory).")
     if command == "init":
-        parser.add_argument("--mode", choices=MODES, required=True)
+        parser.add_argument("--mode", choices=MODES, help="Visibility mode (default: existing configuration, or privacy for a new project).")
         parser.add_argument("--commit-message-style", choices=STYLES)
         parser.add_argument("--language", choices=("en", "zh"), default="en", help="New configuration comments and memory template language (default: en).")
     elif command == "create":

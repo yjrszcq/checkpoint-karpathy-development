@@ -23,7 +23,7 @@ Before every use, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkp
 
 | Setting | Values | Default |
 |---|---|---|
-| `mode` | `collaborative`, `privacy` | `collaborative` |
+| `mode` | `collaborative`, `privacy` | `privacy` |
 | `commit_message_style` | `conventional`, `phase` | `conventional` |
 
 Create configuration only if missing, using user choices and defaults for unspecified settings. Explain every setting's purpose, accepted values and effects, and default in the user's language. Retain existing values when filling missing settings. Keep configuration across goals and archives; change settings only at the user's request. On first use, briefly state the recorded choices and proceed without asking the user to choose unspecified values.
@@ -35,7 +35,7 @@ The state directory is `.checkpoint-karpathy/` in collaborative mode or `.checkp
 - `roadmap/`: fixed directory containing the active goal documents.
 - `archive/`: completed or cancelled goal contents, created as needed.
 
-Use the bundled [initialization command](scripts/init_project.py) to create configuration, `memory.md`, the fixed empty `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. Pass the selected mode explicitly; use defaults for unspecified settings. Send agent-prepared structured JSON on standard input to the [creation command](scripts/create_goal.py); it fills templates with actual content, creates all six goal documents with unchecked plan items, and records roadmap generation and the initial plan baseline. Read [Structured goal input](references/goal-input.md) before preparing content. The [archive command](scripts/archive_goal.py) reads configuration and moves a terminal goal's contents into its archive, leaving the fixed roadmap directory empty. Commands, dependencies, and recovery are in [Project state operations](references/project-state.md#helper-commands).
+Use the bundled [initialization command](scripts/init_project.py) to create configuration, `memory.md`, the fixed empty `roadmap/`, and `.checkpoint-karpathy/private/work/` in both modes. The default for a new project is privacy mode; retain existing configuration on resume. For user-selected collaborative mode on first use, pass `--mode collaborative`; use defaults for unspecified settings. Send agent-prepared structured JSON on standard input to the [creation command](scripts/create_goal.py); it fills templates with actual content, creates all six goal documents with unchecked plan items, and records roadmap generation and the initial plan baseline. Read [Structured goal input](references/goal-input.md) before preparing content. The [archive command](scripts/archive_goal.py) reads configuration and moves a terminal goal's contents into its archive, leaving the fixed roadmap directory empty. Commands, dependencies, and recovery are in [Project state operations](references/project-state.md#helper-commands).
 
 Before initializing directories, creating configuration, filling missing settings, or changing visibility mode, read [Project state operations](references/project-state.md#configuration-and-initialization). It defines the annotated configuration and directory operations. For archiving, read its [Archiving procedure](references/project-state.md#archiving) before moving files.
 

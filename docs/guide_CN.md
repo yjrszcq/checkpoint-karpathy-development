@@ -51,7 +51,7 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 
 ## 核心思路
 
-每次使用先读取 `config.yaml`，仅在缺失时创建。配置记录可见性模式和提交风格，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认协作模式和 Conventional Commits；已有值持续沿用，用户要求时修改。
+每次使用先读取 `config.yaml`，仅在缺失时创建。配置记录可见性模式和提交风格，每项都注明当前值、可填值的作用和默认值。用户指定的设置按要求填，其余默认隐私模式和 Conventional Commits；已有值持续沿用，用户要求时修改。
 
 初始化时在所选模式下创建 `memory.md` 和固定的 `roadmap/`，同时创建两种模式共用的 `private/work/`。目标文档全部放在 `roadmap/` 中，分别记录总览、状态、背景、里程碑计划、计划变更历史和执行历史。初次规划须完整覆盖全部目标。
 
@@ -119,10 +119,10 @@ Phase X.Y: <描述>
 生成的 `config.yaml` 自带逐项说明，用户修改对应的 YAML 值，注释说明配置项：
 
 ```yaml
-# 规划文档的可见性和位置，默认 collaborative。
+# 规划文档的可见性和位置，默认 privacy。
 # collaborative：协作模式，配置、项目记忆、目标文档和归档纳入 Git。
 # privacy：隐私模式，放在 Git 忽略的 private/ 下。
-mode: collaborative
+mode: privacy
 
 # 提交信息格式，默认 conventional。
 # conventional：约定式提交，例如 feat(auth): add login。
@@ -151,13 +151,13 @@ python3 -m pip install -r /技能路径/scripts/requirements.txt
 使用已安装技能中的脚本，并填写实际项目根目录：
 
 ```bash
-python3 /技能路径/scripts/init_project.py --project /项目路径 --mode collaborative --language zh
+python3 /技能路径/scripts/init_project.py --project /项目路径 --language zh
 # 通过标准输入传入完整的结构化 JSON，见下方链接中的调用示例。
 python3 /技能路径/scripts/create_goal.py --project /项目路径
 python3 /技能路径/scripts/archive_goal.py --project /项目路径 --title old-goal-summary
 ```
 
-初始化创建带注释的 YAML 配置、项目记忆模板和固定的空目录，并添加 private 的 Git 忽略规则。用户要求隐私模式或阶段式提交时，分别传 `--mode privacy`、`--commit-message-style phase`。已有配置、项目记忆和完整目标文档保持原样，部分缺失的状态先恢复。agent 将结构化 JSON 通过标准输入传给 `create_goal.py`，脚本校验后按模板生成六份实际文档，计划项均未勾选，并在 progress 记录“生成线路图”、在 changelog 记录“建立初始计划”。完整输入格式和调用示例见[结构化目标输入](../references/goal-input.md)。替换已结束目标时，先用 `--check-only` 校验新内容，再归档旧目标，最后用同一份输入创建新文档。归档脚本读取配置，只移动旧目标内容，保留空的固定 roadmap 目录；配置、项目记忆和 work 持续保留。状态字段要求和失败恢复见[脚本说明](../references/project-state.md#helper-commands)。
+初始化创建带注释的 YAML 配置、项目记忆模板和固定的空目录，并添加 private 的 Git 忽略规则。省略 `--mode` 时，新项目默认隐私模式，已有项目沿用原配置；默认值变化不会迁移已有项目。用户要求协作模式或阶段式提交时，分别传 `--mode collaborative`、`--commit-message-style phase`。已有配置、项目记忆和完整目标文档保持原样，部分缺失的状态先恢复。agent 将结构化 JSON 通过标准输入传给 `create_goal.py`，脚本校验后按模板生成六份实际文档，计划项均未勾选，并在 progress 记录“生成线路图”、在 changelog 记录“建立初始计划”。完整输入格式和调用示例见[结构化目标输入](../references/goal-input.md)。替换已结束目标时，先用 `--check-only` 校验新内容，再归档旧目标，最后用同一份输入创建新文档。归档脚本读取配置，只移动旧目标内容，保留空的固定 roadmap 目录；配置、项目记忆和 work 持续保留。状态字段要求和失败恢复见[脚本说明](../references/project-state.md#helper-commands)。
 
 ### 路线图文档
 

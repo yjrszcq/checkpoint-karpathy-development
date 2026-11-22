@@ -1,4 +1,4 @@
-# Planning visibility and location. Default: collaborative.
+# Planning visibility and location. Default: privacy.
 # collaborative: Track configuration, project memory, roadmap documents, and archives in Git.
 # privacy: Keep them under Git-ignored private/.
 # A mode change requires moving the active config, memory, and roadmap to the matching location.

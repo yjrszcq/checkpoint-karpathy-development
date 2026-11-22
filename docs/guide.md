@@ -51,7 +51,7 @@ After installation, restart or reload your harness and ask it to use `checkpoint
 
 ## Core idea
 
-Read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to collaborative visibility and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
+Read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to privacy mode and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
 
 Initialization creates `memory.md` and the fixed `roadmap/` under the selected state directory and `private/work/` in both modes. Goal documents live inside `roadmap/`, with separate overview, status, context, milestone plan, plan-change history, and execution history. The initial plan must cover every stated goal completely.
 
@@ -119,10 +119,10 @@ Create `config.yaml`, `memory.md`, `roadmap/`, and `private/work/` during initia
 Generate `config.yaml` with explanations in the user's language. Users edit the YAML values; comments explain each setting:
 
 ```yaml
-# Planning visibility and location. Default: collaborative.
+# Planning visibility and location. Default: privacy.
 # collaborative: Track configuration, project memory, roadmap documents, and archives in Git.
 # privacy: Keep them under Git-ignored private/.
-mode: collaborative
+mode: privacy
 
 # Commit subject format. Default: conventional.
 # conventional: Conventional Commits, e.g. feat(auth): add login.
@@ -151,13 +151,13 @@ python3 -m pip install -r /path/to/skill/scripts/requirements.txt
 Run the installed scripts with the actual project root:
 
 ```bash
-python3 /path/to/skill/scripts/init_project.py --project /path/to/project --mode collaborative --language en
+python3 /path/to/skill/scripts/init_project.py --project /path/to/project --language en
 # Send complete structured JSON on stdin; see the input example linked below.
 python3 /path/to/skill/scripts/create_goal.py --project /path/to/project
 python3 /path/to/skill/scripts/archive_goal.py --project /path/to/project --title old-goal-summary
 ```
 
-Initialization creates annotated YAML configuration, the project memory template, fixed empty directories, and the private Git ignore rule. Use `--mode privacy` or `--commit-message-style phase` for user-selected initial settings. Existing configuration, memory, and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration, memory, and work persist. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
+Initialization creates annotated YAML configuration, the project memory template, fixed empty directories, and the private Git ignore rule. Omit `--mode` for privacy on first use or to retain existing configuration on resume. Use `--mode collaborative` or `--commit-message-style phase` for user-selected initial settings. Changing the default does not migrate existing projects. Existing configuration, memory, and complete goal documents are preserved; recover partial state first. The agent sends structured JSON on standard input to `create_goal.py`, which validates content and fills templates to generate six actual documents with unchecked plan items. It records roadmap generation in progress and the initial plan baseline in changelog. Read [structured goal input](../references/goal-input.md) for the complete schema and invocation. Before replacing a terminal goal, validate new content with `--check-only`, archive the old goal, then run creation with the same input. Archiving reads configuration, moves the goal contents, and leaves the fixed roadmap directory empty. Configuration, memory, and work persist. See [helper commands](../references/project-state.md#helper-commands) for status and recovery.
 
 ### Roadmap documents
 
