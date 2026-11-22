@@ -43,6 +43,8 @@ https://github.com/yjrszcq/checkpoint-karpathy-development
 使用 checkpoint-karpathy-development，帮我完成：<目标>
 ```
 
+也可以直接描述任务而不点名技能。Agent 可根据复杂度、依赖、验证及恢复需求，判断是否启用完整路线图和检查点流程；普通问答、小范围独立修改通常直接处理。用户明确要求使用或不使用时优先遵从；继续未完成的活动目标时沿用流程，明确暂停或禁用的除外。
+
 默认使用隐私模式和 Conventional Commits，设置保存在 `config.yaml` 中；项目偏好、约定和踩坑经验保存在跨目标保留的 `memory.md` 中。隐私模式下，规划文档不会进入 Git。目标文档统一放在固定的 `roadmap/` 目录中，分别记录总览、状态、上下文、里程碑、计划变更和执行历史。
 
 ## 文档

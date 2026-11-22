@@ -56,11 +56,21 @@ After installation, restart or reload your harness and ask it to use `checkpoint
 
 ## Core idea
 
-Read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to privacy mode and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
+### When to activate
+
+Explicit requests to use this skill activate it, even for a small task; an explicit opt-out, including one for the whole project, takes precedence. Without a skill mention, the agent may activate it when a full roadmap, checkpoints, milestone reviews, and recoverable context materially help the requested work. Judge complexity, dependencies, uncertainty, verification, and interruption risk rather than file count or change size. Multi-stage development, complex debugging, and substantial refactoring are typical candidates; routine questions and small self-contained edits usually need no workflow.
+
+Decide before creating configuration or directories. For implicit activation, briefly explain the reason and proceed without routinely asking whether to use the skill. Follow the user's requested scope and execution permissions. Resume an unfinished active goal for related work, even when little remains, while respecting explicit pauses and opt-outs. Unrelated tasks do not resume it just because state exists. When the workflow is not used, leave its state untouched.
+
+After a goal ends, reassess each new user-requested task under the same rules. A qualifying task can activate the skill without naming it; a routine task leaves the old goal documents in place. Reconcile an unfinished goal before replacing it, and never automatically revive cancelled work.
+
+### Configuration and execution
+
+After activation, read `config.yaml` on each use and create it only if missing. Every setting explains its current value, accepted values, effects, and default. Use user-specified settings; otherwise default to privacy mode and Conventional Commits. Keep recorded settings across goals and change them at the user's request.
 
 Initialization creates `memory.md` and the fixed `roadmap/` under the selected state directory and `private/work/` in both modes. Goal documents live inside `roadmap/`, with separate overview, status, context, milestone plan, plan-change history, and execution history. The initial plan must cover every stated goal completely.
 
-While a goal is incomplete, the workflow persists across development conversations and resumes its next action. After completion or explicit user cancellation, it deactivates and leaves the documents in place. On the next explicit invocation for a new goal, archive the old contents and initialize new documents inside the same `roadmap/`. Keep configuration, project memory, and private work.
+While a goal is incomplete, the workflow persists across related development conversations and resumes its next action, unless explicitly paused or opted out. After completion or explicit user cancellation, it deactivates and leaves the documents in place. When explicitly or implicitly activated for a new user-requested goal, archive the old contents and initialize new documents inside the same `roadmap/`. Keep configuration, project memory, and private work.
 
 Each normal subphase must end with:
 
@@ -199,7 +209,7 @@ Record Completion in `roadmap/status.md`:
 - `completed`: All subphases, reviews, commits, and overall acceptance are satisfied with verification evidence.
 - `cancelled`: Explicit user termination or confirmation; record its reason and termination history, preserving unfinished items accurately.
 
-Completed and cancelled goals use the same archive flow on the next invocation for a new goal. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions.
+Completed and cancelled goals use the same archive flow when the workflow is next activated for a new user-requested goal, by explicit request or applicability assessment. If the new task does not use the workflow, leave the old documents in place. Move all contents of `roadmap/`, including added files and subdirectories, directly into `archive/YYYYMMDDa-<old-goal-summary>/`. Increment the date suffix letter to avoid collisions.
 
 Keep the fixed `roadmap/` directory and create the new goal files inside it. Retain configuration and project memory across archiving and new goals.
 

@@ -4,7 +4,9 @@ Read the relevant section before initializing directories, creating configuratio
 
 ## Configuration and initialization
 
-Before each use, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
+First apply [Activation and applicability](../SKILL.md#activation-and-applicability). Only initialize or update workflow state after activation; an existing state directory alone is not a trigger.
+
+After activation or when inspecting a possible continuing goal, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`.
 
 - Read an existing configuration and use its settings across conversations and goals. Change settings only at the user's request.
 - Create it only if missing, before planning. Use each user-specified setting and the default for anything unspecified: privacy mode and Conventional Commits. Existing configuration is not migrated when defaults change.
@@ -137,7 +139,7 @@ Create goal documents in an empty `roadmap/`. If documents are partial or outsid
 
 ## Archiving
 
-Archive when the user invokes the skill for a new goal after the old goal is completed or cancelled, or explicitly requests archiving a terminal goal without a replacement. Verify a completed claim against the plan, review commits, and overall acceptance first; cancelled work need not pass unfinished acceptance.
+Archive when the workflow is activated for a new user-requested goal after the old goal is completed or cancelled, whether by explicit skill request or a justified applicability decision, or when the user explicitly requests archiving a terminal goal without a replacement. A new small task that does not use the workflow leaves the old documents in place; do not archive merely because a conversation starts. Verify a completed claim against the plan, review commits, and overall acceptance first; cancelled work need not pass unfinished acceptance.
 
 Use `archive/YYYYMMDDa-<summary>/` within the selected state directory. The letter increments (`a` … `z`, `aa`, `ab`, …) to avoid same-day collisions. Read the summary from the old goal and use a short kebab-case name describing that completed or cancelled goal.
 

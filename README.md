@@ -43,6 +43,8 @@ Restart or reload your harness after installation, then ask:
 Use checkpoint-karpathy-development to help me complete: <goal>
 ```
 
+You can also describe the task without naming the skill. The agent may activate it when complexity, dependencies, verification, and recovery needs justify a full roadmap and checkpoints. Routine questions and small self-contained edits usually proceed directly. Explicit requests to use or avoid the skill take precedence; related work on an unfinished active goal resumes unless paused or opted out.
+
 The defaults are privacy mode and Conventional Commits. Settings persist in `config.yaml`; project preferences, conventions, and reusable lessons persist across goals in `memory.md`; privacy mode keeps planning documents out of Git. Goal documents live in a fixed `roadmap/` directory, with separate overview, status, context, milestones, plan changes, and execution history.
 
 ## Documentation

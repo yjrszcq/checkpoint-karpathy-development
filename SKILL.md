@@ -1,7 +1,7 @@
 ---
 name: checkpoint-karpathy-development
 license: MIT
-description: "Use this skill for roadmap-driven, checkpointed software work across greenfield development, continuation, feature work, bug fixing, refactoring, and maintenance, while following Karpathy-inspired engineering guardrails."
+description: "Plan substantial software work with roadmaps, verified Git checkpoints, and resumable project memory. Use when explicitly requested, when continuing an active goal, or when task complexity, dependencies, verification, and recovery needs justify persistent planning. Skip routine questions and small self-contained edits unless explicitly requested or continuing an active goal. Respect explicit opt-outs."
 ---
 
 # Checkpoint Karpathy Development
@@ -9,6 +9,18 @@ description: "Use this skill for roadmap-driven, checkpointed software work acro
 Plan the full goal, execute commit-sized subphases, record evidence, and resume reliably across session or context loss. Each major milestone ends with a separate review checkpoint.
 
 This workflow supports greenfield development, continuation, features, bug fixes, refactoring, maintenance, release preparation, and development-related documentation or configuration work.
+
+## Activation and applicability
+
+Decide whether to activate this workflow before initializing configuration, memory, roadmap, or work directories. Read existing state when needed to identify a continuing goal; the presence of state alone does not activate the workflow.
+
+- If the user explicitly requests this skill, use it, including for a small task. Respect an explicit instruction not to use it, including a project-wide opt-out; do not override that choice based on task size.
+- If the current request continues an unfinished active goal, resume its next action even when little work remains. Honor an explicit pause or opt-out until the user resumes or changes that instruction. Unrelated questions and tasks do not resume a goal just because unfinished state exists.
+- If the user requests software work without mentioning this skill, decide whether a full roadmap, commit-sized checkpoints, milestone reviews, and recoverable context would materially help. Consider complexity, dependencies, uncertainty, verification effort, and interruption risk rather than file count or change size alone. Multi-stage development, complex debugging, or substantial refactoring are typical candidates.
+- For new tasks outside an unfinished active goal, handle routine questions, small self-contained edits, and straightforward one-step fixes directly unless the user requests this skill. When the workflow adds little value, leave its state untouched.
+- For implicit activation, briefly explain why the task benefits and proceed without asking a routine permission question about using the skill. Activation remains limited to the user's requested work and does not expand execution permissions or scope.
+
+After a completed or cancelled goal, assess the next user-requested task under these same rules. Do not automatically revive cancelled work or infer a new goal from idle state. If a new task qualifies for activation, follow the replacement and archive procedure below. If another goal is still incomplete, reconcile the intended goal before replacing its state.
 
 ## Engineering guardrails
 
@@ -19,7 +31,7 @@ This workflow supports greenfield development, continuation, features, bug fixes
 
 ## Configuration and fixed paths
 
-Before every use, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`. Read the active configuration first. If both exist, resolve the active one with the user before proceeding.
+After deciding to activate or resume under the applicability rules, look for `config.yaml` in `.checkpoint-karpathy/` and `.checkpoint-karpathy/private/`. Read the active configuration first. If both exist, resolve the active one with the user before proceeding.
 
 | Setting | Values | Default |
 |---|---|---|
@@ -43,12 +55,14 @@ On requested settings changes, apply only the requested values to subsequent wor
 
 ## Start or resume
 
+Apply [Activation and applicability](#activation-and-applicability) before these steps.
+
 1. Read project instructions and configuration, initialize missing fixed directories and `memory.md`, then read project memory before planning or resuming work. Inspect the actual goal files. Memory provides background and does not override current user instructions or project rules.
 2. Read `roadmap/README.md` and `roadmap/status.md`, then recent progress and the active milestone, dependencies, and relevant context or blockers. Read plan-change history when needed to understand a decision.
 3. If goal files are absent, plan the full goal and create its documents using structured input. For partial or misplaced documents, read [Recovering partial state](references/project-state.md#recovering-partial-state); preserve content and recover from evidence. Clarify conflicting goals or terminal states with the user.
 4. If Completion is `incomplete`, resume the next unfinished action: a subphase, milestone review, or blocker resolution. Check the complete plan before changing scope or cross-milestone dependencies.
 5. If `completed`, verify the claim against plan checkboxes, review commits, and overall acceptance evidence; reconcile inconsistencies before archiving.
-6. If `completed` or `cancelled` and starting an explicitly requested new goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration, project memory, and work.
+6. If `completed` or `cancelled` and this workflow is activated for a new user-requested goal, prepare and validate the new goal input with `create_goal.py --check-only`, archive the old goal, then run `create_goal.py` with the validated input inside the same `roadmap/`. Retain configuration, project memory, and work.
 
 Select and record the work mode in `roadmap/README.md`:
 
@@ -103,7 +117,7 @@ Execute one coherent subphase or milestone review at a time:
 5. Append the actual work, files changed, verification results, decisions, known issues, and next step to `roadmap/progress.md`. Before creating or reconstructing this log, read the [Progress template](references/checkpoint-details.md#progress-template). Preserve useful prior history.
 6. Update the current snapshot, phase reference, and Next Action in `roadmap/status.md`. Update context and the plan-change log when their information changes. If all subphases of a milestone are done, the next action is its standalone review.
 7. Review status and diffs, stage relevant files, inspect the staged diff, and commit the checkpoint with its plan checkboxes, progress, and current state. Report the commit and next action.
-8. Continue to the next action until the goal is complete, the conversation ends, or the user pauses or cancels. Resume an incomplete goal across development conversations without requiring re-invocation.
+8. Continue to the next action until the goal is complete, the conversation ends, or the user pauses or cancels. Resume an incomplete goal across related development conversations without requiring re-invocation, subject to the activation rules and any explicit pause or opt-out.
 
 Each subphase checkpoint commit includes coherent project changes, verified plan checkboxes, progress, and current status.
 
@@ -131,7 +145,7 @@ Record Completion in `roadmap/status.md`. Keep the machine-readable `## Completi
 
 Paused, blocked, and in-progress belong in Current State and remain `incomplete`. Session endings do not terminate a goal. Do not infer cancellation from difficulty, inactivity, or blockers. On cancellation, record the reason in the completion document and append termination to progress; preserve completed work and unfinished checkboxes accurately.
 
-After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. Invoke it for a new goal only when explicitly requested. On that next invocation, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories. Keep the fixed `roadmap/` and reuse configuration, project memory, and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
+After completion or cancellation, report the outcome, deactivate this workflow, and leave goal documents in place unless the user explicitly requests archiving. For the next user-requested task, reassess applicability: an explicit skill request or a justified implicit activation can start a new goal. On activation for that new goal, archive all goal contents directly into `archive/YYYYMMDDa-<old-goal-summary>/`, preserving extra files and subdirectories. Keep the fixed `roadmap/` and reuse configuration, project memory, and work. Follow [Archiving](references/project-state.md#archiving) before moving files; cancelled work need not pass unfinished acceptance.
 
 ## Temporary work and visibility
 
