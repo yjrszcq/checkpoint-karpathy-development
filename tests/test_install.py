@@ -28,6 +28,7 @@ PROJECT_DIRS = {
     "deepseek": ".dsh/skills",
     "gemini": ".gemini/skills",
     "opencode": ".opencode/skills",
+    "shared": ".agents/skills",
 }
 WORK = ROOT / ".checkpoint-karpathy/private/work/verification/install"
 
@@ -166,7 +167,7 @@ class InstallerTests(unittest.TestCase):
         self.assert_package(self.target())
 
     def test_aliases_repeated_flags_and_custom_directory(self):
-        aliases = "claudecode,claude-code,codex,pi,omp,oh-my-pi,antigrivaty,cursor,deepseekharness,deepseek-harness,dsh,geminicli,gemini-cli,opencode"
+        aliases = "claudecode,claude-code,codex,pi,omp,oh-my-pi,antigrivaty,cursor,deepseekharness,deepseek-harness,dsh,geminicli,gemini-cli,opencode,shared"
         result = self.invoke("--harness", aliases, "--harness", "codex", "--project", str(self.project), "--dry-run")
         self.assertEqual(len(result.stdout.splitlines()), len(PROJECT_DIRS))
         self.assertEqual(list(self.project.iterdir()), [])
@@ -180,7 +181,8 @@ class InstallerTests(unittest.TestCase):
         home = Path.home()
         expected = {
             "claude": Path(self.env.get("CLAUDE_CONFIG_DIR", home / ".claude")) / "skills",
-            "codex": home / ".agents/skills",
+            "codex": Path(self.env.get("CODEX_HOME") or home / ".codex") / "skills",
+            "shared": home / ".agents/skills",
             "pi": Path(self.env.get("PI_CODING_AGENT_DIR", home / ".pi/agent")) / "skills",
             "ohmypi": home / ".omp/agent/skills",
             "antigravity": home / ".gemini/config/skills",
@@ -193,6 +195,27 @@ class InstallerTests(unittest.TestCase):
             self.assertIn(f"{harness} (user): {directory / NAME}\n", result.stdout)
         self.assertFalse((self.case / "state").exists())
         self.assertFalse((self.case / "cache").exists())
+
+    def test_codex_user_destination_fallback_and_overrides(self):
+        for codex_home in (None, ""):
+            with self.subTest(codex_home=codex_home):
+                if codex_home is None:
+                    self.env.pop("CODEX_HOME", None)
+                else:
+                    self.env["CODEX_HOME"] = codex_home
+                result = self.invoke("--harness", "codex", "--scope", "user", "--dry-run")
+                expected = Path.home() / ".codex/skills" / NAME
+                self.assertIn(f"codex (user): {expected}\n", result.stdout)
+        # Real installations use an isolated Codex home, never the user's settings.
+        codex_home = self.case / "isolated codex home"
+        self.env["CODEX_HOME"] = str(codex_home)
+        self.invoke("--harness", "codex", "--scope", "user")
+        self.assert_package(codex_home / "skills" / NAME)
+        self.invoke(*self.base)
+        self.assert_package(self.target())  # Project scope still uses .agents/skills.
+        explicit = self.case / "explicit skills"
+        self.invoke("--harness", "codex", "--scope", "user", "--skills-dir", str(explicit))
+        self.assert_package(explicit / NAME)
 
     def test_invalid_arguments_and_incomplete_source_preserve_install(self):
         self.invoke(*self.base)
@@ -227,6 +250,7 @@ class InstallerTests(unittest.TestCase):
     def test_user_directory_overrides_without_installing(self):
         overrides = {
             "claude": ("CLAUDE_CONFIG_DIR", "claude config"),
+            "codex": ("CODEX_HOME", "codex home"),
             "pi": ("PI_CODING_AGENT_DIR", "pi agent"),
             "deepseek": ("DSH_HOME", "deepseek home"),
             "opencode": ("XDG_CONFIG_HOME", "xdg config"),
@@ -367,8 +391,30 @@ class InstallerTests(unittest.TestCase):
         self.assert_package(self.target())
         self.assert_package(self.project / PROJECT_DIRS["cursor"] / NAME)
 
+    def test_shared_destinations_and_explicit_override(self):
+        self.env["CODEX_HOME"] = str(self.case / "isolated codex home")
+        result = self.invoke("--harness", "shared", "--scope", "user", "--dry-run")
+        self.assertIn(f"shared (user): {Path.home() / '.agents/skills' / NAME}\n", result.stdout)
+        result = self.invoke("--harness", "codex,antigravity,shared", "--project", str(self.project))
+        self.assertEqual(result.stdout.count("Installed:"), 1)
+        self.assert_package(self.project / ".agents/skills" / NAME)
+        explicit = self.case / "shared custom path"
+        self.invoke("--harness", "shared", "--scope", "user", "--skills-dir", str(explicit))
+        self.assert_package(explicit / NAME)
+        listing = self.invoke("--list", source=False).stdout.splitlines()
+        self.assertEqual(listing[-2:], ["Shared (.agents/skills)", "Custom"])
+
+    def test_interactive_shared_installation_by_number_and_name(self):
+        for choice in (b"10", b"shared"):
+            with self.subTest(choice=choice):
+                transcript = self.run_interactive([(b"> ", choice), (b"Install scope:", b"2")])
+                self.assertIn("10) Shared (.agents/skills)", transcript)
+                self.assertIn("11) Custom (enter installation path)", transcript)
+                self.assertNotIn("Skills directory (parent", transcript)
+                self.assert_package(self.project / ".agents/skills" / NAME)
+
     def test_interactive_custom_installation_by_number_and_name(self):
-        for choice in (b"10", b"custom"):
+        for choice in (b"11", b"custom"):
             with self.subTest(choice=choice):
                 parent = self.case / ("custom skills " + choice.decode())
                 # Relative paths and spaces must survive terminal input unchanged.

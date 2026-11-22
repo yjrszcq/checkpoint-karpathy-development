@@ -4,8 +4,8 @@ set -euo pipefail
 
 SKILL_NAME=checkpoint-karpathy-development
 REPOSITORY=yjrszcq/checkpoint-karpathy-development
-HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode custom)
-HARNESS_NAMES=('Claude Code' 'Codex' 'Pi' 'Oh My Pi' 'Antigravity' 'Cursor' 'DeepSeek Harness' 'Gemini CLI' 'OpenCode' 'Custom')
+HARNESS_LIST=(claude codex pi ohmypi antigravity cursor deepseek gemini opencode shared custom)
+HARNESS_NAMES=('Claude Code' 'Codex' 'Pi' 'Oh My Pi' 'Antigravity' 'Cursor' 'DeepSeek Harness' 'Gemini CLI' 'OpenCode' 'Shared (.agents/skills)' 'Custom')
 selected=()
 scope=
 project_dir=
@@ -36,15 +36,17 @@ Usage: bash install.sh [OPTIONS]
   -h, --help               Show this help.
 
 Harnesses: Claude Code, Codex, Pi, Oh My Pi, Antigravity, Cursor,
-  DeepSeek Harness, Gemini CLI, OpenCode, Custom.
+  DeepSeek Harness, Gemini CLI, OpenCode, Shared, Custom.
 For --harness identifiers, see:
   https://github.com/yjrszcq/checkpoint-karpathy-development/blob/main/docs/guide.md#harness-identifiers
+Use --harness shared for ~/.agents/skills (user) or .agents/skills (project).
 Use --harness custom --skills-dir PATH for other compatible harnesses.
 With no --harness, read an interactive menu from /dev/tty (also works with curl | bash).
 Select custom to enter the skills parent directory; the skill folder is added inside it.
 
 Examples:
   bash install.sh --harness codex --scope user
+  bash install.sh --harness shared --scope user
   bash install.sh --harness claude,cursor --project /path/to/project
   bash install.sh --harness pi --source . --dry-run
   bash install.sh --harness custom --skills-dir /path/to/skills
@@ -56,7 +58,7 @@ add_harness() {
   name=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
   case "$name" in
     claude|claudecode|claude-code) name=claude ;;
-    codex|pi|cursor|opencode|custom) ;;
+    codex|pi|cursor|opencode|shared|custom) ;;
     omp|ohmypi|oh-my-pi) name=ohmypi ;;
     antigravity|antigrivaty) name=antigravity ;;
     deepseek|deepseekharness|deepseek-harness|dsh) name=deepseek ;;
@@ -102,7 +104,7 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   if ! { exec 3<>/dev/tty; } 2>/dev/null; then
     die 'No terminal available. Specify --harness NAME and optionally --scope user|project.'
   fi
-  printf 'Select harnesses by number (separated by spaces or commas):\n' >&3
+  printf 'Select installation targets by number (separated by spaces or commas):\n' >&3
   for ((i=0; i<${#HARNESS_LIST[@]}; i++)); do
     if [[ "${HARNESS_LIST[$i]}" == custom ]]; then
       printf '  %s) Custom (enter installation path)\n' "$((i+1))" >&3
@@ -116,7 +118,7 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   read -r -a choices <<< "$answer"
   for choice in ${choices[@]+"${choices[@]}"}; do
     case "$choice" in
-      [1-9]|10) add_harness "${HARNESS_LIST[$((choice-1))]}" ;;
+      [1-9]|10|11) add_harness "${HARNESS_LIST[$((choice-1))]}" ;;
       *) add_harness "$choice" ;;
     esac
   done
@@ -163,7 +165,7 @@ skills_root() {
   if [[ "$scope" == project ]]; then
     case "$1" in
       claude) printf '%s/.claude/skills\n' "$project_dir" ;;
-      codex|antigravity) printf '%s/.agents/skills\n' "$project_dir" ;;
+      codex|antigravity|shared) printf '%s/.agents/skills\n' "$project_dir" ;;
       pi) printf '%s/.pi/skills\n' "$project_dir" ;;
       ohmypi) printf '%s/.omp/skills\n' "$project_dir" ;;
       cursor) printf '%s/.cursor/skills\n' "$project_dir" ;;
@@ -175,7 +177,8 @@ skills_root() {
   else
     case "$1" in
       claude) printf '%s/skills\n' "${CLAUDE_CONFIG_DIR:-$HOME/.claude}" ;;
-      codex) printf '%s/.agents/skills\n' "$HOME" ;;
+      codex) printf '%s/skills\n' "${CODEX_HOME:-$HOME/.codex}" ;;
+      shared) printf '%s/.agents/skills\n' "$HOME" ;;
       pi) printf '%s/skills\n' "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}" ;;
       ohmypi) printf '%s/.omp/agent/skills\n' "$HOME" ;;
       antigravity) printf '%s/.gemini/config/skills\n' "$HOME" ;;

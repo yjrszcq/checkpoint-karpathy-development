@@ -29,9 +29,14 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 | DeepSeek Harness | `deepseek` |
 | Gemini CLI | `gemini` |
 | OpenCode | `opencode` |
+| Shared (.agents/skills) | `shared` |
 | Custom | `custom` |
 
 Use `--harness claude,cursor` for multiple harnesses, or `--project /path/to/project` for project installation. For a local checkout, run `bash install.sh --harness codex --source .`.
+
+Codex user installations default to `$CODEX_HOME/skills`, or `~/.codex/skills/` when `CODEX_HOME` is unset or empty. Project installations use `.agents/skills/`. `--skills-dir` overrides either destination; existing installations are not automatically moved.
+
+Select `Shared (.agents/skills)` immediately above `Custom` to use the shared directory: `~/.agents/skills/` for user scope, or `.agents/skills/` under the project root for project scope. The command-line equivalent is `--harness shared --scope user` or `--harness shared --project /path/to/project`. This target is independent of `CODEX_HOME`; only agents that discover the shared directory can use it. It can be combined with other targets; identical destinations install once.
 
 Select `custom` in the interactive menu to enter a skills directory manually, or pass `--harness custom --skills-dir /actual/path/to/skills`. The installer creates `checkpoint-karpathy-development/` inside that directory.
 

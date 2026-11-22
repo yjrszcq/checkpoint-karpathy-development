@@ -29,9 +29,14 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 | DeepSeek Harness | `deepseek` |
 | Gemini CLI | `gemini` |
 | OpenCode | `opencode` |
+| Shared (.agents/skills) | `shared` |
 | Custom | `custom` |
 
 多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
+
+Codex 用户级安装默认使用 `$CODEX_HOME/skills`，未设置或为空时使用 `~/.codex/skills/`；项目级安装使用 `.agents/skills/`。`--skills-dir` 可覆盖两种安装位置，已有安装不会自动迁移。
+
+在 Custom 上方选择 `Shared (.agents/skills)` 可安装到共享目录：用户级为 `~/.agents/skills/`，项目级为项目根目录下的 `.agents/skills/`。命令行使用 `--harness shared --scope user` 或 `--harness shared --project /path/to/project`。共享选项不受 `CODEX_HOME` 影响，供支持读取该目录的 Agent 使用；可与其他目标一起选择，相同目的地仅安装一次。
 
 在交互菜单选择 `custom`，即可手动输入技能目录；也可使用参数 `--harness custom --skills-dir /实际路径/skills`。安装器会在该目录下创建 `checkpoint-karpathy-development/`。
 
