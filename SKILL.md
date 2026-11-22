@@ -1,7 +1,7 @@
 ---
 name: checkpoint-karpathy-development
 license: MIT
-description: "Plan substantial software work with roadmaps, verified Git checkpoints, and resumable project memory. Use when explicitly requested, when continuing an active goal, or when task complexity, dependencies, verification, and recovery needs justify persistent planning. Skip routine questions and small self-contained edits unless explicitly requested or continuing an active goal. Respect explicit opt-outs."
+description: "Plan software work with roadmaps, verified Git checkpoints, and resumable project memory. Use when explicitly requested, when continuing an active goal, or when task complexity, dependencies, verification, and recovery needs justify persistent planning. Skip routine questions and small self-contained edits unless explicitly requested or continuing an active goal. Respect explicit opt-outs."
 ---
 
 # Checkpoint Karpathy Development
@@ -16,7 +16,7 @@ Decide whether to activate this workflow before initializing configuration, memo
 
 - If the user explicitly requests this skill, use it, including for a small task. Respect an explicit instruction not to use it, including a project-wide opt-out; do not override that choice based on task size.
 - If the current request continues an unfinished active goal, resume its next action even when little work remains. Honor an explicit pause or opt-out until the user resumes or changes that instruction. Unrelated questions and tasks do not resume a goal just because unfinished state exists.
-- If the user requests software work without mentioning this skill, decide whether a full roadmap, commit-sized checkpoints, milestone reviews, and recoverable context would materially help. Consider complexity, dependencies, uncertainty, verification effort, and interruption risk rather than file count or change size alone. Multi-stage development, complex debugging, or substantial refactoring are typical candidates.
+- If the user requests software work without mentioning this skill, decide whether a full roadmap, commit-sized checkpoints, milestone reviews, and recoverable context would materially help. Consider complexity, dependencies, uncertainty, verification effort, and interruption risk rather than file count or change size alone. Development, debugging, and refactoring can qualify regardless of overall size when staged planning and verification help.
 - For new tasks outside an unfinished active goal, handle routine questions, small self-contained edits, and straightforward one-step fixes directly unless the user requests this skill. When the workflow adds little value, leave its state untouched.
 - For implicit activation, briefly explain why the task benefits and proceed without asking a routine permission question about using the skill. Activation remains limited to the user's requested work and does not expand execution permissions or scope.
 
