@@ -17,7 +17,7 @@ Standard skills parent directories are listed below. Each receives a `checkpoint
 | Harness | User scope | Project scope |
 |---|---|---|
 | [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/` | `.claude/skills/` |
-| [Codex](https://developers.openai.com/codex/skills/) | `~/.codex/skills/` | `.agents/skills/` |
+| [Codex](https://developers.openai.com/codex/skills/) | `~/.codex/skills/` | `.codex/skills/` |
 | [Pi](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/skills.md) | `~/.pi/agent/skills/` | `.pi/skills/` |
 | [Oh My Pi](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/discovery/builtin.ts) | `~/.omp/agent/skills/` | `.omp/skills/` |
 | [Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/` | `.agents/skills/` |
@@ -33,7 +33,7 @@ See the [harness identifiers table](docs/guide.md#harness-identifiers) for `--ha
 
 The installer honors `CLAUDE_CONFIG_DIR`, `CODEX_HOME`, `PI_CODING_AGENT_DIR`, `DSH_HOME`, and `XDG_CONFIG_HOME` for the corresponding user paths. For profiles, custom homes, or other configuration overrides, determine the actual discovery directory and pass `--skills-dir /absolute/path/to/skills`. For example, an Oh My Pi named profile normally uses `~/.omp/profiles/<name>/agent/skills/`; pass that active profile directory explicitly. With this option select just one harness. Other compatible harnesses can use `--harness custom --skills-dir PATH`; confirm their discovery rules first.
 
-Codex user installations use `$CODEX_HOME/skills`, falling back to `~/.codex/skills/` when `CODEX_HOME` is unset or empty. Project installations continue to use `.agents/skills/`. An explicit `--skills-dir` takes precedence in either scope. This is the installer's default destination policy; Codex also documents `~/.agents/skills/` for user skill discovery. Existing installations are not automatically moved.
+Codex user installations use `$CODEX_HOME/skills`, falling back to `~/.codex/skills/` when `CODEX_HOME` is unset or empty. Codex project installations use `<project>/.codex/skills/`, independently of `CODEX_HOME`; the `shared` target uses `.agents/skills/`. An explicit `--skills-dir` takes precedence in either scope. This is the installer's default destination policy; Codex also documents `~/.agents/skills/` for user skill discovery. Existing installations are not automatically moved.
 
 The `shared` target appears immediately above `custom` in the menu. It uses `~/.agents/skills/` for user scope and `<project>/.agents/skills/` for project scope, independently of `CODEX_HOME`. Use `--harness shared --scope user` or `--harness shared --project /absolute/path/to/project`. Shared can be combined with other targets; identical destinations install once. `--skills-dir` can override its destination under the same single-target rule. Only harnesses that discover the shared directory will load skills installed there.
 

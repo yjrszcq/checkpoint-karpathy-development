@@ -20,7 +20,7 @@ SCRIPT = ROOT / "install.sh"
 NAME = "checkpoint-karpathy-development"
 PROJECT_DIRS = {
     "claude": ".claude/skills",
-    "codex": ".agents/skills",
+    "codex": ".codex/skills",
     "pi": ".pi/skills",
     "ohmypi": ".omp/skills",
     "antigravity": ".agents/skills",
@@ -212,7 +212,7 @@ class InstallerTests(unittest.TestCase):
         self.invoke("--harness", "codex", "--scope", "user")
         self.assert_package(codex_home / "skills" / NAME)
         self.invoke(*self.base)
-        self.assert_package(self.target())  # Project scope still uses .agents/skills.
+        self.assert_package(self.target())  # Project scope uses .codex/skills, independently of CODEX_HOME.
         explicit = self.case / "explicit skills"
         self.invoke("--harness", "codex", "--scope", "user", "--skills-dir", str(explicit))
         self.assert_package(explicit / NAME)
@@ -396,7 +396,8 @@ class InstallerTests(unittest.TestCase):
         result = self.invoke("--harness", "shared", "--scope", "user", "--dry-run")
         self.assertIn(f"shared (user): {Path.home() / '.agents/skills' / NAME}\n", result.stdout)
         result = self.invoke("--harness", "codex,antigravity,shared", "--project", str(self.project))
-        self.assertEqual(result.stdout.count("Installed:"), 1)
+        self.assertEqual(result.stdout.count("Installed:"), 2)
+        self.assert_package(self.project / ".codex/skills" / NAME)
         self.assert_package(self.project / ".agents/skills" / NAME)
         explicit = self.case / "shared custom path"
         self.invoke("--harness", "shared", "--scope", "user", "--skills-dir", str(explicit))

@@ -34,7 +34,7 @@ curl -fsSL https://raw.githubusercontent.com/yjrszcq/checkpoint-karpathy-develop
 
 多个 harness 可写为 `--harness claude,cursor`；项目级安装使用 `--project /path/to/project`。本地仓库可运行 `bash install.sh --harness codex --source .`。
 
-Codex 用户级安装默认使用 `$CODEX_HOME/skills`，未设置或为空时使用 `~/.codex/skills/`；项目级安装使用 `.agents/skills/`。`--skills-dir` 可覆盖两种安装位置，已有安装不会自动迁移。
+Codex 用户级安装默认使用 `$CODEX_HOME/skills`，未设置或为空时使用 `~/.codex/skills/`；Codex 项目级安装使用 `.codex/skills/`，不受 `CODEX_HOME` 影响；需要 `.agents/skills/` 时选择 `shared`。`--skills-dir` 可覆盖两种安装位置，已有安装不会自动迁移。
 
 在 Custom 上方选择 `Shared (.agents/skills)` 可安装到共享目录：用户级为 `~/.agents/skills/`，项目级为项目根目录下的 `.agents/skills/`。命令行使用 `--harness shared --scope user` 或 `--harness shared --project /path/to/project`。共享选项不受 `CODEX_HOME` 影响，供支持读取该目录的 Agent 使用；可与其他目标一起选择，相同目的地仅安装一次。
 

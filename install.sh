@@ -165,7 +165,8 @@ skills_root() {
   if [[ "$scope" == project ]]; then
     case "$1" in
       claude) printf '%s/.claude/skills\n' "$project_dir" ;;
-      codex|antigravity|shared) printf '%s/.agents/skills\n' "$project_dir" ;;
+      codex) printf '%s/.codex/skills\n' "$project_dir" ;;
+      antigravity|shared) printf '%s/.agents/skills\n' "$project_dir" ;;
       pi) printf '%s/.pi/skills\n' "$project_dir" ;;
       ohmypi) printf '%s/.omp/skills\n' "$project_dir" ;;
       cursor) printf '%s/.cursor/skills\n' "$project_dir" ;;
